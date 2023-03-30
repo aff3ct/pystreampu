@@ -1,5 +1,6 @@
 import numpy as np
 from .. import builtins
+from .. import array
 from .Binaryop import Binaryop
 
 def bop_generic_factory(name, s0, s1, invert = False):
@@ -30,9 +31,9 @@ def bop_generic_factory(name, s0, s1, invert = False):
 
     if type(s0) is not builtins.core.Socket:
         try:
-            mdl0 = builtins.Array(np.array(s0, dtype = dtype))
-            mdl0.n_frames = n_frames
-            s0 = mdl0.get()
+            s0 = array(np.array(s0, dtype = np.dtype(dtype.name)))
+            s0.task.module.n_frames = n_frames
+            s0.task.module.get()
         except:
             return NotImplemented
     else:
@@ -40,9 +41,9 @@ def bop_generic_factory(name, s0, s1, invert = False):
 
     if type(s1) is not builtins.core.Socket:
         try:
-            mdl1 = builtins.Array(np.array(s1, dtype = dtype))
-            mdl1.n_frames = n_frames
-            s1 = mdl1.get()
+            s1 = array(np.array(s1, dtype = np.dtype(dtype.name)))
+            s1.task.module.n_frames = n_frames
+            s1.task.module.get()
         except:
             return NotImplemented
     else:

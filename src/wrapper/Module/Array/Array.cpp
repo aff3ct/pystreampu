@@ -9,7 +9,6 @@ using namespace pyaf::wrapper;
 
 void pyaf::wrapper::wrap_array(py::module_ &scope)
 {
-	auto doc_str = R"pbdoc()pbdoc";
 	using lTI = tl::type_list<ALL_DTYPES>;
 	lTI::for_each([&](auto ti) {
 		using TI = typename decltype(ti)::type;

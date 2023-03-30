@@ -17,4 +17,8 @@ Socket.__neg__    = lambda slf       : uop_generic_factory("neg",  slf)
 Socket.astype     = lambda slf,dtype : uop_generic_factory("cast", slf, dtype)
 Socket.__invert__ = lambda slf       : uop_generic_factory("not",  slf)
 
-all = []
+def abs (s):        return uop_generic_factory("abs",s)
+def neg (s):        return uop_generic_factory("neg",s)
+def cast(s, dtype): return uop_generic_factory("cast",s, dtype)
+
+all = ["abs","neg","cast"]

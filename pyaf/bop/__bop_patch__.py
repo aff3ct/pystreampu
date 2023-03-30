@@ -25,7 +25,7 @@ def bop_generic_factory(name, s0, s1, invert = False):
         n_frames = 1
         first    = 0
         np_dtype = np.find_common_type([], [np.array(s0).dtype, np.array(s1).dtype])
-        dtype    = builtins.dtype.get(np_dtype.__name__)
+        dtype    = builtins.dtype.of(np_dtype.type.__name__)
 
 
     if type(s0) is not builtins.core.Socket:

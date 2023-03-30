@@ -1,10 +1,8 @@
 from .. import builtins
 from .Unaryop import Unaryop
 
-Socket = builtins.core.Socket
-
 def uop_generic_factory(name, sckt, out_dtype=None):
-    in_dtype = builtins.__getattribute__(sckt.datatype)
+    in_dtype = sckt.dtype
     if not out_dtype:
         out_dtype = in_dtype
     n_frames = sckt.task.module.n_frames
@@ -14,11 +12,9 @@ def uop_generic_factory(name, sckt, out_dtype=None):
     s = the_uop.perform(sckt)
     return s
 
+Socket = builtins.core.Socket
 Socket.__neg__    = lambda slf       : uop_generic_factory("neg",  slf)
 Socket.astype     = lambda slf,dtype : uop_generic_factory("cast", slf, dtype)
 Socket.__invert__ = lambda slf       : uop_generic_factory("not",  slf)
 
-del Socket
-del uop_generic_factory
-del Unaryop
-del builtins
+all = []

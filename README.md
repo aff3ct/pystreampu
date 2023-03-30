@@ -17,3 +17,21 @@ For example the following command will compile `pyaf` in `Debug` and `editable` 
 DEBUG=1 CMAKE_BUILD_PARALLEL_LEVEL=8 pip3 install -e -v pyaf-core
 ```
 
+## Run tests
+Tests for `pyaf` require `pytest`, run the following command:
+```
+pytest --pyargs pyaf
+```
+
+## A simple `pyaf` program
+
+```python
+import pyaf
+
+x = pyaf.array([1,2,3], dtype = pyaf.uint8)
+y = pyaf.array([4,5,6], dtype = pyaf.uint8)
+
+z = x+y
+print(z)
+```
+This should return `[5 7 9]`.

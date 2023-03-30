@@ -2,5 +2,5 @@
 	path = lib/aff3ct-core
 	url = https://gitlab.inria.fr/fec/aff3ct-core.git
 [submodule "pybind11"]
-	path = pybind11
+	path = lib/pybind11
 	url = https://github.com/pybind/pybind11.git

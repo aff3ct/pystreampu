@@ -3,6 +3,8 @@ import numpy as np
 from typing import Union
 
 def array(arr:Union[list, np.ndarray], n_frames:int = 1, dtype:builtins.dtype = None):
+    if type(arr) is int   : arr = [arr]
+    if type(arr) is float : arr = [arr]
     if type(arr) is list and not dtype:
         if all(isinstance(x, int) for x in arr):
             dtype = builtins.int64

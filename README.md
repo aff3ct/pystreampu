@@ -14,7 +14,7 @@ To build using multiple cores set the variable `CMAKE_BUILD_PARALLEL_LEVEL` to t
 
 For example the following command will compile `pyaf` in `Debug` and `editable` mode, using 8 cores and shows the compilation output.
 ```
-DEBUG=1 CMAKE_BUILD_PARALLEL_LEVEL=8 pip3 install -e -v pyaf-core
+DEBUG=1 CMAKE_BUILD_PARALLEL_LEVEL=8 pip3 install -e pyaf-core -v
 ```
 
 ## Run tests

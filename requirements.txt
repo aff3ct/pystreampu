@@ -1,0 +1,4 @@
+graphviz
+numpy
+pytest
+setuptools

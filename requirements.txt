@@ -1,4 +1,1 @@
-graphviz
-numpy
-pytest
 setuptools

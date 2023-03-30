@@ -139,6 +139,11 @@ setup(
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     extras_require={},
+    install_requires=[
+        'graphviz',
+        'numpy',
+        'pytest',
+    ],
     python_requires=">=3.7",
     package_dir={'pyaf.array'   :'pyaf/array',
                  'pyaf.bop'     :'pyaf/bop',
@@ -147,4 +152,4 @@ setup(
                  'pyaf.test'    :'pyaf/test',
                  'pyaf.viz'     :'pyaf/viz'},
     packages=['pyaf']
-) 
+)

@@ -18,7 +18,7 @@ PYBIND11_MODULE(builtins, m){
 	// Split in two following https://pybind11.readthedocs.io/en/stable/advanced/misc.html#avoiding-c-types-in-docstrings
 	// for enhancing python doc
 	//setControlMode(rang::control::Off);
-	m.attr("__name__") = "pyaf.builtins";
+	m.attr("__name__") = "aff3ct.builtins";
 
 	m.doc() =
 R"pbdoc(
@@ -35,7 +35,7 @@ R"pbdoc(
 	pyaf::wrapper::wrap_dtypes(m);
 
 	py::module_ submod_tools = m.def_submodule("tools");
-	py::module_ submod_itf   = m.def_submodule("interfaces");
+	py::module_ submod_itf   = submod_tools.def_submodule("interfaces");
 	pyaf::wrapper::wrap_interface_clone           (submod_itf);
 	pyaf::wrapper::wrap_interface_is_done         (submod_itf);
 	pyaf::wrapper::wrap_interface_reset           (submod_itf);

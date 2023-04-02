@@ -129,13 +129,13 @@ class CMakeBuild(build_ext):
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
 setup(
-    name="pyaf",
+    name="aff3ct",
     version="0.0.1",
     author="Romain Tajan",
     author_email="romain.tajan@ims-bordeaux.fr",
     description="Python bindings for the C++ AFF3CT library.",
     long_description="",
-    ext_modules=[CMakeExtension("pyaf.builtins")],
+    ext_modules=[CMakeExtension("aff3ct.builtins")],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     extras_require={},
@@ -145,11 +145,11 @@ setup(
         'pytest',
     ],
     python_requires=">=3.7",
-    package_dir={'pyaf.array'   :'pyaf/array',
-                 'pyaf.bop'     :'pyaf/bop',
-                 'pyaf.uop'     :'pyaf/uop',
-                 'pyaf.jit'     :'pyaf/jit',
-                 'pyaf.test'    :'pyaf/test',
-                 'pyaf.viz'     :'pyaf/viz'},
-    packages=['pyaf']
+    package_dir={'aff3ct.array'   :'aff3ct/array',
+                 'aff3ct.bop'     :'aff3ct/bop',
+                 'aff3ct.uop'     :'aff3ct/uop',
+                 'aff3ct.jit'     :'aff3ct/jit',
+                 'aff3ct.test'    :'aff3ct/test',
+                 'aff3ct.viz'     :'aff3ct/viz'},
+    packages=['aff3ct']
 )

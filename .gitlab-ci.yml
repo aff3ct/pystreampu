@@ -1,0 +1,54 @@
+image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+stages:
+  - build
+  - test
+
+cache:
+  paths:
+    - .cache/pip
+    - venv/
+
+before_script:
+  - apt update
+  - apt install -y python3
+  - apt install -y python3-pip
+  - python3 --version  # For debugging
+  - pip3 install virtualenv
+  - virtualenv venv
+  - source venv/bin/activate
+
+build:
+  stage: build
+  tags:
+    - x86_64
+    - linux
+    - docker
+
+  artifacts:
+    name: aff3ct
+    paths:
+      - aff3ct
+      - venv
+
+  script:
+    - export CC="gcc"
+    - export CXX="g++"
+    - CMAKE_BUILD_PARALLEL_LEVEL=24 pip3 install -e ../pyaf-core -v
+
+test:
+  stage: test
+
+  dependencies:
+  - build
+
+  tags:
+  - x86_64
+  - linux
+  - docker
+
+  script:
+    - pytest --pyargs aff3ct

@@ -1,6 +1,6 @@
-import pyaf
+import aff3ct
 
-list_types = [pyaf.uint8,pyaf.uint16,pyaf.uint32,pyaf.uint64,pyaf.int8,pyaf.int16,pyaf.int32,pyaf.int64,pyaf.float32,pyaf.float64]
+list_types = [aff3ct.uint8,aff3ct.uint16,aff3ct.uint32,aff3ct.uint64,aff3ct.int8,aff3ct.int16,aff3ct.int32,aff3ct.int64,aff3ct.float32,aff3ct.float64]
 
 def pytest_generate_tests(metafunc):
 

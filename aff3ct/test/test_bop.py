@@ -1,4 +1,4 @@
-import aff3ct
+from ..array.array import array
 import numpy as np
 
 def test_bop_add(dtype):
@@ -6,8 +6,8 @@ def test_bop_add(dtype):
     y = np.array(13.2,dtype=dtype.numpy)
     z = x+y
 
-    px = aff3ct.array(x)
-    py = aff3ct.array(y)
+    px = array(x)
+    py = array(y)
     pz = px + py
     assert(np.allclose(pz,z))
 
@@ -16,8 +16,8 @@ def test_bop_sub(signed_dtype):
     y = np.array(13.2,dtype=signed_dtype.numpy)
     z = x-y
 
-    px = aff3ct.array(x)
-    py = aff3ct.array(y)
+    px = array(x)
+    py = array(y)
     pz = px - py
     assert(np.allclose(pz,z))
 
@@ -26,8 +26,8 @@ def test_bop_mul(dtype):
     y = np.array(13.2,dtype=dtype.numpy)
     z = x * y
 
-    px = aff3ct.array(x)
-    py = aff3ct.array(y)
+    px = array(x)
+    py = array(y)
     pz = px * py
     assert(np.allclose(pz,z))
 
@@ -36,8 +36,8 @@ def test_bop_div(float_dtype):
     y = np.array(13.2,dtype=float_dtype.numpy)
     z = x / y
 
-    px = aff3ct.array(x)
-    py = aff3ct.array(y)
+    px = array(x)
+    py = array(y)
     pz = px / py
     assert(np.allclose(pz,z))
 
@@ -46,8 +46,8 @@ def test_bop_div2(int_dtype):
     y = np.array(2,dtype=int_dtype.numpy)
     z = x // y
 
-    px = aff3ct.array(x)
-    py = aff3ct.array(y)
+    px = array(x)
+    py = array(y)
     pz = px / py
     assert(np.allclose(pz,z))
 
@@ -56,8 +56,8 @@ def test_bop_gt(float_dtype):
     y = np.array(13.2,dtype=float_dtype.numpy)
     z = x > y
 
-    px = aff3ct.array(x)
-    py = aff3ct.array(y)
+    px = array(x)
+    py = array(y)
     pz = px > py
     assert(np.allclose(pz,z))
 
@@ -66,8 +66,8 @@ def test_bop_lt(float_dtype):
     y = np.array(13.2,dtype=float_dtype.numpy)
     z = x < y
 
-    px = aff3ct.array(x)
-    py = aff3ct.array(y)
+    px = array(x)
+    py = array(y)
     pz = px < py
     assert(np.allclose(pz,z))
 
@@ -76,8 +76,8 @@ def test_bop_ge(float_dtype):
     y = np.array(13.2,dtype=float_dtype.numpy)
     z = x >= y
 
-    px = aff3ct.array(x)
-    py = aff3ct.array(y)
+    px = array(x)
+    py = array(y)
     pz = px >= py
     assert(np.allclose(pz,z))
 
@@ -86,8 +86,8 @@ def test_bop_le(float_dtype):
     y = np.array(13.2,dtype=float_dtype.numpy)
     z = x <= y
 
-    px = aff3ct.array(x)
-    py = aff3ct.array(y)
+    px = array(x)
+    py = array(y)
     pz = px <= py
     assert(np.allclose(pz,z))
 
@@ -96,8 +96,8 @@ def test_bop_eq(float_dtype):
     y = np.array(13.2,dtype=float_dtype.numpy)
     z = x == y
 
-    px = aff3ct.array(x)
-    py = aff3ct.array(y)
+    px = array(x)
+    py = array(y)
     pz = px == py
     assert(np.allclose(pz,z))
 
@@ -106,8 +106,8 @@ def test_bop_neq(float_dtype):
     y = np.array(13.2,dtype=float_dtype.numpy)
     z = x != y
 
-    px = aff3ct.array(x)
-    py = aff3ct.array(y)
+    px = array(x)
+    py = array(y)
     pz = px != py
     assert(np.allclose(pz,z))
 
@@ -116,7 +116,7 @@ def test_bop_add_const(dtype):
     y = dtype.numpy(13.2)
     z = x+y
 
-    px = aff3ct.array(x)
+    px = array(x)
     pz = px + y
     assert(np.allclose(pz,z))
 
@@ -125,7 +125,7 @@ def test_bop_sub_const(signed_dtype):
     y = signed_dtype.numpy(13.2)
     z = x-y
 
-    px = aff3ct.array(x)
+    px = array(x)
     pz = px - y
     assert(np.allclose(pz,z))
 
@@ -134,6 +134,6 @@ def test_bop_mul_const(dtype):
     y = dtype.numpy(13.2)
     z = x*y
 
-    px = aff3ct.array(x)
+    px = array(x)
     pz = px * y
     assert(np.allclose(pz,z))

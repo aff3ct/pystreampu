@@ -60,7 +60,7 @@ test:
   script:
     - cd ..
     - pip3 show -f aff3ct
-    - pytest --pyargs aff3ct --junitxml=report.xml
+    - pytest --pyargs aff3ct --junitxml=./pyaf-core/report.xml
     
   artifacts:
     when: always

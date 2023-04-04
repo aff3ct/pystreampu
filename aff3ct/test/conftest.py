@@ -1,6 +1,6 @@
-import aff3ct
+from ..builtins import uint8,uint16,uint32,uint64,int8,int16,int32,int64,float32,float64
 
-list_types = [aff3ct.uint8,aff3ct.uint16,aff3ct.uint32,aff3ct.uint64,aff3ct.int8,aff3ct.int16,aff3ct.int32,aff3ct.int64,aff3ct.float32,aff3ct.float64]
+list_types = [uint8,uint16,uint32,uint64,int8,int16,int32,int64,float32,float64]
 
 def pytest_generate_tests(metafunc):
 

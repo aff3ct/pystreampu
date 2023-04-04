@@ -4,7 +4,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from setuptools import Extension, setup
+from setuptools import Extension, setup, find_packages
 from setuptools.command.build_ext import build_ext
 
 # Convert distutils Windows platform specifiers to CMake -A arguments
@@ -135,7 +135,7 @@ setup(
     author_email="romain.tajan@ims-bordeaux.fr",
     description="Python bindings for the C++ AFF3CT library.",
     long_description="",
-    ext_modules=[CMakeExtension("aff3ct.builtins")],
+    ext_modules=[CMakeExtension("aff3ct.builtins", os.path.dirname(os.path.realpath(__file__)))],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     extras_require={},
@@ -146,10 +146,11 @@ setup(
     ],
     python_requires=">=3.7",
     package_dir={'aff3ct.array'   :'aff3ct/array',
+                 'aff3ct.core'    :'aff3ct/core',
                  'aff3ct.bop'     :'aff3ct/bop',
                  'aff3ct.uop'     :'aff3ct/uop',
                  'aff3ct.jit'     :'aff3ct/jit',
                  'aff3ct.test'    :'aff3ct/test',
                  'aff3ct.viz'     :'aff3ct/viz'},
-    packages=['aff3ct']
+    packages=find_packages()
 )

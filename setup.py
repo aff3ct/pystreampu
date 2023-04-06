@@ -41,7 +41,10 @@ class CMakeBuild(build_ext):
         # Can be set with Conda-Build, for example.
         cmake_generator = os.environ.get("CMAKE_GENERATOR", "")
 
-        ext_cxx_args = "-Wall -funroll-loops -march=native -fvisibility=hidden -fvisibility-inlines-hidden -faligned-new -Wno-overloaded-virtual"
+        cmake_cxx_flags = os.environ.get("CMAKE_CXX_FLAGS", "")
+
+        ext_cxx_args = cmake_cxx_flags + " -Wall -funroll-loops -fvisibility=hidden -fvisibility-inlines-hidden -faligned-new -Wno-overloaded-virtual"
+
         if debug:
             ext_cxx_args = "-g " + ext_cxx_args
         # Set Python_EXECUTABLE instead if you use PYBIND11_FINDPYTHON

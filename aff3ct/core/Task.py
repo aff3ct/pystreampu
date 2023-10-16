@@ -1,51 +1,61 @@
 from ..builtins.core import Task, Socket
 
-def getattr(tsk, sck_name):
+def ___getattr___(tsk, sck_name):
     try:
         return tsk.module[f"{tsk.name}::{sck_name}"]
     except:
         raise AttributeError(f"'{tsk.__class__.__name__}' object has no attribute '{sck_name}'")
 
-Task.__getattr__ = lambda tsk, attr: getattr(tsk, attr)
+Task.__getattr__ = lambda tsk, attr: ___getattr___(tsk, attr)
 
-def update_dir(tsk):
+def ___dir___(tsk):
     from builtins import object
     new_dir = object.__dir__(tsk)
     for t in tsk.sockets:
         new_dir.append(t.name)
     return new_dir
 
-Task.__dir__ = lambda m: update_dir(m)
+Task.__dir__ = lambda m: ___dir___(m)
 
-def task_call(slf, *args, **kwargs):
+def ___call___(slf, *args, **kwargs):
+    inputs  = []
+    outputs  = []
     str = "Parameters\n----------\n"
-    for s in slf.inputs:
-        str += f"\t{s.name}: Input of size {s.n_elmts/slf.module.n_frames}\n"
-    task_call.__doc__ = str
-    mdl = slf.module
-    if not hasattr(mdl,"__tag__"):
-        mdl.__tag__ = dict.fromkeys([tsk.name for tsk in slf.module.tasks], {})
+    for s in slf.sockets:
+        if s.direction == Socket.directions.IN:
+            str += f"\t{s.name}: Input socket of size {s.n_elmts/slf.module.n_frames}\n"
+            inputs.append(s)
+        elif s.direction == Socket.directions.OUT:
+            str += f"\t{s.name}: Output socket of size {s.n_elmts/slf.module.n_frames}\n"
+            outputs.append(s)
+        else:
+            str += f"\t{s.name}: Forward socket of size {s.n_elmts/slf.module.n_frames}\n"
+            inputs.append(s)
+            #outputs.append(s)
 
-    inputs  = slf.inputs
+    ___call___.__doc__ = str
+
     for i in range(len(args)):
         inputs[i].reset()
         inputs[i].bind(args[i])
-        mdl.__tag__[slf.name][inputs[i].name] = args[i].task.module
 
     for k,s in kwargs.items():
         slf[k].reset()
         slf[k].bind(s)
-        mdl.__tag__[slf.name][k] = s.task.module
 
     slf.exec()
-    rv = tuple([s for s in slf.outputs if s.name != "status"])
-    for v in rv:
-        v.__tag__ = mdl
+
+    for s_out in outputs:
+        s_out.__mdl__ = slf.module
+
+    rv = tuple([s for s in outputs if s.name != "status"])
     if len(rv) > 1:
         return rv
-    else:
+    elif len(rv) == 1:
         return rv[0]
+    else:
+        return None
 
-Task.__call__ = task_call
+Task.__call__ = ___call___
 
 __all__ = ["Task"]

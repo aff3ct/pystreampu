@@ -17,12 +17,12 @@ using namespace py::literals;
 PYBIND11_MODULE(builtins, m){
 	// Split in two following https://pybind11.readthedocs.io/en/stable/advanced/misc.html#avoiding-c-types-in-docstrings
 	// for enhancing python doc
-	//setControlMode(rang::control::Off);
+
 	m.attr("__name__") = "aff3ct.builtins";
 
 	m.doc() =
 R"pbdoc(
-        Python bindings for AFF3CT library.
+        Pyaf is a Python bindings for C++ AFF3CT-CORE library.
 
         .. autosummary::
            :toctree:
@@ -35,6 +35,7 @@ R"pbdoc(
 	pyaf::wrapper::wrap_dtypes(m);
 
 	py::module_ submod_tools = m.def_submodule("tools");
+
 	py::module_ submod_itf   = submod_tools.def_submodule("interfaces");
 	pyaf::wrapper::wrap_interface_clone           (submod_itf);
 	pyaf::wrapper::wrap_interface_is_done         (submod_itf);
@@ -44,7 +45,7 @@ R"pbdoc(
 	py::module_ m_core = m.def_submodule("core");
 	std::string doc_m_core =
 R"pbdoc(
-        Bindings for AFF3CT-CORE.
+        Bindings for the "core" of AFF3CT.
 
         .. autosummary::
            :toctree:
@@ -54,9 +55,8 @@ R"pbdoc(
 
 	std::vector<std::unique_ptr<pyaf::wrapper::Wrapper_py>> wrappers;
 
-
-	wrappers.push_back(std::unique_ptr<pyaf::wrapper::Wrapper_py>(new pyaf::wrapper::Wrapper_Socket(m_core)));
-	wrappers.push_back(std::unique_ptr<pyaf::wrapper::Wrapper_py>(new pyaf::wrapper::Wrapper_Task  (m_core)));
+	pyaf::wrapper::wrap_socket(m_core);
+	pyaf::wrapper::wrap_task(m_core);
 	wrappers.push_back(std::unique_ptr<pyaf::wrapper::Wrapper_py>(new pyaf::wrapper::Wrapper_Module(m_core)));
 
 	for (size_t i = 0; i < wrappers.size(); i++)
@@ -73,6 +73,7 @@ R"pbdoc(
 	pyaf::wrapper::wrap_array(submod_arr);
 
 	pyaf::wrapper::wrap_range(m);
+	pyaf::wrapper::wrap_slicer(m);
 
 	py::module_ submod_bop = m.def_submodule("bop");
 	pyaf::wrapper::wrap_binaryop(submod_bop);

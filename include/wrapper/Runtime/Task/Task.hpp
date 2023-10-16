@@ -23,18 +23,12 @@ class Task_Publicist : public Task
 }
 }
 
+
 namespace pyaf
 {
 namespace wrapper
 {
-class Wrapper_Task : public Wrapper_py,
-                     public py::class_<aff3ct::runtime::Task, std::shared_ptr<aff3ct::runtime::Task>, aff3ct::runtime::Task_Publicist>
-{
-	public:
-	Wrapper_Task(py::handle scope);
-	virtual void definitions();
-	virtual ~Wrapper_Task() = default;
-};
+	void wrap_task(py::handle scope);
 }
 }
 

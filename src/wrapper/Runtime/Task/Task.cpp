@@ -14,25 +14,19 @@ using namespace aff3ct::module;
 using namespace pyaf::wrapper;
 using namespace aff3ct::runtime;
 
-Wrapper_Task
-::Wrapper_Task(py::handle scope)
-: Wrapper_py(),
-  py::class_<aff3ct::runtime::Task, std::shared_ptr<aff3ct::runtime::Task>, aff3ct::runtime::Task_Publicist>(scope, "Task", py::dynamic_attr())
+void pyaf::wrapper::wrap_task(py::handle scope)
 {
-}
+	py::class_ <aff3ct::runtime::Task, std::shared_ptr<aff3ct::runtime::Task>, aff3ct::runtime::Task_Publicist> py_task(scope, "Task");
 
-void Wrapper_Task
-::definitions()
-{
-	this->def_property_readonly("name",    &aff3ct::runtime::Task::get_name);
-	this->def_property_readonly("sockets", [](aff3ct::runtime::Task& t) -> std::vector<std::shared_ptr<aff3ct::runtime::Socket>>
+	py_task.def_property_readonly("name",    &aff3ct::runtime::Task::get_name);
+	py_task.def_property_readonly("sockets", [](aff3ct::runtime::Task& t) -> std::vector<std::shared_ptr<aff3ct::runtime::Socket>>
 	{
 		return t.sockets;
 	});
 
-	this->def("can_exec",&aff3ct::runtime::Task::can_exec);
+	py_task.def("can_exec",&aff3ct::runtime::Task::can_exec);
 
-	this->def_property_readonly("inputs", [](aff3ct::runtime::Task& t)
+	py_task.def_property_readonly("inputs", [](aff3ct::runtime::Task& t)
 	{
 		std::vector<aff3ct::runtime::Socket*> in;
 
@@ -43,7 +37,18 @@ void Wrapper_Task
 		return in;
 	});
 
-	this->def_property_readonly("outputs", [](aff3ct::runtime::Task& t)
+	py_task.def_property_readonly("forwards", [](aff3ct::runtime::Task& t)
+	{
+		std::vector<aff3ct::runtime::Socket*> fwd;
+
+		for(auto s:t.sockets)
+			if (t.get_socket_type(*s) == aff3ct::runtime::socket_t::SFWD)
+				fwd.push_back(s.get());
+
+		return fwd;
+	});
+
+	py_task.def_property_readonly("outputs", [](aff3ct::runtime::Task& t)
 	{
 		std::vector<aff3ct::runtime::Socket*> out;
 		auto sockets = t.sockets;
@@ -53,7 +58,7 @@ void Wrapper_Task
 		return out;
 	});
 
-	this->def("exec",
+	py_task.def("exec",
 		[](aff3ct::runtime::Task &self, const int frame_id, const bool managed_memory)
 		{
 			py::scoped_ostream_redirect stream(
@@ -64,59 +69,57 @@ void Wrapper_Task
 			self.exec(frame_id, managed_memory);
 		},
 		"frame_id"_a = -1, "managed_memory"_a = true);
-	this->def("__getitem__",  [](aff3ct::runtime::Task& t, const std::string& s)
+	py_task.def("__getitem__",  [](aff3ct::runtime::Task& t, const std::string& s)
 	{
 		auto& m = t.get_module();
 		return py::cast(&m[t.get_name() + "::" + s]);
 	}, py::return_value_policy::reference);
-	this->def_property_readonly("module", &aff3ct::runtime::Task::get_module, py::return_value_policy::reference);
-	this->def_property("debug", &aff3ct::runtime::Task::is_debug, &aff3ct::runtime::Task::set_debug);
-	this->def_property("stats", &aff3ct::runtime::Task::is_stats, &aff3ct::runtime::Task::set_stats);
-	this->def_property("fast" , &aff3ct::runtime::Task::is_fast,  &aff3ct::runtime::Task::set_fast );
-	this->def_property_readonly("n_calls",         &aff3ct::runtime::Task::get_n_calls       );
-	this->def_property_readonly("total_duration", [](const aff3ct::runtime::Task& self)
+	py_task.def_property_readonly("module", &aff3ct::runtime::Task::get_module, py::return_value_policy::reference);
+	py_task.def_property("debug", &aff3ct::runtime::Task::is_debug, &aff3ct::runtime::Task::set_debug);
+	py_task.def_property("stats", &aff3ct::runtime::Task::is_stats, &aff3ct::runtime::Task::set_stats);
+	py_task.def_property("fast" , &aff3ct::runtime::Task::is_fast,  &aff3ct::runtime::Task::set_fast );
+	py_task.def_property_readonly("n_calls",         &aff3ct::runtime::Task::get_n_calls       );
+	py_task.def_property_readonly("total_duration", [](const aff3ct::runtime::Task& self)
 	{
 		if(self.is_stats())
 			return std::chrono::duration<double>(self.get_duration_total()).count();
 		else
 			return double(0.0f);
 	});
-	this->def_property_readonly("avg_duration", [](const aff3ct::runtime::Task& self)
+	py_task.def_property_readonly("avg_duration", [](const aff3ct::runtime::Task& self)
 	{
 		if(self.is_stats())
 			return std::chrono::duration<double>(self.get_duration_avg()).count();
 		else
 			return double(0.0f);
 	});
-	this->def_property_readonly("min_duration", [](const aff3ct::runtime::Task& self)
+	py_task.def_property_readonly("min_duration", [](const aff3ct::runtime::Task& self)
 	{
 		if(self.is_stats())
 			return std::chrono::duration<double>(self.get_duration_min()).count();
 		else
 			return double(0.0f);
 	});
-	this->def_property_readonly("max_duration", [](const aff3ct::runtime::Task& self)
+	py_task.def_property_readonly("max_duration", [](const aff3ct::runtime::Task& self)
 	{
 		if(self.is_stats())
 			return std::chrono::duration<double>(self.get_duration_max()).count();
 		else
 			return double(0.0f);
 	});
-	this->def("reset", &aff3ct::runtime::Task::reset);
-	this->def("bind", [](aff3ct::runtime::Task& self, aff3ct::runtime::Socket& s_out, const int priority)
+	py_task.def("reset", &aff3ct::runtime::Task::reset);
+	py_task.def("bind", [](aff3ct::runtime::Task& self, aff3ct::runtime::Socket& s_out, const int priority)
 	{
 		self.bind(s_out, priority);
 	}, "Binds the Task to socket 's_out' with priority 'priority'.", "s_out"_a, "priority"_a=1);
 
-	this->def("is_bound"           , &aff3ct::runtime::Task::is_bound                          );
-	this->def("set_debug_hex"      , &aff3ct::runtime::Task::set_debug_hex      , "debug_hex"_a);
-	this->def("set_debug_limit"    , &aff3ct::runtime::Task::set_debug_limit    , "limit"_a    );
-	this->def("set_debug_precision", &aff3ct::runtime::Task::set_debug_precision, "prec"_a     );
-	this->def("set_debug_frame_max", &aff3ct::runtime::Task::set_debug_frame_max, "limit"_a    );
+	py_task.def("is_bound"           , &aff3ct::runtime::Task::is_bound                          );
+	py_task.def("set_debug_hex"      , &aff3ct::runtime::Task::set_debug_hex      , "debug_hex"_a);
+	py_task.def("set_debug_limit"    , &aff3ct::runtime::Task::set_debug_limit    , "limit"_a    );
+	py_task.def("set_debug_precision", &aff3ct::runtime::Task::set_debug_precision, "prec"_a     );
+	py_task.def("set_debug_frame_max", &aff3ct::runtime::Task::set_debug_frame_max, "limit"_a    );
 
-
-
-	/*this->def("__call__", [](aff3ct::runtime::Task& self, py::args args, const py::kwargs& kwargs)
+	/*py_task.def("__call__", [](aff3ct::runtime::Task& self, py::args args, const py::kwargs& kwargs)
 	{
 		py::list outputs;
 		std::vector<std::shared_ptr<aff3ct::runtime::Socket>> inputs;
@@ -258,7 +261,7 @@ void Wrapper_Task
 	}, py::return_value_policy::reference);*/
 
 
-	/*this->def("__getattr__", [](aff3ct::runtime::Task& t, const std::string& attr){
+	/*py_task.def("__getattr__", [](aff3ct::runtime::Task& t, const std::string& attr){
 		try
 		{
 			auto& m = t.get_module();
@@ -270,7 +273,7 @@ void Wrapper_Task
 		}
 
 	},"If 'attr' is a socket name, task.attr returns the corresponding socket.", "attr"_a, py::keep_alive<0,1>());
-	this->def("__dir__", [](const aff3ct::runtime::Task& t){
+	py_task.def("__dir__", [](const aff3ct::runtime::Task& t){
 
 		py::list ret = py::module::import("builtins").attr("object").attr("__dir__")(py::cast(t));
 		for (auto & s : t.sockets)

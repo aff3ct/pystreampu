@@ -3,6 +3,7 @@ from . import core
 
 help    = builtins.help
 range   = builtins.Range
+dtype   = builtins.dtype
 uint8   = builtins.uint8
 uint16  = builtins.uint16
 uint32  = builtins.uint32
@@ -21,6 +22,14 @@ from . import bop
 
 from .uop.__uop_patch__ import *
 from . import uop
+
+def __dtype_call__(slf, data):
+    if type(data) is Socket:
+        return data.astype(slf)
+    else:
+        return array(data, dtype = slf)
+
+dtype.__call__ = lambda slf, data: __dtype_call__(slf, data)
 
 from .jit.jit import *
 from .viz.viz import *

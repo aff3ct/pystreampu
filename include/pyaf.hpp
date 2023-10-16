@@ -20,6 +20,7 @@
 #include "wrapper/Module/Binaryop/Binaryop.hpp"
 #include "wrapper/Module/Range/Range.hpp"
 #include "wrapper/Module/Reducer/Reducer.hpp"
+#include "wrapper/Module/Slicer/Slicer.hpp"
 #include "wrapper/Module/Subsequence/Subsequence.hpp"
 #include "wrapper/Module/Switcher/Switcher.hpp"
 #include "wrapper/Module/Unaryop/Unaryop.hpp"

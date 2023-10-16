@@ -20,6 +20,11 @@
             "border" : "1",
             "bgcolor":"#90ee90"
         },
+        "socket.forward":{
+            "style" : "rounded",
+            "border" : "1",
+            "bgcolor":"#dda0dd"
+        },
         "socket.empty":{
             "bgcolor" : "#ffffff",
             "border" : "0"
@@ -48,6 +53,11 @@
             "border" : "1",
             "bgcolor":"#90ee90",
             "color":"#ff0000"
+        },
+        "socket.forward":{
+            "style" : "rounded",
+            "border" : "1",
+            "bgcolor":"#dda0dd"
         },
         "socket.empty":{
             "bgcolor" : "#ffffff",

@@ -12,7 +12,7 @@ namespace pyaf
 {
 namespace wrapper
 {
-class Wrapper_Socket : public Wrapper_py,
+/*class Wrapper_Socket : public Wrapper_py,
                        public py::class_<aff3ct::runtime::Socket, aff3ct::tools::Interface_reset, std::shared_ptr<aff3ct::runtime::Socket>>//, aff3ct::tools::Interface_reset
 {
 	protected:
@@ -23,10 +23,13 @@ class Wrapper_Socket : public Wrapper_py,
 	Wrapper_Socket(py::handle scope);
 	virtual void definitions();
 	virtual ~Wrapper_Socket() = default;
-};
+};*/
+	//py::object bop_wrapping(aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& other);
+	void wrap_socket(py::handle scope);
 }
 }
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+
+/*#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #include "Socket.hxx"
-#endif
+#endif*/
 #endif //BIND_SOCKET_HPP_

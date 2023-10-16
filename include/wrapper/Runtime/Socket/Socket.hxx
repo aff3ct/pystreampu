@@ -1,4 +1,4 @@
-#include "Socket.hpp"
+/*#include "Socket.hpp"
 #include "wrapper/Common/Tools/type_functions.h"
 
 using namespace aff3ct::runtime;
@@ -8,8 +8,7 @@ namespace pyaf
 namespace wrapper
 {
 	template <typename TI, typename TO, aff3ct::tools::proto_bop<TI,TO> BOP>
-	py::object Wrapper_Socket
-	::bop_wrapping(aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& other){
+	py::object bop_wrapping(aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& other){
 		auto binary_op = new aff3ct::module::Binaryop<TI,TO,BOP>(self.get_n_elmts());
 		(*binary_op)[aff3ct::module::bop::sck::perform::in1].bind(self);
 		(*binary_op)[aff3ct::module::bop::sck::perform::in2].bind(other);
@@ -60,4 +59,4 @@ namespace wrapper
 		}                                                                                              \
 	}
 }
-}
+}*/

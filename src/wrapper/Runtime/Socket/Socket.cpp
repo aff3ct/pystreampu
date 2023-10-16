@@ -28,17 +28,17 @@ std::map<std::type_index, std::string> type_map = {{typeid(int8_t  ), py::format
                                                    {typeid(float   ), py::format_descriptor<float   >::format()},
                                                    {typeid(double  ), py::format_descriptor<double  >::format()}};
 
-Wrapper_Socket
-::Wrapper_Socket(py::handle scope)
-: Wrapper_py(),
-  py::class_<Socket, aff3ct::tools::Interface_reset, std::shared_ptr<Socket>>(scope, "Socket", py::buffer_protocol(), py::dynamic_attr())
-{
-}
 
-void Wrapper_Socket
-::definitions()
+void pyaf::wrapper::wrap_socket(py::handle scope)
 {
-	this->def_buffer([](Socket &s) -> py::buffer_info{
+	py::class_<Socket, aff3ct::tools::Interface_reset, std::shared_ptr<Socket>> py_socket(scope, "Socket", py::buffer_protocol(), py::dynamic_attr());
+
+	py::enum_<socket_t>(py_socket, "directions")
+      .value("IN",  socket_t::SIN)
+      .value("OUT", socket_t::SOUT)
+	  .value("FWD", socket_t::SFWD);
+
+	py_socket.def_buffer([](Socket &s) -> py::buffer_info{
 	if (s.get_name() == "status")
 	{
 		size_t n_w = (size_t)s.get_task().get_module().get_n_waves();
@@ -78,38 +78,38 @@ void Wrapper_Socket
 		}
 	}
 	});
-	this->def_property_readonly("task", &aff3ct::runtime::Socket::get_task, py::return_value_policy::reference);
-	this->def_property_readonly("n_elmts", &aff3ct::runtime::Socket::get_n_elmts);
-	this->def_property_readonly("dtype", [](const aff3ct::runtime::Socket& self){return pyaf::dtype::get(self.get_datatype_string());});
-	this->def_property_readonly("bound_sockets", &aff3ct::runtime::Socket::get_bound_sockets, py::return_value_policy::reference);
-	this->def_property_readonly("bound_socket", static_cast<Socket&(Socket::*)()>(&aff3ct::runtime::Socket::get_bound_socket), py::keep_alive<0, 1>());
+	py_socket.def_property_readonly("task", &aff3ct::runtime::Socket::get_task, py::return_value_policy::reference);
+	py_socket.def_property_readonly("n_elmts", &aff3ct::runtime::Socket::get_n_elmts);
+	py_socket.def_property_readonly("dtype", [](const aff3ct::runtime::Socket& self){return pyaf::dtype::get(self.get_datatype_string());});
+	py_socket.def_property_readonly("bound_sockets", &aff3ct::runtime::Socket::get_bound_sockets, py::return_value_policy::reference);
+	py_socket.def_property_readonly("bound_socket", static_cast<Socket&(Socket::*)()>(&aff3ct::runtime::Socket::get_bound_socket), py::keep_alive<0, 1>());
 
-	this->def("has_data", [](const aff3ct::runtime::Socket& self)
+	py_socket.def("has_data", [](const aff3ct::runtime::Socket& self)
 	{
 		return self.get_dataptr() != nullptr;
 	});
-	this->def_property_readonly("dataaddr", [](const aff3ct::runtime::Socket& self){
+	py_socket.def_property_readonly("dataaddr", [](const aff3ct::runtime::Socket& self){
 		std::stringstream ss;
 		ss << self.get_dataptr();
 		return ss.str();
 	});
 
-	this->def_property_readonly("numpy", [](aff3ct::runtime::Socket& self)
+	py_socket.def_property_readonly("numpy", [](aff3ct::runtime::Socket& self)
 	{
 		py::array array = py::cast(self);
 		return array;
 	});
-	this->def("__getitem__", [](aff3ct::runtime::Socket& sckt, py::handle& index) {
+	py_socket.def("__getitem__", [](aff3ct::runtime::Socket& sckt, py::handle& index) {
 		py::array array = py::cast(sckt);
 		return array.attr("__getitem__")(index);
 		},py::return_value_policy::reference);
 
-	this->def("__setitem__", [](aff3ct::runtime::Socket& sckt, py::handle& index, py::handle& value) {
+	py_socket.def("__setitem__", [](aff3ct::runtime::Socket& sckt, py::handle& index, py::handle& value) {
 		py::array arr = py::cast(sckt);
 		arr.attr("__setitem__")(index, value);
 		},py::return_value_policy::reference);
 
-	this->def("__bool__", [](const aff3ct::runtime::Socket& sckt) {
+	py_socket.def("__bool__", [](const aff3ct::runtime::Socket& sckt) {
 		size_t n_frames = sckt.get_task().get_module().get_n_frames();
 		size_t n        = sckt.get_n_elmts()/n_frames;
 		if (n > n_frames)
@@ -136,12 +136,12 @@ void Wrapper_Socket
 		}
 	});
 
-	this->def("bind", [](aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& s_out, const int priority)
+	py_socket.def("__bind__", [](aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& s_out, const int priority)
 	{
 		self.bind(s_out, priority);
 	}, "Binds the socket to socket 's_out' with priority 'priority'.", "s_out"_a, "priority"_a=1);
 
-	/*this->def("bind", [](aff3ct::runtime::Socket& self, const float& cst)
+	/*py_socket.def("bind", [](aff3ct::runtime::Socket& self, const float& cst)
 	{
 		aff3ct::module::Task&   t = self.get_task();
 		if (t.get_socket_type(self) == socket_t::SOUT )
@@ -169,8 +169,8 @@ void Wrapper_Socket
 		self_.attr("__tag__") = py::cast(std::unique_ptr<aff3ct::module::Source_array<float>>(std::move(cst_mdl)));
 	}
 	);*/
-
-	this->def("bind", [](aff3ct::runtime::Socket& self, py::array& arr)
+	/*
+	py_socket.def("bind", [](aff3ct::runtime::Socket& self, py::array& arr)
 	{
 		size_t n_row = (size_t)self.get_task().get_module().get_n_frames();
 		size_t n_col = (size_t)self.get_n_elmts()/n_row;
@@ -204,28 +204,31 @@ void Wrapper_Socket
 		if (!arr.dtype().is(py_self.dtype()))
 		{
 			std::stringstream message;
-			message << "The dtype of the array must match the socket one.";
-			message << "Socket dtype: " << py_self.dtype().attr("name").cast<std::string>() << ".";
+			message << "The dtype of the array must match the socket one.\n";
+			message << "Socket dtype: " << py_self.dtype().attr("name").cast<std::string>() << ".\n";
 			message << "Array dtype: " << arr.dtype().attr("name").cast<std::string>() << ".\n";
 			throw std::runtime_error(message.str());
 		}
 
 		self.bind(buffer.ptr);
-	}, "Binds the socket to the numpy array 'array' with priority 'priority'.", "array"_a);
-	this->def_property_readonly("name", &aff3ct::runtime::Socket::get_name);
-	this->def_property_readonly("direction", [](const aff3ct::runtime::Socket& self)
+	}, "Binds the socket to the numpy array 'array' with priority 'priority'.", "array"_a);*/
+	py_socket.def_property_readonly("name", &aff3ct::runtime::Socket::get_name);
+	py_socket.def_property_readonly("direction", [](const aff3ct::runtime::Socket& self)
 	{
 		aff3ct::runtime::Task&   t = self.get_task();
-		if (t.get_socket_type(self) == socket_t::SIN )
+		return t.get_socket_type(self);
+		/*if (t.get_socket_type(self) == socket_t::SIN )
 			return("in");
 		else if (t.get_socket_type(self) == socket_t::SOUT )
 			return("out");
+		else if (t.get_socket_type(self) == socket_t::SFWD )
+			return("fwd");
 		else // This should not happen
 		{
 			std::stringstream message;
 			message << "Unknown socket direction.";
 			throw std::runtime_error(message.str());
-		}
+		}*/
 	});
 
 };

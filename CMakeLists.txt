@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.6)
 cmake_policy(SET CMP0054 NEW)
 
-project (pyaf_builtins VERSION ${VERSION_INFO})
+project (pyaf VERSION ${VERSION_INFO})
 
 # Enable C++17
 set(CMAKE_CXX_STANDARD 17)
@@ -21,18 +21,30 @@ file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/*)
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/aff3ct-core/include/aff3ct-core.hpp")
     option(AFF3CT_CORE_COMPILE_STATIC_LIB "" ON)
     option(AFF3CT_CORE_COMPILE_SHARED_LIB "" OFF)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/aff3ct-core/ EXCLUDE_FROM_ALL)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/aff3ct-core/)
+
     message(STATUS "Sub-project found: aff3ct-core")
 else()
     message(FATAL_ERROR "aff3ct-core can't be found, try to init the submodule with the following cmd:\n"
                         "$ git submodule update --init --recursive")
 endif()
 
+
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/pybind11/)
 
 # `pybind11_add_module` is a wrapper of the CMake `add_library` function
-pybind11_add_module(builtins MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/pyaf.cpp ${SRC_FILES} ${HEADER_FILES})
-include_directories(builtins PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set_target_properties(builtins PROPERTIES OUTPUT_NAME builtins POSITION_INDEPENDENT_CODE ON PRIVATE VERSION_INFO=${VERSION_INFO}) #  set -fpic
+pybind11_add_module(_ext MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/pyaf.cpp ${SRC_FILES} ${HEADER_FILES})
 
-target_link_libraries(builtins PRIVATE aff3ct-core-static-lib)
+set(pybind11_INCLUDE_DIRS)
+
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/pybind11/include
+        DESTINATION ${CMAKE_INSTALL_PREFIX}
+        FILES_MATCHING PATTERN "*.h")
+
+include_directories(_ext PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set_target_properties(_ext PROPERTIES OUTPUT_NAME _ext
+                           POSITION_INDEPENDENT_CODE ON
+                           PRIVATE VERSION_INFO=${VERSION_INFO}) #  set -fpic
+
+target_link_libraries(_ext PRIVATE aff3ct-core-static-lib)
+

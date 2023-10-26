@@ -1,4 +1,5 @@
-from ..builtins.core import Task, Socket
+from aff3ct._ext.core import Task
+from ._socket import Socket
 
 def ___getattr___(tsk, sck_name):
     try:
@@ -36,16 +37,19 @@ def ___call___(slf, *args, **kwargs):
     ___call___.__doc__ = str
 
     for i in range(len(args)):
+        inputs[i].__class__ = Socket
         inputs[i].reset()
         inputs[i].bind(args[i])
 
     for k,s in kwargs.items():
+        slf[k].__class__ = Socket
         slf[k].reset()
         slf[k].bind(s)
 
     slf.exec()
 
     for s_out in outputs:
+        s_out.__class__ = Socket
         s_out.__mdl__ = slf.module
 
     rv = tuple([s for s in outputs if s.name != "status"])

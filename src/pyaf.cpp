@@ -14,15 +14,15 @@ using namespace py::literals;
 
 
 #define PYBIND11_DETAILED_ERROR_MESSAGES
-PYBIND11_MODULE(builtins, m){
-	// Split in two following https://pybind11.readthedocs.io/en/stable/advanced/misc.html#avoiding-c-types-in-docstrings
-	// for enhancing python doc
+PYBIND11_MODULE(_ext, m){
+	 //Split in two following https:pybind11.readthedocs.io/en/stable/advanced/misc.html#avoiding-c-types-in-docstrings
+	 //for enhancing python doc
 
-	m.attr("__name__") = "aff3ct.builtins";
+	//m.attr("__name__") = "aff3ct._ext";
 
 	m.doc() =
 R"pbdoc(
-        Pyaf is a Python bindings for C++ AFF3CT-CORE library.
+        Python bindings for C++ AFF3CT library.
 
         .. autosummary::
            :toctree:

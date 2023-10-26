@@ -1,4 +1,4 @@
-from ..array.array import array
+from aff3ct import array
 import numpy as np
 import pytest
 

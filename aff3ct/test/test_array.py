@@ -1,4 +1,4 @@
-from ..array.array import array, arange
+from aff3ct import array, arange
 import numpy as np
 
 def test_array_type(dtype):

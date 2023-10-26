@@ -94,12 +94,12 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		return ss.str();
 	});
 
-	py_socket.def_property_readonly("numpy", [](aff3ct::runtime::Socket& self)
+	/*py_socket.def_property_readonly("numpy", [](aff3ct::runtime::Socket& self)
 	{
 		py::array array = py::cast(self);
 		return array;
-	});
-	py_socket.def("__getitem__", [](aff3ct::runtime::Socket& sckt, py::handle& index) {
+	});*/
+	/*py_socket.def("__getitem__", [](aff3ct::runtime::Socket& sckt, py::handle& index) {
 		py::array array = py::cast(sckt);
 		return array.attr("__getitem__")(index);
 		},py::return_value_policy::reference);
@@ -107,7 +107,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 	py_socket.def("__setitem__", [](aff3ct::runtime::Socket& sckt, py::handle& index, py::handle& value) {
 		py::array arr = py::cast(sckt);
 		arr.attr("__setitem__")(index, value);
-		},py::return_value_policy::reference);
+		},py::return_value_policy::reference);*/
 
 	py_socket.def("__bool__", [](const aff3ct::runtime::Socket& sckt) {
 		size_t n_frames = sckt.get_task().get_module().get_n_frames();

@@ -6,6 +6,7 @@ from pathlib import Path
 
 from setuptools import Extension, setup, find_packages
 from setuptools.command.build_ext import build_ext
+import setuptools.command.install
 
 # Convert distutils Windows platform specifiers to CMake -A arguments
 PLAT_TO_CMAKE = {
@@ -14,7 +15,6 @@ PLAT_TO_CMAKE = {
     "win-arm32": "ARM",
     "win-arm64": "ARM64",
 }
-
 
 # A CMakeExtension needs a sourcedir instead of a file list.
 # The name must be the _single_ output extension from the CMake build.
@@ -43,7 +43,7 @@ class CMakeBuild(build_ext):
 
         cmake_cxx_flags = os.environ.get("CMAKE_CXX_FLAGS", "")
 
-        ext_cxx_args = cmake_cxx_flags + " -Wall -funroll-loops -fvisibility=hidden -fvisibility-inlines-hidden -faligned-new -Wno-overloaded-virtual"
+        ext_cxx_args = cmake_cxx_flags + " -Wall -funroll-loops -fvisibility=hidden -fvisibility-inlines-hidden -Wno-overloaded-virtual"
 
         if debug:
             ext_cxx_args = "-g " + ext_cxx_args
@@ -55,12 +55,13 @@ class CMakeBuild(build_ext):
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_BUILD_TYPE={cfg}",  # not used on MSVC, but no harm
+            f"-DCMAKE_INSTALL_PREFIX={extdir}{os.sep}"
         ]
         build_args = []
         # Adding CMake arguments set as environment variable
         # (needed e.g. to build for ARM OSx on conda-forge)
         if "CMAKE_ARGS" in os.environ:
-            cmake_args += [item for item in os.environ["CMAKE_ARGS"].split(" ") if item]
+            cmake_args += [os.environ["CMAKE_ARGS"]]#[item for item in os.environ["CMAKE_ARGS"].split(" ") if item]
 
         # In this example, we pass in the version to C++. You might not need to.
         cmake_args += [f"-DVERSION_INFO={self.distribution.get_version()}"]  # type: ignore[attr-defined]
@@ -127,19 +128,29 @@ class CMakeBuild(build_ext):
         subprocess.run(
             ["cmake", "--build", ".", *build_args], cwd=build_temp, check=True
         )
+        subprocess.run(
+            ["cmake", "--install", ".", *build_args], cwd=build_temp, check=True
+        )
+
+class install(setuptools.command.install.install):
+    def run(self):
+        super().run()
 
 
+
+if __name__ == "__main__":
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
-setup(
+    setup(
     name="aff3ct",
     version="0.0.1",
     author="Romain Tajan",
     author_email="romain.tajan@ims-bordeaux.fr",
     description="Python bindings for the C++ AFF3CT library.",
     long_description="",
-    ext_modules=[CMakeExtension("aff3ct.builtins", os.path.dirname(os.path.realpath(__file__)))],
-    cmdclass={"build_ext": CMakeBuild},
+    ext_modules=[CMakeExtension("aff3ct._ext", os.path.dirname(os.path.realpath(__file__)))],
+    cmdclass={"build_ext": CMakeBuild,
+              "install": install},
     zip_safe=False,
     extras_require={},
     install_requires=[
@@ -148,12 +159,7 @@ setup(
         'pytest',
     ],
     python_requires=">=3.7",
-    package_dir={'aff3ct.array'   :'aff3ct/array',
-                 'aff3ct.core'    :'aff3ct/core',
-                 'aff3ct.bop'     :'aff3ct/bop',
-                 'aff3ct.uop'     :'aff3ct/uop',
-                 'aff3ct.jit'     :'aff3ct/jit',
-                 'aff3ct.test'    :'aff3ct/test',
-                 'aff3ct.viz'     :'aff3ct/viz'},
+    #package_dir={'aff3ct.test' :'aff3ct/test'},
+    package_data={'aff3ct' : ["include/pybind11/*.h", "include/pybind11/detail/*.h"]},
     packages=find_packages()
-)
+    )

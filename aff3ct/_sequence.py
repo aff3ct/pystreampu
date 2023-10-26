@@ -1,4 +1,4 @@
-from ..builtins.core import Sequence
+from aff3ct._ext.core import Sequence
 
 def get_firsts(s):
     def visit(s, visited):

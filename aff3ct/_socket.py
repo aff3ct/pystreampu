@@ -34,7 +34,7 @@ class Socket(aff3ct._ext.core.Socket):
     @classmethod
     def from_array(cls, input, dtype:aff3ct.dtype = None, n_frames:int = 1):
         """
-        Creates a module with a task that produces the same data as in arr.
+        :returns: an output Socket that contains the same data as in input.
 
         Parameters
         ----------
@@ -69,12 +69,13 @@ class Socket(aff3ct._ext.core.Socket):
     def bind(self:"Socket", s_out, priority:int = 1) -> None:
         """
         Binds self to s_out. If s_out is not a `Socket`, s_out is converted to a `Socket` first.
+
         Parameters
         ----------
         s_out : SocketLike
                 Socket to bind
 
-        priority : int
+        priority : :int:
                    Priority of the bind.
         """
         # The __tag__ attribute of module will store the modules which are binded to mdl
@@ -103,6 +104,7 @@ class Socket(aff3ct._ext.core.Socket):
     def _bop_factory(cls, name:str, s0:"Socket", s1:any, fwd = False, rev = False):
         """
         Binary operator factory from Sockets.
+
         Parameters
         ----------
         name : str
@@ -115,6 +117,11 @@ class Socket(aff3ct._ext.core.Socket):
               If true, performs operations in place.
         rev : bool
               If true, exchange s0 and s1.
+
+        Returns
+        -------
+        out : aff3ct.Socket
+              A Socket where the Binary operation is performed component-wise.
         """
         n_frames = s0.task.module.n_frames
         TI = s0.dtype
@@ -191,151 +198,151 @@ class Socket(aff3ct._ext.core.Socket):
         return slc.read(self)
 
     def __add__(self, value):
-        """Return self + s."""
+        """:return: self + s."""
         return Socket._bop_factory("add", self, value)
 
     def __iadd__(self, value):
-        """Return self += value."""
+        """:return: self += value."""
         return Socket._bop_factory("add", self, value, fwd=True)
 
     def __radd__(self, value):
-        """Return value + self."""
+        """:return: value + self."""
         return Socket._bop_factory("add", self, value, rev=True)
 
     def __sub__(self, value):
-        """Return self - s."""
+        """:return: self - s."""
         return Socket._bop_factory("sub", self, value)
 
     def __isub__(self, value):
-        """Return self -= value."""
+        """:return: self -= value."""
         return Socket._bop_factory("sub", self, value, fwd=True)
 
     def __rsub__(self, value):
-        """Return value - self."""
+        """:return: value - self."""
         return Socket._bop_factory("sub", self, value, rev=True)
 
     def __mul__(self, value):
-        """Return self * s."""
+        """:return: self * s."""
         return Socket._bop_factory("mul", self, value)
 
     def __imul__(self, value):
-        """Return self *= value."""
+        """:return: self *= value."""
         return Socket._bop_factory("mul", self, value, fwd=True)
 
     def __rmul__(self, value):
-        """Return value * self."""
+        """:return: value * self."""
         return Socket._bop_factory("mul", self, value, rev=True)
 
     def __truediv__(self, value):
-        """Return self / s."""
+        """:return: self / s."""
         return Socket._bop_factory("div", self, value)
 
     def __itruediv__(self, value):
-        """Return self /= value."""
+        """:return: self /= value."""
         return Socket._bop_factory("div", self, value, fwd=True)
 
     def __rtruediv__(self, value):
-        """Return value / self."""
+        """:return: value / self."""
         return Socket._bop_factory("div", self, value, rev=True)
 
     def __ge__(self, value):
-        """Return self >= s."""
+        """:return: self >= s."""
         return Socket._bop_factory("ge", self, value)
 
     def __rge__(self, value):
-        """Return value >= self."""
+        """:return: value >= self."""
         return Socket._bop_factory("ge", self, value, rev=True)
 
     def __gt__(self, value):
-        """Return self > s."""
+        """:return: self > s."""
         return Socket._bop_factory("gt", self, value)
 
     def __rgt__(self, value):
-        """Return value > self."""
+        """:return: value > self."""
         return Socket._bop_factory("gt", self, value, rev=True)
 
     def __eq__(self, value):
-        """Return self == s."""
+        """:return: self == s."""
         return Socket._bop_factory("eq", self, value)
 
     def __req__(self, value):
-        """Return value == self."""
+        """:return: value == self."""
         return Socket._bop_factory("eq", self, value, rev=True)
 
     def __neq__(self, value):
-        """Return self != s."""
+        """:return: self != s."""
         return Socket._bop_factory("neq", self, value)
 
     def __rneq__(self, value):
-        """Return value != self."""
+        """:return: value != self."""
         return Socket._bop_factory("neq", self, value, rev=True)
 
     def __le__(self, value):
-        """Return self <= s."""
+        """:return: self <= s."""
         return Socket._bop_factory("le", self, value)
 
     def __rle__(self, value):
-        """Return value <= self."""
+        """:return: value <= self."""
         return Socket._bop_factory("le", self, value, rev=True)
 
     def __lt__(self, value):
-        """Return self < s."""
+        """:return: self < s."""
         return Socket._bop_factory("lt", self, value)
 
     def __rlt__(self, value):
-        """Return value < self."""
+        """:return: value < self."""
         return Socket._bop_factory("lt", self, value, rev=True)
 
     def __and__(self, value):
-        """Return self & s."""
+        """:return: self & s."""
         return Socket._bop_factory("and", self, value)
 
     def __iand__(self, value):
-        """Return self &= value."""
+        """:return: self &= value."""
         return Socket._bop_factory("and", self, value, fwd=True)
 
     def __rand__(self, value):
-        """Return value & self."""
+        """:return: value & self."""
         return Socket._bop_factory("and", self, value, rev=True)
 
     def __or__(self, value):
-        """Return self | s."""
+        """:return: self | s."""
         return Socket._bop_factory("or", self, value)
 
     def __ior__(self, value):
-        """Return self |= value."""
+        """:return: self |= value."""
         return Socket._bop_factory("or", self, value, fwd=True)
 
     def __ror__(self, value):
-        """Return value | self."""
+        """:return: value | self."""
         return Socket._bop_factory("or", self, value, rev=True)
 
     def __xor__(self, value):
-        """Return self ^ s."""
+        """:return: self ^ s."""
         return Socket._bop_factory("xor", self, value)
 
     def __ixor__(self, value):
-        """Return self ^= value."""
+        """:return: self ^= value."""
         return Socket._bop_factory("xor", self, value, fwd=True)
 
     def __rxor__(self, value):
-        """Return value ^ self."""
+        """:return: value ^ self."""
         return Socket._bop_factory("xor", self, value, rev=True)
 
     def __abs__(self):
-        """Return |self|."""
+        """:return: |self|."""
         return Socket._uop_factory("abs", self)
 
     def __neg__(self):
-        """Return -self."""
+        """:return: -self."""
         return Socket._uop_factory("neg", self)
 
     def __invert__(self):
-        """Return ~self."""
+        """:return: ~self."""
         return Socket._uop_factory("not", self)
 
     def astype(self, dtype):
-        """Return a cast of self as dtype."""
+        """:return: a cast of self as dtype."""
         return Socket._uop_factory("cast", self, dtype)
 
     #Socket.astype       = lambda slf,dt : cast           (slf, dt)
@@ -355,30 +362,32 @@ def bitwise_or     (s0:Socket, s1:Socket): return Socket.bop_factory( "or",s0,s1
 def bitwise_xor    (s0:Socket, s1:Socket): return Socket.bop_factory("xor",s0,s1)
 def abs            (s : Socket):
     """Compute the absolute value of the elements of a Socket.
-Parameters
-----------
-s : :Socket:
-    Socket containing input data.
 
-Returns
--------
-out : :Socket:
-      Socket containing output data.
-"""
+    Parameters
+    ----------
+    s : Socket
+        Socket containing input data.
+
+    Returns
+    -------
+    out : Socket
+        Socket containing output data.
+    """
     return Socket.uop_factory("abs",s)
 
 def neg (s):
     """Compute the absolute value of the elements of a Socket.
-Parameters
-----------
-s : :Socket:
-    Socket containing input data.
 
-Returns
--------
-out : :Socket:
-      Socket containing output data.
-"""
+    Parameters
+    ----------
+    s : Socket
+        Socket containing input data.
+
+    Returns
+    -------
+    out : Socket
+        Socket containing output data.
+    """
     return Socket.uop_factory("neg",s)
 
 def bitwise_not(s): return Socket.uop_factory("not",s)

@@ -1,6 +1,6 @@
 r"Add some magic functions to :aff3ct._ext.core.Socket:"
 import numpy as np
-
+from typing import Union
 import aff3ct
 from aff3ct._ext      import Slicer
 from ._array          import array
@@ -180,7 +180,7 @@ class Socket(aff3ct._ext.core.Socket):
             self.__slicers__ = []
         self.__slicers__.append(slc)
 
-    def __getitem__(self:"Socket", key:slice|int):
+    def __getitem__(self:"Socket", key:Union[slice,int]):
         slc = None
         if type(key) is slice:
             start, stop, step = key.indices(self.n_elmts // self.task.module.n_frames)

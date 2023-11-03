@@ -1,4 +1,4 @@
-include README.md
+include README.md LICENSE lib/pybind11/LICENSE lib/aff3ct-core/LICENSE
 graft lib
 graft include
 graft src

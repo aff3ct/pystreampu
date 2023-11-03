@@ -6,3 +6,28 @@ requires = [
     "ninja; platform_system!='Windows'",
 ]
 build-backend = "setuptools.build_meta:__legacy__"
+
+[project]
+name = "aff3ct"
+version = "0.0.1"
+authors = [{name = "Romain Tajan", email= "romain.tajan@ims-bordeaux.fr"}]
+requires-python = ">=3.8"
+description = "A python wrapper for the AFF3CT library."
+license = {file = "LICENSE"}
+readme = "README.md"
+dependencies = [
+    "graphviz",
+    "numpy"
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = [
+    "test"
+]
+
+[tool.cibuildwheel]
+manylinux-x86_64-image = "manylinux2014"
+build-verbosity = 3
+test-requires = "pytest"
+test-command = "pytest --pyargs aff3ct --junitxml=./pyaf-core/report.xml"

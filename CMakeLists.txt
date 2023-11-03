@@ -6,7 +6,6 @@ project (pyaf VERSION ${VERSION_INFO})
 # Enable C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-MESSAGE( STATUS "CMAKE_CXX_FLAGS: " ${CMAKE_CXX_FLAGS} )
 
 # Link with the "Threads library (required to link with AFF3CT after)
 set(CMAKE_THREAD_PREFER_PTHREAD ON)

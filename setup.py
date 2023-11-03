@@ -132,9 +132,9 @@ class CMakeBuild(build_ext):
             ["cmake", "--install", ".", *build_args], cwd=build_temp, check=True
         )
 
-class install(setuptools.command.install.install):
-    def run(self):
-        super().run()
+#class install(setuptools.command.install.install):
+#    def run(self):
+#        super().run()
 
 
 
@@ -142,23 +142,22 @@ if __name__ == "__main__":
 # The information here can also be placed in setup.cfg - better separation of
 # logic and declaration, and simpler if you include description/version in a file.
     setup(
-    name="aff3ct",
-    version="0.0.1",
-    author="Romain Tajan",
-    author_email="romain.tajan@ims-bordeaux.fr",
-    description="Python bindings for the C++ AFF3CT library.",
-    long_description="",
+    #name="aff3ct",
+    #version="0.0.1",
+    #author="Romain Tajan",
+    #author_email="romain.tajan@ims-bordeaux.fr",
+    #description="Python bindings for the C++ AFF3CT library.",
+    #long_description="",
     ext_modules=[CMakeExtension("aff3ct._ext", os.path.dirname(os.path.realpath(__file__)))],
-    cmdclass={"build_ext": CMakeBuild,
-              "install": install},
+    cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     extras_require={},
-    install_requires=[
-        'graphviz',
-        'numpy',
-        'pytest',
-    ],
-    python_requires=">=3.7",
+    #install_requires=[
+    #    'graphviz',
+    #    'numpy',
+    #    'pytest',
+    #],
+    #python_requires=">=3.7",
     #package_dir={'aff3ct.test' :'aff3ct/test'},
     package_data={'aff3ct' : ["include/pybind11/*.h", "include/pybind11/detail/*.h"]},
     packages=find_packages()

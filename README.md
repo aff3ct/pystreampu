@@ -1,15 +1,19 @@
 # pyaf-core
 
 ## Getting started
-### Basic install
-Once you have cloned this repository just run the following command:
+### Install from the sources
+Clone the repository
+```
+git clone --recursive git@gitlab.inria.fr:fec/pyaf-core.git
+```
+then install `pyaf-core` using `pip3`
 ```
 pip3 install ./pyaf-core
 ```
-If you want more information during compilation, use `-v` option.
+If you want more information during compilation, use `-v` option of the `pip3` command.
 
 ### Install with debug mode
-To build using `debug` configuration set `DEBUG=1`.
+To build using `debug` configuration, set an environment variable `DEBUG=1` prior to install the library.
 
 For example the following command will compile the package `aff3ct` in `Debug` and `editable` mode, and shows the compilation output.
 ```

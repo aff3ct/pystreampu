@@ -1,25 +1,69 @@
-from aff3ct._ext.core import Module, Task, Socket
+
+# encoding: utf-8
+"""Add some python magic dedicated to aff3ct._ext.core.Module."""
+
+from __future__ import annotations
+
+from builtins import object
 from typing import Union
 
-def getattr_impl(cls:Module, attr:str)->Union[Task, Socket]:
+from aff3ct._ext.core import Module, Socket, Task
+
+
+def getattr_impl(self: Module, attr: str) -> Union[Task, Socket]:
+    """Overload __getattr__ of aff3ct._ext.core.Module.
+
+    module[task_name] will return the task named `task_name` of the module.
+
+    module[task_name::socket_name] will return the socket named `socket_name`
+    of the task `task_name` of the module.
+
+    Args:
+        self (Module): A Module
+        attr (str): attribute name
+
+    Returns:
+        out (Task): if attr is formatted as 'task_name'
+        out (Socket): if attr is formatted as 'task_name::socket_name'
+
+    Raises:
+        AttributeError: if no attribute can be found
+    """
     try:
-        return cls[attr]
-    except:
-        raise AttributeError(f"'{cls.__class__.__name__}' object has no attribute '{attr}'")
+        return self[attr]
+    except Exception as exc:
+        e_str = f"'{self.__class__.__name__}' object has no attribute '{attr}'"
+        raise AttributeError(e_str) from exc
 
 
-def dir_impl(cls:Module)->dict:
-    from builtins import object
-    new_dir = object.__dir__(cls)
-    for t in cls.tasks:
-        new_dir.append(t.name)
+def dir_impl(self: Module) -> dict:
+    """Add tasks of a module to its __dir__.
+
+    Args:
+        self (Module): A Module
+
+    Returns:
+        out (dict): task augmented Module's dict
+    """
+    new_dir = object.__dir__(self)
+    for tsk in self.tasks:
+        new_dir.append(tsk.name)
     return new_dir
 
-def setitem_impl(mdl:Module, str:str, sck:Socket)->None:
-    mdl[str].bind(sck)
+
+def setitem_impl(self: Module, attr: str, sck: Socket) -> None:
+    """Bind self[attr] to the socket sck.
+
+    Args:
+        self (Module): A Module
+        attr (str): attribute name (should name a task or a socket)
+        sck (Socket): socket to bind self[attr].
+    """
+    self[attr].bind(sck)
+
 
 Module.__getattr__ = getattr_impl
-Module.__dir__     = dir_impl
+Module.__dir__ = dir_impl
 Module.__setitem__ = setitem_impl
 
-__all__ = ["Module"]
+__all__ = ['Module']

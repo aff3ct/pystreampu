@@ -10,11 +10,26 @@ import numpy as np
 from . import _ext
 
 
+def _find_common_type(lst: list) -> _ext.dtype:
+    """Return the common type of a list.
+
+    Args:
+        lst (list): input list
+
+    Returns:
+        out (dtype): a common dtype for the list
+    """
+    dtype = _ext.float64
+    if all(isinstance(x, int) for x in lst):
+        dtype = _ext.int64
+    return dtype
+
+
 def array(
-        in_array: Union[list, np.ndarray],
-        n_frames: int = 1,
-        dtype: _ext.dtype = None
-        ) -> _ext.core.Socket:
+    in_array: Union[list, np.ndarray],
+    n_frames: int = 1,
+    dtype: _ext.dtype = None
+) -> _ext.core.Socket:
     """Build a socket either from a numpy.array or a list.
 
     Args:
@@ -29,29 +44,25 @@ def array(
         in_array = [in_array]
 
     if isinstance(in_array, list) and not dtype:
-        dtype = _ext.float64
-        if all(isinstance(x, int) for x in in_array):
-            dtype = _ext.int64
-
+        dtype = _find_common_type(in_array)
     elif isinstance(in_array, np.ndarray) and not dtype:
         dtype = getattr(_ext, in_array.dtype.type.__name__)
 
     lst = np.array(in_array, dtype=np.dtype(dtype.name))
     attr_name = f'Array_{dtype.name}'
+
     if lst.size == 1:
         mdl = getattr(_ext.arr, attr_name)(1, lst)
     else:
         mdl = getattr(_ext.arr, attr_name)(lst)
-    if n_frames > 1:
-        mdl.n_frames = n_frames
+
+    mdl.n_frames = n_frames
     return mdl.get()
 
 
 def zeros(
-        n_elmts: int = 1,
-        n_frames: int = 1,
-        dtype: _ext.dtype = _ext.float32
-        ) -> _ext.core.Socket:
+    n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32
+) -> _ext.core.Socket:
     """Build a socket filled with zeros.
 
     Args:
@@ -69,10 +80,8 @@ def zeros(
 
 
 def ones(
-        n_elmts: int = 1,
-        n_frames: int = 1,
-        dtype: _ext.dtype = _ext.float32
-        ) -> _ext.core.Socket:
+    n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32
+) -> _ext.core.Socket:
     """Build a socket filled with ones.
 
     Args:
@@ -90,12 +99,12 @@ def ones(
 
 
 def arange(
-        start: Union[int, float],
-        stop: Union[int, float],
-        step: Union[int, float] = 1,
-        n_frames: int = 1,
-        dtype: _ext.dtype = _ext.float32
-        ) -> _ext.core.Socket:
+    start: Union[int, float],
+    stop: Union[int, float],
+    step: Union[int, float] = 1,
+    n_frames: int = 1,
+    dtype: _ext.dtype = _ext.float32,
+) -> _ext.core.Socket:
     """Build a socket similar to np.arange.
 
     Args:

@@ -38,7 +38,7 @@ def bop(
         raise TypeError(ex_msg)
 
     try:
-        attr_name = f'Binaryop_{bop_name}_{input_type.name}_{output_type.name}'
+        attr_name = f"Binaryop_{bop_name}_{input_type.name}_{output_type.name}"
         return getattr(aff3ct._ext.bop, attr_name)(n_in0, n_in1)
     except AttributeError as exc:
         ex_msg = f"binary operator '{attr_name}' does not exist."

@@ -10,18 +10,18 @@ import numpy as np
 from . import _ext
 from ._array import array
 
-dtype   = _ext.dtype
-uint8   = _ext.uint8
-uint16  = _ext.uint16
-uint32  = _ext.uint32
-uint64  = _ext.uint64
-int8    = _ext.int8
-int16   = _ext.int16
-int32   = _ext.int32
-int64   = _ext.int64
+dtype = _ext.dtype
+uint8 = _ext.uint8
+uint16 = _ext.uint16
+uint32 = _ext.uint32
+uint64 = _ext.uint64
+int8 = _ext.int8
+int16 = _ext.int16
+int32 = _ext.int32
+int64 = _ext.int64
 float32 = _ext.float32
 float64 = _ext.float64
-Socket  = _ext.core.Socket
+Socket = _ext.core.Socket
 
 
 def _dtype_call(self: dtype, data: Union['Socket', 'np.array']) -> Socket:

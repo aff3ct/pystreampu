@@ -25,7 +25,7 @@ namespace module
 			T* x   = (T*)(t[ps_x ].get_dataptr());
 			T* nx  = (T*)(t[ps_nx].get_dataptr());
 
-			for (int i = 0; i < slicer.slice.size(); i++)
+			for (size_t i = 0; i < slicer.slice.size(); i++)
 				x[slicer.slice[i]] = nx[i];
 
 			return runtime::status_t::SUCCESS;
@@ -41,7 +41,7 @@ namespace module
 			T* x   = (T*)(t[p1s_x ].get_dataptr());
 			T* nx  = (T*)(t[p1s_nx].get_dataptr());
 
-			for (int i = 0; i < slicer.slice.size(); i++)
+			for (size_t i = 0; i < slicer.slice.size(); i++)
 				x[slicer.slice[i]] = nx[0];
 
 			return runtime::status_t::SUCCESS;
@@ -58,7 +58,7 @@ namespace module
 			T* x   = (T*)(t[p2s_x ].get_dataptr());
 			T* xs  = (T*)(t[p2s_xs].get_dataptr());
 
-			for (int i = 0; i < slicer.slice.size(); i++)
+			for (size_t i = 0; i < slicer.slice.size(); i++)
 				xs[i] = x[slicer.slice[i]];
 
 			return runtime::status_t::SUCCESS;

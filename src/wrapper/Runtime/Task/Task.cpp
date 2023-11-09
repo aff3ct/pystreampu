@@ -19,6 +19,7 @@ void pyaf::wrapper::wrap_task(py::handle scope)
 	py::class_ <aff3ct::runtime::Task, std::shared_ptr<aff3ct::runtime::Task>, aff3ct::runtime::Task_Publicist> py_task(scope, "Task");
 
 	py_task.def_property_readonly("name",    &aff3ct::runtime::Task::get_name);
+	py_task.def_property_readonly("doc", &aff3ct::runtime::Task::get_doc);
 	py_task.def_property_readonly("sockets", [](aff3ct::runtime::Task& t) -> std::vector<std::shared_ptr<aff3ct::runtime::Socket>>
 	{
 		return t.sockets;

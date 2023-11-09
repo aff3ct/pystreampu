@@ -1,43 +1,66 @@
-from aff3ct._ext.core import Task
-from ._socket import Socket
+# encoding: utf-8
+r"Add some magic functions to :aff3ct._ext.core.Task:"
+from __future__ import annotations
 
-def ___getattr___(tsk, sck_name):
+from typing import Union
+
+from aff3ct._ext.core import Task, Socket
+
+def _getattr_impl(self: Task, sck_name: str) -> Union[tuple, Socket, None]:
+    """Overload __getattr__ of aff3ct._ext.core.Task.
+
+    task[socket_name] will return the socket named `socket_name`
+    of the task.
+
+    Args:
+        self (Task): A Task
+        sck_name (str): socket name
+
+    Returns:
+        out (Socket): the task socket named 'sck_name'
+
+    Raises:
+        AttributeError: if no socket is found
+    """
     try:
-        return tsk.module[f"{tsk.name}::{sck_name}"]
+        return self.module[f'{self.name}::{sck_name}']
     except:
-        raise AttributeError(f"'{tsk.__class__.__name__}' object has no attribute '{sck_name}'")
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{sck_name}'")
 
-Task.__getattr__ = lambda tsk, attr: ___getattr___(tsk, attr)
 
-def ___dir___(tsk):
+def _dir_impl(self: Task) -> dict:
     from builtins import object
-    new_dir = object.__dir__(tsk)
-    for t in tsk.sockets:
+    new_dir = object.__dir__(self)
+    for t in self.sockets:
         new_dir.append(t.name)
     return new_dir
 
-Task.__dir__ = lambda m: ___dir___(m)
 
-def ___call___(slf, *args, **kwargs):
+def _call_impl(slf: Task, *args, **kwargs):
     inputs  = []
     outputs  = []
-    str = "Parameters\n----------\n"
+    str_args = "Args:\n"
+    str_returns = "Returns:\n"
     for s in slf.sockets:
         if s.direction == Socket.directions.IN:
-            str += f"\t{s.name}: Input socket of size {s.n_elmts/slf.module.n_frames}\n"
+            str_args += f'\t{s.name} (Socket[{s.n_elmts/slf.module.n_frames}'
+            str_args += f', {slf.module.n_frames}]):{s.doc}\n'
+
             inputs.append(s)
         elif s.direction == Socket.directions.OUT:
-            str += f"\t{s.name}: Output socket of size {s.n_elmts/slf.module.n_frames}\n"
+            str_returns += f'\t{s.name} (Socket[{s.n_elmts/slf.module.n_frames}'
+            str_returns += f', {slf.module.n_frames}]):{s.doc}\n'
+
             outputs.append(s)
         else:
-            str += f"\t{s.name}: Forward socket of size {s.n_elmts/slf.module.n_frames}\n"
+            str_args += f'\t{s.name} (Socket[{s.n_elmts/slf.module.n_frames}'
+            str_args += f', {slf.module.n_frames}]):{s.doc}\n'
             inputs.append(s)
             #outputs.append(s)
 
-    ___call___.__doc__ = str
+    _call_impl.__doc__ = str_args + "\n" + str_returns + "\n"
 
     for i in range(len(args)):
-        inputs[i].__class__ = Socket
         inputs[i].reset()
         inputs[i].bind(args[i])
 
@@ -60,6 +83,8 @@ def ___call___(slf, *args, **kwargs):
     else:
         return None
 
-Task.__call__ = ___call___
+Task.__call__ = _call_impl
+Task.__getattr__ = _getattr_impl
+Task.__dir__ = _dir_impl
 
 __all__ = ["Task"]

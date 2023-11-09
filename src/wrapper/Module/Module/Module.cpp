@@ -26,8 +26,9 @@ Wrapper_Module
 void Wrapper_Module
 ::definitions()
 {
-	this->def(py::init<>(), py::return_value_policy::reference);
+	//this->def(py::init<>(), py::return_value_policy::reference);
 	this->def_property_readonly("tasks", [](Module& self) -> std::vector<std::shared_ptr<aff3ct::runtime::Task>> { return self.tasks; });
+	this->def_property_readonly("doc", &Module::get_doc);
 	this->def_property("name", [](const Module & m){return m.get_custom_name()==""?m.get_name():m.get_custom_name();}, &Module::set_custom_name);
 	this->def("create_reset_task", &Module::create_reset_task);
 

@@ -1,6 +1,6 @@
 from aff3ct._ext.core import Sequence
 
-def get_firsts(s):
+def _get_firsts(s):
     def visit(s, visited):
         visited.append(s.task)
         if len(s.task.inputs)==0 and len(s.task.forwards)==0 and not s.task.is_bound():
@@ -25,7 +25,7 @@ def from_socket(s, *args, **kwargs):
     for s_itm in s:
         while hasattr(s_itm, "__mrv__"):
             s_itm = s_itm.__mrv__
-        lf = get_firsts(s_itm)
+        lf = _get_firsts(s_itm)
         for lf_it in lf:
             if lf_it not in f:
                 f.append(lf_it)

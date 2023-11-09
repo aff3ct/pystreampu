@@ -1,9 +1,10 @@
 # encoding: utf-8
 """Provides some array factories."""
-
 from __future__ import annotations
 
 from typing import Union
+
+from ._typing import SocketLike
 
 import numpy as np
 
@@ -26,20 +27,23 @@ def _find_common_type(lst: list) -> _ext.dtype:
 
 
 def array(
-    in_array: Union[list, np.ndarray],
+    in_array: SocketLike,
     n_frames: int = 1,
     dtype: _ext.dtype = None
 ) -> _ext.core.Socket:
     """Build a socket either from a numpy.array or a list.
 
     Args:
-        in_array (list|np.ndarray): initial numpy array or list
+        in_array (SocketLike): initial numpy array or list
         n_frames (int): number of frames
         dtype (dtype): socket data type
 
     Returns:
         out (Socket): a socket containing the same data as in object
     """
+    if isinstance(in_array, _ext.core.Socket):
+        return in_array
+
     if isinstance(in_array, (int, float)):
         in_array = [in_array]
 
@@ -52,7 +56,8 @@ def array(
     attr_name = f'Array_{dtype.name}'
 
     if lst.size == 1:
-        mdl = getattr(_ext.arr, attr_name)(1, lst)
+        print(lst)
+        mdl = getattr(_ext.arr, attr_name)(1, lst[0])
     else:
         mdl = getattr(_ext.arr, attr_name)(lst)
 

@@ -83,15 +83,19 @@ namespace wrapper
 {
 inline void wrap_generic_dtype(py::module_ &m)
 {
-    py::class_<pyaf::dtype>(m, "dtype", py::dynamic_attr())
-        .def_property_readonly("name",              &pyaf::dtype::get_name)
-        .def_property_readonly("is_signed",         &pyaf::dtype::is_signed)
-        .def_property_readonly("is_floating_point", &pyaf::dtype::is_floating_point)
-        .def_property_readonly("size",              &pyaf::dtype::get_size)
-        .def_property_readonly("numpy", [](const pyaf::dtype& slf){return py::module_::import("numpy").attr("dtype")(slf.get_name().c_str()).attr("type");})
-        .def_static           ("of",                &pyaf::dtype::get, "name"_a)
+    py::class_<pyaf::dtype>(m, "dtype", py::dynamic_attr(),
+    R"mydelimiter(
+AFF3CT abstract class for data type object.)mydelimiter")
+        .def_property_readonly("name",              &pyaf::dtype::get_name, "dtype's name")
+        .def_property_readonly("is_signed",         &pyaf::dtype::is_signed, "True if dtype names a signed type, False otherwise.")
+        .def_property_readonly("is_floating_point", &pyaf::dtype::is_floating_point, "True if dtype names a floating point type, False otherwise.")
+        .def_property_readonly("size",              &pyaf::dtype::get_size, "Byte size of the dtype.")
+        .def_property_readonly("numpy", [](const pyaf::dtype& slf){return py::module_::import("numpy").attr("dtype")(slf.get_name().c_str()).attr("type");}, "Get the corresponding numpy dtype.")
+        .def_static           ("of",                &pyaf::dtype::get, "name"_a, "Dtype factory.")
         .def                  ("__repr__", [](const pyaf::dtype& slf){return "aff3ct." + slf.get_name();})
-        .def                  ("__str__", [](const pyaf::dtype& slf){return slf.get_name();});
+        .def                  ("__str__", [](const pyaf::dtype& slf){return slf.get_name();})
+        .doc(
+);
 }
 
 inline void wrap_dtypes(py::module_ &m)

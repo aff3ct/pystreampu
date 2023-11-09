@@ -6,8 +6,8 @@ def test_array_type(dtype):
     assert(x.dtype.name == dtype.name)
 
 def test_array_value(dtype):
-    x = array([25], 14, dtype = dtype)
-    assert(x[0][0] == dtype.numpy(25))
+    x = array([25], 14, dtype=dtype)
+    assert(x.numpy()[0] == dtype.numpy(25))
 
 def test_array_size(dtype):
     x = array([25], 14, dtype = dtype)

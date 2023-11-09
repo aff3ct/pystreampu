@@ -213,6 +213,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		self.bind(buffer.ptr);
 	}, "Binds the socket to the numpy array 'array' with priority 'priority'.", "array"_a);*/
 	py_socket.def_property_readonly("name", &aff3ct::runtime::Socket::get_name);
+	py_socket.def_property_readonly("doc", &aff3ct::runtime::Socket::get_doc);
 	py_socket.def_property_readonly("direction", [](const aff3ct::runtime::Socket& self)
 	{
 		aff3ct::runtime::Task&   t = self.get_task();

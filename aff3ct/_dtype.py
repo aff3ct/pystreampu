@@ -1,4 +1,3 @@
-# encoding: utf-8
 """Add some python magic for handling dtypes."""
 
 from __future__ import annotations
@@ -24,7 +23,7 @@ float64 = _ext.float64
 Socket = _ext.core.Socket
 
 
-def _dtype_call(self: dtype, data: Union['Socket', 'np.array']) -> Socket:
+def _dtype_call(self: dtype, data: Union[Socket, np.array]) -> Socket:
     """Create socket representing `data` with the dtype of `self`.
 
     Args:

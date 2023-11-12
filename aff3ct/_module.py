@@ -1,10 +1,8 @@
 
-# encoding: utf-8
 """Add some python magic dedicated to aff3ct._ext.core.Module."""
 
 from __future__ import annotations
 
-from builtins import object
 from typing import Union
 
 from aff3ct._ext.core import Module, Socket, Task

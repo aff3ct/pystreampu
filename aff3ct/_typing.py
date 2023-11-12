@@ -1,4 +1,3 @@
-# encoding: utf-8
 """Provides type hints."""
 
 from __future__ import annotations

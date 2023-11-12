@@ -37,6 +37,32 @@ def array(
 
     Returns:
         Socket: a socket containing the same data as in object.
+
+    Examples:
+
+        If all elements in the list are int and no dtype, the dtype of x will
+        be int64
+
+        >>> x = aff3ct.array([1,2,3,4,5])
+        >>> x
+        socket([1 2 3 4 5], dtype=int64, name=X, task=Array.get)
+
+        If one (or more) element is a float and no dtype, the dtype of x will
+        be float64
+
+        >>> x = aff3ct.array([1.0,2,3,4,5])
+        >>> x
+
+        If a dtype is set, x will have this dtype
+        socket([1. 2. 3. 4. 5.], dtype=float64, name=X, task=Array.get)
+
+        >>> x = aff3ct.array([1.0,2,3,4,5], dtype=aff3ct.int8)
+        >>> x
+        socket([1 2 3 4 5], dtype=int8, name=X, task=Array.get)
+
+    See Also:
+        :meth:`aff3ct.ones`, :meth:`aff3ct.zeros`, :meth:`aff3ct.arange`
+
     """
     if isinstance(in_array, _ext.core.Socket):
         return in_array
@@ -74,6 +100,18 @@ def zeros(
 
     Returns:
         Socket: a socket filled with 0
+
+    Examples:
+
+        .. code-block:: python
+
+           x = aff3ct.zeros(8, dtype=aff3ct.int16)
+           print(x)
+
+           [0 0 0 0 0 0 0 0]
+
+    See Also:
+        :meth:`aff3ct.array`, :meth:`aff3ct.ones`, :meth:`aff3ct.arange`
     """
     mdl = getattr(_ext.arr, f'Array_{dtype.name}')(n_elmts, 0)
     if n_frames > 1:
@@ -93,6 +131,17 @@ def ones(
 
     Returns:
         Socket: a socket filled with 1
+
+    Examples:
+        >>> x = aff3ct.ones(8)
+        >>> x
+        socket([1. 1. 1. 1. 1. 1. 1. 1.], dtype=float32, name=X, task=Array.get)
+        >>> x = aff3ct.ones(8, dtype=aff3ct.int16)
+        >>> x
+        socket([1 1 1 1 1 1 1 1], dtype=int16, name=X, task=Array.get)
+
+    See Also:
+        :meth:`aff3ct.array`, :meth:`aff3ct.zeros`, :meth:`aff3ct.arange`
     """
     mdl = getattr(_ext.arr, f'Array_{dtype.name}')(n_elmts, 1)
     if n_frames > 1:
@@ -118,6 +167,15 @@ def arange(
 
     Returns:
         Socket: a socket of evenly spaced values.
+
+
+    Examples:
+        >>> x = aff3ct.arange(1, 2, 0.25, dtype=aff3ct.float64)
+        >>> x
+        socket([1.   1.25 1.5  1.75], dtype=float64, name=X,task=Array.get)
+
+    See Also:
+        :meth:`aff3ct.array`, :meth:`aff3ct.zeros`, :meth:`aff3ct.ones`
     """
     arr = np.arange(start, stop, step, dtype=np.dtype(dtype.name))
     return array(arr, n_frames, dtype)

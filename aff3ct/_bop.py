@@ -1,4 +1,3 @@
-# encoding: utf-8
 """
 Provides elementwise binary operators (bop).
 
@@ -115,8 +114,8 @@ def bop(bop_type: BType,
     if name in comparisons and not output_dtype:
         output_dtype = int32
 
-    n_in0 = s_0.n_elmts//n_frames
-    n_in1 = s_1.n_elmts//n_frames
+    n_in0 = s_0.n_elmts // n_frames
+    n_in1 = s_1.n_elmts // n_frames
 
     the_bop = _bop_factory(n_in0, n_in1, bop_type, input_dtype, output_dtype)
     the_bop.n_frames = n_frames
@@ -350,10 +349,9 @@ def bitwise_xor(s_0: Socket,
     """
     return bop(BType.XOR, s_0, s_1, output_dtype=output_dtype)
 
-
-def smin(s_0: Socket,
-         s_1: Socket,
-         output_dtype: dtype = None) -> Socket:
+def min(s_0: Socket,
+        s_1: Socket,
+        output_dtype: dtype = None) -> Socket:
     """
     Compute componentwise min.
 
@@ -367,10 +365,9 @@ def smin(s_0: Socket,
     """
     return bop(BType.MIN, s_0, s_1, output_dtype=output_dtype)
 
-
-def smax(s_0: Socket,
-         s_1: Socket,
-         output_dtype: dtype = None) -> Socket:
+def max(s_0: Socket,
+        s_1: Socket,
+        output_dtype: dtype = None) -> Socket:
     """
     Compute componentwise max.
 
@@ -400,5 +397,5 @@ __all__ = ['BType',
            'bitwise_and',
            'bitwise_or',
            'bitwise_xor',
-           'smin',
-           'smax']
+           'min',
+           'max']

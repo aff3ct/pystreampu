@@ -14,21 +14,6 @@ from ._dtype import dtype
 from ._typing import SocketLike
 
 
-def _numpy(self: Socket) -> np.array:
-    """Return a NumPy array view of the socket (copy-less).
-
-    Args:
-        self (Socket): A socket
-
-    Returns:
-        out (np.array): socket as the NumPy array
-    """
-    return np.array(self)
-
-
-Socket.numpy = _numpy
-
-
 def _str(self: Socket) -> str:
     """Return the socket as a str.
 
@@ -759,17 +744,8 @@ def _astype(self: Socket, output_dtype: dtype) -> Socket:
     """
     return _uop.cast(self, output_dtype)
 
-'''def _min(self: Socket, output_dtype: dtype) -> Socket:
-    """Compute min of a socket, return as dtype.
 
-    Args:
-        self (Socket): input data
-        output_dtype (dtype): output data type
+Socket.astype = _astype
 
-    Returns:
-        Socket:  minimum of the Socket
-    """
-    return _red.cast(self, output_dtype)
 
-Socket.min = _min'''
 __all__ = ['Socket']

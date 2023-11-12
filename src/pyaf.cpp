@@ -18,8 +18,6 @@ PYBIND11_MODULE(_ext, m){
 	 //Split in two following https:pybind11.readthedocs.io/en/stable/advanced/misc.html#avoiding-c-types-in-docstrings
 	 //for enhancing python doc
 
-	//m.attr("__name__") = "aff3ct._ext";
-
 	m.doc() =
 R"pbdoc(
         Python bindings for C++ AFF3CT library.

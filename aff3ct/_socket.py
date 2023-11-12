@@ -69,7 +69,7 @@ def _repr(self: Socket) -> str:
         out (str): a str representing the socket
     """
     data_str = str(np.array(self))
-    out = 'socket({data_str}, dtype={self.dtype.name}, name={self.name},'
+    out = f'socket({data_str}, dtype={self.dtype.name}, name={self.name}, '
     out += f'task={self.task.module.name}.{self.task.name})'
     return out
 

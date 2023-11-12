@@ -3,8 +3,6 @@ The aff3ct package provides interfaces for C++ Module Task and Socket classes
 of the AFF3CT library.
 """
 
-from multipledispatch import dispatch
-
 from aff3ct._ext import help as _help
 from aff3ct._ext import Range as _range
 

@@ -5,6 +5,7 @@ import sys
 sys.path.insert(0, os.path.abspath("../../aff3ct"))
 
 import sphinx_rtd_theme
+import IPython
 # -- Project information -----------------------------------------------------
 
 project = 'aff3ct'
@@ -23,7 +24,9 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
-    "sphinx.ext.autosectionlabel"
+    "sphinx.ext.autosectionlabel",
+    'IPython.sphinxext.ipython_console_highlighting',
+    'IPython.sphinxext.ipython_directive'
     ]
 
 # generate autosummary even if no references

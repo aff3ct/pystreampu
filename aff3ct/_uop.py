@@ -1,4 +1,3 @@
-# encoding: utf-8
 """
 Provides elementwise unary operators (uop).
 
@@ -42,7 +41,7 @@ def _uop_factory(n_elmts: int,
         output_dtype (dtype): Input data type
 
     Returns:
-        out (Module): AFF3CT module unary operator
+        Module: AFF3CT module unary operator
 
     Raises:
         TypeError: if input_type or output_type are not dtypes
@@ -71,7 +70,7 @@ def uop(uop_type: UType,
         output_dtype(dtype): output data type
 
     Returns:
-        out (Socket): Modified socket.
+        Socket: Modified socket.
     """
     input_dtype = sckt.dtype
     if not output_dtype:
@@ -83,16 +82,16 @@ def uop(uop_type: UType,
     return mdl.perform(sckt)
 
 
-def sabs(sckt: Socket,
+def abs(sckt: Socket,
          output_dtype: dtype = None) -> Socket:
-    """Return |sckt|.
+    """Return abs(sckt).
 
     Args:
         sckt (Socket): input data.
         output_dtype (dtype): input data type.
 
     Returns:
-        out(Socket): |s|
+        Socket: abs(s)
     """
     return uop(UType.ABS, sckt, output_dtype)
 
@@ -106,7 +105,7 @@ def neg(sckt: Socket,
         output_dtype (dtype): input data type.
 
     Returns:
-        out (Socket): -sckt
+        Socket: -sckt
     """
     return uop(UType.NEG, sckt, output_dtype)
 
@@ -120,7 +119,7 @@ def bitwise_not(sckt: Socket,
         output_dtype (dtype): input data type.
 
     Returns:
-        out (Socket): !sckt
+        Socket: !sckt
     """
     return uop(UType.NOT, sckt, output_dtype)
 
@@ -134,7 +133,7 @@ def cast(sckt: Socket,
         output_dtype (dtype): input data type.
 
     Returns:
-        out (Socket): dtype(sckt)
+        Socket: dtype(sckt)
     """
     if not dtype:
         return sckt
@@ -142,4 +141,4 @@ def cast(sckt: Socket,
     return uop(UType.CAST, sckt, output_dtype)
 
 
-__all__ = ['UType', 'uop', 'sabs', 'neg', 'bitwise_not', 'cast']
+__all__ = ['UType', 'uop', 'abs', 'neg', 'bitwise_not', 'cast']

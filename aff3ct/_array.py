@@ -1,8 +1,5 @@
-# encoding: utf-8
 """Provides some array factories."""
 from __future__ import annotations
-
-from typing import Union
 
 from ._typing import SocketLike
 
@@ -34,12 +31,12 @@ def array(
     """Build a socket either from a numpy.array or a list.
 
     Args:
-        in_array (SocketLike): initial numpy array or list
-        n_frames (int): number of frames
-        dtype (dtype): socket data type
+        in_array (SocketLike): initial numpy array or list.
+        n_frames (int): number of frames.
+        dtype (dtype): socket data type.
 
     Returns:
-        out (Socket): a socket containing the same data as in object
+        Socket: a socket containing the same data as in object.
     """
     if isinstance(in_array, _ext.core.Socket):
         return in_array
@@ -76,7 +73,7 @@ def zeros(
         dtype (dtype): socket data type
 
     Returns:
-        out (Socket): a socket filled with 0
+        Socket: a socket filled with 0
     """
     mdl = getattr(_ext.arr, f'Array_{dtype.name}')(n_elmts, 0)
     if n_frames > 1:
@@ -95,7 +92,7 @@ def ones(
         dtype (dtype): socket data type
 
     Returns:
-        out (Socket): a socket filled with 1
+        Socket: a socket filled with 1
     """
     mdl = getattr(_ext.arr, f'Array_{dtype.name}')(n_elmts, 1)
     if n_frames > 1:
@@ -104,23 +101,23 @@ def ones(
 
 
 def arange(
-    start: Union[int, float],
-    stop: Union[int, float],
-    step: Union[int, float] = 1,
+    start: float,
+    stop: float,
+    step: float = 1,
     n_frames: int = 1,
     dtype: _ext.dtype = _ext.float32,
 ) -> _ext.core.Socket:
     """Build a socket similar to np.arange.
 
     Args:
-        start (int|float): start of the interval
-        stop (int|float): end of the interval
-        step (int|float): step
+        start (float): start of the interval
+        stop (float): end of the interval
+        step (float): step
         n_frames (int): number of frames
         dtype (dtype): socket data type
 
     Returns:
-        out (Socket): a socket of evenly spaced values.
+        Socket: a socket of evenly spaced values.
     """
     arr = np.arange(start, stop, step, dtype=np.dtype(dtype.name))
     return array(arr, n_frames, dtype)

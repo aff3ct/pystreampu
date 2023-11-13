@@ -9,6 +9,8 @@
 
 #include "wrapper/Module/Module/Module.hpp"
 #include "wrapper/Runtime/Task/Task.hpp"
+#include "wrapper/Common/Tools/Type/Type.hpp"
+#include "wrapper/Common/Tools/type_functions.h"
 
 namespace py = pybind11;
 using namespace py::literals;
@@ -31,7 +33,13 @@ void Wrapper_Module
 	this->def_property("doc", &Module::get_doc, &Module_Publicist::set_doc, R"pbdoc(Module's doc string)pbdoc");
 	this->def_property("name", [](const Module & m){return m.get_custom_name()==""?m.get_name():m.get_custom_name();}, &Module::set_custom_name, R"pbdoc(Name of the module)pbdoc");
 	//this->def("create_socket_in", &Module_Publicist::create_socket_in);
-	//this->def("create_socket_out", &Module_Publicist::create_socket_out);
+	this->def("create_socket_in", [](Module_Publicist& mdl, runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype, const std::string &doc)
+	{
+		return mdl.create_socket_in(task, name, n_elmts, utils::str2typeid(dtype.get_name()), doc);
+	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a, "doc"_a="",
+	R"pbdoc(
+        Create a new socket to a task.
+    )pbdoc");
 	this->def("create_task",
 	[](Module_Publicist& mdl, const std::string &name, const std::string &doc)
 	{

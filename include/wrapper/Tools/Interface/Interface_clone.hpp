@@ -14,7 +14,7 @@ namespace wrapper
 	public:
 		/* Trampoline (need one for each virtual function) */
 		aff3ct::tools::Interface_clone* clone() const override {
-			PYBIND11_OVERRIDE_PURE(
+			PYBIND11_OVERRIDE(
 				aff3ct::tools::Interface_clone*, /* Return type */
 				aff3ct::tools::Interface_clone,  /* Parent class */
 				clone                            /* Name of function in C++ (must match Python name) */

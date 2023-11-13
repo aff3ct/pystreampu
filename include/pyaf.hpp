@@ -24,5 +24,6 @@
 #include "wrapper/Module/Subsequence/Subsequence.hpp"
 #include "wrapper/Module/Switcher/Switcher.hpp"
 #include "wrapper/Module/Unaryop/Unaryop.hpp"
+#include "wrapper/Module/Stateless/Stateless.hpp"
 
 #endif //PYAF_HPP_

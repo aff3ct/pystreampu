@@ -17,9 +17,9 @@ class Module_Publicist : public Module
 	using Module::Module;
 	using Module::set_doc;
 	using Module::create_task;
-	//using Module::create_socket_in;
-	//using Module::create_socket_out;
-	//using Module::create_socket_fwd;
+	using Module::create_socket_in;
+	using Module::create_socket_out;
+	using Module::create_socket_fwd;
 	using Module::create_codelet;
 
 	virtual ~Module_Publicist() = default;

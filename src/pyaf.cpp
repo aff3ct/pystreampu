@@ -72,6 +72,7 @@ R"pbdoc(
 
 	pyaf::wrapper::wrap_range(m);
 	pyaf::wrapper::wrap_slicer(m);
+	pyaf::wrapper::wrap_stateless(m);
 
 	py::module_ submod_bop = m.def_submodule("bop");
 	pyaf::wrapper::wrap_binaryop(submod_bop);
@@ -87,6 +88,7 @@ R"pbdoc(
 
 	py::module_ submod_uop = m.def_submodule("uop");
 	pyaf::wrapper::wrap_unaryop(submod_uop);
+
 
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;

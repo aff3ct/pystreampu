@@ -33,10 +33,10 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 {
 	py::class_<Socket, aff3ct::tools::Interface_reset, std::shared_ptr<Socket>> py_socket(scope, "Socket", py::buffer_protocol(), py::dynamic_attr());
 
-	py::enum_<socket_t>(py_socket, "directions")
-      .value("IN",  socket_t::SIN)
-      .value("OUT", socket_t::SOUT)
-	  .value("FWD", socket_t::SFWD);
+	py::enum_<socket_t>(py_socket, "directions", "Enumeration of socket directions")
+      .value("IN",  socket_t::SIN, "Input socket")
+      .value("OUT", socket_t::SOUT, "Output socket")
+	  .value("FWD", socket_t::SFWD, "Forward socket");
 
 	py_socket.def_buffer([](Socket &s) -> py::buffer_info{
 	if (s.get_name() == "status")
@@ -78,27 +78,28 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		}
 	}
 	});
-	py_socket.def_property_readonly("task", &aff3ct::runtime::Socket::get_task, py::return_value_policy::reference);
-	py_socket.def_property_readonly("n_elmts", &aff3ct::runtime::Socket::get_n_elmts);
-	py_socket.def_property_readonly("dtype", [](const aff3ct::runtime::Socket& self){return pyaf::dtype::get(self.get_datatype_string());});
-	py_socket.def_property_readonly("bound_sockets", &aff3ct::runtime::Socket::get_bound_sockets, py::return_value_policy::reference);
-	py_socket.def_property_readonly("bound_socket", static_cast<Socket&(Socket::*)()>(&aff3ct::runtime::Socket::get_bound_socket), py::keep_alive<0, 1>());
+	py_socket.def_property_readonly("task", &aff3ct::runtime::Socket::get_task, py::return_value_policy::reference, "Task owning the socket.");
+	py_socket.def_property_readonly("n_elmts", &aff3ct::runtime::Socket::get_n_elmts, "Number of elements per `n_frames`");
+	py_socket.def_property_readonly("dtype", [](const aff3ct::runtime::Socket& self){return pyaf::dtype::get(self.get_datatype_string());}, "Data type.");
+	py_socket.def_property_readonly("bound_sockets", &aff3ct::runtime::Socket::get_bound_sockets, py::return_value_policy::reference, "Sockets to wich the socket is bound (for output sockets only).");
+	py_socket.def_property_readonly("bound_socket", static_cast<Socket&(Socket::*)()>(&aff3ct::runtime::Socket::get_bound_socket), py::keep_alive<0, 1>(), "Socket bound to self (for input sockets only).");
 
 	py_socket.def("has_data", [](const aff3ct::runtime::Socket& self)
 	{
 		return self.get_dataptr() != nullptr;
-	});
+	}, "Return True if the socket has data allocated.");
 	py_socket.def_property_readonly("dataaddr", [](const aff3ct::runtime::Socket& self){
 		std::stringstream ss;
 		ss << self.get_dataptr();
 		return ss.str();
-	});
+	}, "Return the socket data address as str.");
 
-	/*py_socket.def_property_readonly("numpy", [](aff3ct::runtime::Socket& self)
+	py_socket.def_property_readonly("numpy", [](aff3ct::runtime::Socket& self)
 	{
 		py::array array = py::cast(self);
 		return array;
-	});*/
+	},
+	"Numpy array view of the socket (copy-less).");
 	/*py_socket.def("__getitem__", [](aff3ct::runtime::Socket& sckt, py::handle& index) {
 		py::array array = py::cast(sckt);
 		return array.attr("__getitem__")(index);
@@ -218,18 +219,6 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 	{
 		aff3ct::runtime::Task&   t = self.get_task();
 		return t.get_socket_type(self);
-		/*if (t.get_socket_type(self) == socket_t::SIN )
-			return("in");
-		else if (t.get_socket_type(self) == socket_t::SOUT )
-			return("out");
-		else if (t.get_socket_type(self) == socket_t::SFWD )
-			return("fwd");
-		else // This should not happen
-		{
-			std::stringstream message;
-			message << "Unknown socket direction.";
-			throw std::runtime_error(message.str());
-		}*/
-	});
+	}, "Direction of the socket ()");
 
 };

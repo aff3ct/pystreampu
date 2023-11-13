@@ -15,6 +15,13 @@ class Module_Publicist : public Module
 {
 	public:
 	using Module::Module;
+	using Module::set_doc;
+	using Module::create_task;
+	//using Module::create_socket_in;
+	//using Module::create_socket_out;
+	//using Module::create_socket_fwd;
+	using Module::create_codelet;
+
 	virtual ~Module_Publicist() = default;
 };
 }
@@ -25,7 +32,7 @@ namespace pyaf
 namespace wrapper
 {
 class Wrapper_Module : public Wrapper_py,
-                       public py::class_<aff3ct::module::Module, aff3ct::tools::Interface_clone, aff3ct::tools::Interface_get_set_n_frames>
+                       public py::class_<aff3ct::module::Module, aff3ct::module::Module_Publicist, aff3ct::tools::Interface_clone, aff3ct::tools::Interface_get_set_n_frames>
 {
 	public:
 	Wrapper_Module(py::handle scope);

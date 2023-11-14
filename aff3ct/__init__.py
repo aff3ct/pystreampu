@@ -6,7 +6,9 @@ from __future__ import annotations
 
 from aff3ct._ext import help as _help
 from aff3ct._ext import Range as _range
+from aff3ct._ext import Stateless as _Stateless
 
+Stateless = _Stateless
 help  = _help
 range = _range
 

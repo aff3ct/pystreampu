@@ -52,17 +52,24 @@ def _call_impl(self: Task,
 
     str_args = 'Args:\n'
     str_returns = 'Returns:\n'
+    tsk_doc = f'{self.name} = {self.name}('
+    for sckt in inputs:
+        tsk_doc += f'{sckt.name}, '
+    if inputs:
+        tsk_doc = tsk_doc[0:-2]
+    tsk_doc += f')\n{self.doc}\n'
+
     for sckt in inputs:
         len_ = sckt.n_elmts // self.module.n_frames
         str_args += f'\t{sckt.name} (Socket[{len_}'
-        str_args += f', {self.module.n_frames}]):{sckt.doc}\n'
+        str_args += f', aff3ct.{str(sckt.dtype)}]): {sckt.doc}\n'
 
     for sckt in outputs:
         len_ = sckt.n_elmts // self.module.n_frames
         str_returns += f'\t{sckt.name} (Socket[{len_}'
-        str_returns += f', {self.module.n_frames}]):{sckt.doc}\n'
+        str_returns += f', aff3ct.{str(sckt.dtype)}]): {sckt.doc}\n'
 
-    _call_impl.__doc__ = f'{str_args}\n{str_returns}\n'
+    _call_impl.__doc__ = f'{tsk_doc}\n{str_args}\n{str_returns}\n'
 
     for i, arg in enumerate(args):
         inputs[i].reset()

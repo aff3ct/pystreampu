@@ -32,19 +32,36 @@ void Wrapper_Module
 	this->def_property_readonly("tasks", [](Module& self) -> std::vector<std::shared_ptr<aff3ct::runtime::Task>> { return self.tasks; },  R"pbdoc(Module's list of tasks.)pbdoc");
 	this->def_property("doc", &Module::get_doc, &Module_Publicist::set_doc, R"pbdoc(Module's doc string)pbdoc");
 	this->def_property("name", [](const Module & m){return m.get_custom_name()==""?m.get_name():m.get_custom_name();}, &Module::set_custom_name, R"pbdoc(Name of the module)pbdoc");
-	//this->def("create_socket_in", &Module_Publicist::create_socket_in);
-	this->def("create_socket_in", [](Module_Publicist& mdl, runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype, const std::string &doc)
+
+	this->def("create_socket_in", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype, const std::string &doc)
 	{
 		return mdl.create_socket_in(task, name, n_elmts, utils::str2typeid(dtype.get_name()), doc);
 	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a, "doc"_a="",
 	R"pbdoc(
-        Create a new socket to a task.
+        Create a new input socket to a task.
     )pbdoc");
+
+	this->def("create_socket_out", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype, const std::string &doc)
+	{
+		return mdl.create_socket_out(task, name, n_elmts, utils::str2typeid(dtype.get_name()), doc);
+	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a, "doc"_a="",
+	R"pbdoc(
+        Create a new output socket to a task.
+    )pbdoc");
+
+	this->def("create_socket_fwd", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype, const std::string &doc)
+	{
+		return mdl.create_socket_fwd(task, name, n_elmts, utils::str2typeid(dtype.get_name()), doc);
+	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a, "doc"_a="",
+	R"pbdoc(
+        Create a new forward socket to a task.
+    )pbdoc");
+
 	this->def("create_task",
 	[](Module_Publicist& mdl, const std::string &name, const std::string &doc)
 	{
-		return mdl.create_task(name, doc);
-	},"name"_a, "doc"_a="",
+		return &mdl.create_task(name, doc);
+	}, py::return_value_policy::reference, "name"_a, "doc"_a="",
 	R"pbdoc(
         Create a new task.
 
@@ -56,6 +73,7 @@ void Wrapper_Module
             Task: newly created task.
 
     )pbdoc");
+
 	this->def("create_codelet", &Module_Publicist::create_codelet);
 
 	this->def("__getitem__",  [](Module& m, const std::string& key)
@@ -80,5 +98,11 @@ void Wrapper_Module
         Returns:
             Task | Socket : task or socket described by the key.
     )pbdoc");
+
+	def("__copy__",  [](const Module &self) {
+        return Module(self);
+    });
+
+	def("deep_copy",  &Module_Publicist::deep_copy);
 
 };

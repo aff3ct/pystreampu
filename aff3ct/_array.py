@@ -79,7 +79,6 @@ def array(
     attr_name = f'Array_{dtype.name}'
 
     if lst.size == 1:
-        print(lst)
         mdl = getattr(_ext.arr, attr_name)(1, lst[0])
     else:
         mdl = getattr(_ext.arr, attr_name)(lst)

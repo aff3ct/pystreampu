@@ -25,7 +25,7 @@ class BType(Enum):
     LE = auto()
     LT = auto()
     EQ = auto()
-    NEQ = auto()
+    NE = auto()
     AND = auto()
     OR = auto()
     XOR = auto()

@@ -31,56 +31,56 @@ std::map<std::type_index, std::string> type_map = {{typeid(int8_t  ), py::format
 
 void pyaf::wrapper::wrap_socket(py::handle scope)
 {
-	py::class_<Socket, aff3ct::tools::Interface_reset, std::shared_ptr<Socket>> py_socket(scope, "Socket", py::buffer_protocol(), py::dynamic_attr());
+	py::class_<Socket, aff3ct::tools::Interface_reset, std::shared_ptr<Socket>> py_socket(scope, "Socket", py::dynamic_attr());
 
 	py::enum_<socket_t>(py_socket, "directions", "Enumeration of socket directions")
       .value("IN",  socket_t::SIN, "Input socket")
       .value("OUT", socket_t::SOUT, "Output socket")
 	  .value("FWD", socket_t::SFWD, "Forward socket");
 
-	py_socket.def_buffer([](Socket &s) -> py::buffer_info{
-	if (s.get_name() == "status")
-	{
-		size_t n_w = (size_t)s.get_task().get_module().get_n_frames_per_wave();
-		return py::buffer_info(
-			s.get_dataptr(),            /* Pointer to buffer */
-			s.get_datatype_size(),      /* Size of one scalar */
-			type_map[s.get_datatype()], /* Python struct-style format descriptor */
-			1,                          /* Number of dimensions */
-			{n_w},                        /* Buffer dimensions */
-			{(size_t)s.get_datatype_size()}
-		);
-	}
-	else
-	{
-		size_t n_frames = s.get_task().get_module().get_n_frames();
-		size_t n_row    = s.get_task().get_module().get_n_frames_per_wave();
-		size_t n_col    = s.get_n_elmts()/n_frames;
-		if (n_row > 1)
-		{
-			return py::buffer_info(
-				s.get_dataptr(),            /* Pointer to buffer */
-				s.get_datatype_size(),      /* Size of one scalar */
-				type_map[s.get_datatype()], /* Python struct-style format descriptor */
-				2,                          /* Number of dimensions */
-				{n_row, n_col},             /* Buffer dimensions */
-				{(size_t)s.get_datatype_size()*n_col, (size_t)s.get_datatype_size()},
-				false
-				);
-		}
-		else
-		{
-			return py::buffer_info(
-				s.get_dataptr(),            /* Pointer to buffer */
-				s.get_datatype_size(),      /* Size of one scalar */
-				type_map[s.get_datatype()], /* Python struct-style format descriptor */
-				1,                          /* Number of dimensions */
-				{n_col},                    /* Buffer dimensions */
-				{(size_t)s.get_datatype_size()},
-				false);
-		}
-	}
-	});
+	//py_socket.def_buffer([](Socket &s) -> py::buffer_info{
+	//if (s.get_name() == "status")
+	//{
+	//	size_t n_w = (size_t)s.get_task().get_module().get_n_frames_per_wave();
+	//	return py::buffer_info(
+	//		s.get_dataptr(),            /* Pointer to buffer */
+	//		s.get_datatype_size(),      /* Size of one scalar */
+	//		type_map[s.get_datatype()], /* Python struct-style format descriptor */
+	//		1,                          /* Number of dimensions */
+	//		{n_w},                        /* Buffer dimensions */
+	//		{(size_t)s.get_datatype_size()}
+	//	);
+	//}
+	//else
+	//{
+	//	size_t n_frames = s.get_task().get_module().get_n_frames();
+	//	size_t n_row    = s.get_task().get_module().get_n_frames_per_wave();
+	//	size_t n_col    = s.get_n_elmts()/n_frames;
+	//	if (n_row > 1)
+	//	{
+	//		return py::buffer_info(
+	//			s.get_dataptr(),            /* Pointer to buffer */
+	//			s.get_datatype_size(),      /* Size of one scalar */
+	//			type_map[s.get_datatype()], /* Python struct-style format descriptor */
+	//			2,                          /* Number of dimensions */
+	//			{n_row, n_col},             /* Buffer dimensions */
+	//			{(size_t)s.get_datatype_size()*n_col, (size_t)s.get_datatype_size()},
+	//			false
+	//			);
+	//	}
+	//	else
+	//	{
+	//		return py::buffer_info(
+	//			s.get_dataptr(),            /* Pointer to buffer */
+	//			s.get_datatype_size(),      /* Size of one scalar */
+	//			type_map[s.get_datatype()], /* Python struct-style format descriptor */
+	//			1,                          /* Number of dimensions */
+	//			{n_col},                    /* Buffer dimensions */
+	//			{(size_t)s.get_datatype_size()},
+	//			false);
+	//	}
+	//}
+	//});
 	py_socket.def_property_readonly("task", &aff3ct::runtime::Socket::get_task, py::return_value_policy::reference, "Task owning the socket.");
 	py_socket.def_property_readonly("n_elmts", &aff3ct::runtime::Socket::get_n_elmts, "Number of elements per `n_frames`");
 	py_socket.def_property_readonly("dtype", [](const aff3ct::runtime::Socket& self){return pyaf::dtype::get(self.get_datatype_string());}, "Data type.");
@@ -99,8 +99,32 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 
 	py_socket.def_property_readonly("numpy", [](aff3ct::runtime::Socket& self)
 	{
-		py::array array = py::cast(self);
-		return array;
+		size_t n_frames = self.get_task().get_module().get_n_frames();
+		size_t n_row    = self.get_task().get_module().get_n_frames_per_wave();
+		size_t n_col    = self.get_n_elmts()/n_frames;
+		if (n_row > 1)
+		{
+			return py::array(
+					py::buffer_info(
+						self.get_dataptr(),            /* Pointer to buffer */
+						self.get_datatype_size(),      /* Size of one scalar */
+						type_map[self.get_datatype()], /* Python struct-style format descriptor */
+						2,                          /* Number of dimensions */
+						{n_row, n_col},             /* Buffer dimensions */
+						{(size_t)self.get_datatype_size()*n_col, (size_t)self.get_datatype_size()},
+						true)
+				);
+		}
+		// If n_row is 1, squeeze.
+		return py::array(py::buffer_info(
+			self.get_dataptr(),            /* Pointer to buffer */
+			self.get_datatype_size(),      /* Size of one scalar */
+			type_map[self.get_datatype()], /* Python struct-style format descriptor */
+			1,                          /* Number of dimensions */
+			{n_col},                    /* Buffer dimensions */
+			{(size_t)self.get_datatype_size()},
+			true
+			));
 	},
 	"Numpy array view of the socket (copy-less).");
 	/*py_socket.def("__getitem__", [](aff3ct::runtime::Socket& sckt, py::handle& index) {
@@ -116,7 +140,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 	py_socket.def("__bool__", [](const aff3ct::runtime::Socket& sckt) {
 		size_t n_frames = sckt.get_task().get_module().get_n_frames();
 		size_t n        = sckt.get_n_elmts()/n_frames;
-		if (n > n_frames)
+		if (n > 1)
 		{
 			std::stringstream message;
 			message << "The truth value of an array with more than one element is ambiguous.";

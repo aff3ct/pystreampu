@@ -23,7 +23,7 @@ def _str(self: Socket) -> str:
     Returns:
         out (str): str representing the socket's data
     """
-    return str(np.array(self))
+    return str(self.numpy)
 
 
 Socket.__str__ = _str
@@ -53,7 +53,7 @@ def _repr(self: Socket) -> str:
     Returns:
         out (str): a str representing the socket
     """
-    data_str = str(np.array(self))
+    data_str = str(self.numpy)
     out = f'socket({data_str}, dtype={self.dtype.name}, name={self.name}, '
     out += f'task={self.task.module.name}.{self.task.name})'
     return out
@@ -76,7 +76,7 @@ def _bind(self: Socket, s_out: SocketLike, priority: int = 1) -> None:
     if not isinstance(s_out, Socket):
         s_out = array(s_out)
     else:
-        while hasattr(s_out, '_mrv'):
+        if hasattr(s_out, '_mrv'):
             s_out = s_out._mrv
 
     self._tag = s_out
@@ -442,7 +442,7 @@ def _req(self: Socket, value: SocketLike) -> Socket:
 Socket.__req__ = _req
 
 
-def _neq(self: Socket, value: SocketLike) -> Socket:
+def _ne(self: Socket, value: SocketLike) -> Socket:
     """Compute self != value.
 
     Args:
@@ -452,10 +452,10 @@ def _neq(self: Socket, value: SocketLike) -> Socket:
     Returns:
         out (Socket):  self != value
     """
-    return _bop.bop(_bop.BType.NEQ, self, value)
+    return _bop.bop(_bop.BType.NE, self, value)
 
 
-Socket.__neq__ = _neq
+Socket.__ne__ = _ne
 
 
 def _rneq(self: Socket, value: SocketLike) -> Socket:

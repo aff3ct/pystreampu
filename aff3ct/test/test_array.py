@@ -17,4 +17,4 @@ def test_arange(dtype):
     x  = np  .arange(0, 255, 2.3, dtype = dtype.numpy)
     px = arange(0, 255, 2.3, dtype = dtype)
 
-    assert (np.allclose(px[:], x[:]))
+    assert (np.allclose(px.numpy[:], x[:]))

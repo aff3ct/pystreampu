@@ -24,14 +24,11 @@ def getattr_impl(self: Module, attr: str) -> Union[Task, Socket]:
         out (Task): if attr is formatted as 'task_name'
         out (Socket): if attr is formatted as 'task_name::socket_name'
 
-    Raises:
-        AttributeError: if no attribute can be found
     """
-    try:
+    if attr in [t.name for t in self.tasks]:
         return self[attr]
-    except Exception as exc:
-        e_str = f"'{self.__class__.__name__}' object has no attribute '{attr}'"
-        raise AttributeError(e_str) from exc
+
+    return object.__getattribute__(self, attr)
 
 
 def dir_impl(self: Module) -> dict:

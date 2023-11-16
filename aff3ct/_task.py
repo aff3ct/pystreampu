@@ -82,8 +82,7 @@ def _call_impl(self: Task,
     self.exec()
 
     for s_out in outputs:
-        s_out.__class__ = Socket
-        s_out.__mdl__ = self.module
+        s_out._mdl = self.module
 
     # Return a tuple of Sockets except that does not contain the status socket
     # If only one output socket, return this socket

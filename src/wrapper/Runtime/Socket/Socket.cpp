@@ -41,7 +41,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 	py_socket.def_buffer([](Socket &s) -> py::buffer_info{
 	if (s.get_name() == "status")
 	{
-		size_t n_w = (size_t)s.get_task().get_module().get_n_waves();
+		size_t n_w = (size_t)s.get_task().get_module().get_n_frames_per_wave();
 		return py::buffer_info(
 			s.get_dataptr(),            /* Pointer to buffer */
 			s.get_datatype_size(),      /* Size of one scalar */
@@ -54,7 +54,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 	else
 	{
 		size_t n_frames = s.get_task().get_module().get_n_frames();
-		size_t n_row    = n_frames;
+		size_t n_row    = s.get_task().get_module().get_n_frames_per_wave();
 		size_t n_col    = s.get_n_elmts()/n_frames;
 		if (n_row > 1)
 		{
@@ -64,7 +64,9 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 				type_map[s.get_datatype()], /* Python struct-style format descriptor */
 				2,                          /* Number of dimensions */
 				{n_row, n_col},             /* Buffer dimensions */
-				{(size_t)s.get_datatype_size()*n_col, (size_t)s.get_datatype_size()});
+				{(size_t)s.get_datatype_size()*n_col, (size_t)s.get_datatype_size()},
+				false
+				);
 		}
 		else
 		{
@@ -74,7 +76,8 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 				type_map[s.get_datatype()], /* Python struct-style format descriptor */
 				1,                          /* Number of dimensions */
 				{n_col},                    /* Buffer dimensions */
-				{(size_t)s.get_datatype_size()});
+				{(size_t)s.get_datatype_size()},
+				false);
 		}
 	}
 	});

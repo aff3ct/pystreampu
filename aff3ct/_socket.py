@@ -72,11 +72,6 @@ def _bind(self: Socket, s_out: SocketLike, priority: int = 1) -> None:
         s_out (SocketLike): Socket to bind
         priority (int): Priority of the bind.
     """
-    # The __tag__ attribute of module will store the modules which are binded
-    # to the tasks of mdl
-    mdl = self.task.module
-    if not hasattr(mdl, '__tag__'):
-        mdl.__tag__ = dict.fromkeys([tsk.name for tsk in mdl.tasks], {})
 
     if not isinstance(s_out, Socket):
         s_out = array(s_out)
@@ -84,7 +79,7 @@ def _bind(self: Socket, s_out: SocketLike, priority: int = 1) -> None:
         while hasattr(s_out, '_mrv'):
             s_out = s_out._mrv
 
-    mdl.__tag__[self.task.name][self.name] = s_out
+    self._tag = s_out
 
     if self.direction == Socket.directions.FWD:
         # If slf is a forward socket,

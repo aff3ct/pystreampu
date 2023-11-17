@@ -1,10 +1,27 @@
 """Add some magic functions to the class Task."""
 from __future__ import annotations
 
-from typing import Union
+from typing import Union, Any
 
 from aff3ct._ext.core import Socket, Task
 from aff3ct._typing import SocketLike
+
+def _setattr_impl(self: Task, attr: str, value: Any) -> Union[tuple, Socket, None]:
+    """Overload __setattr__ of aff3ct._ext.core.Task.
+
+    Args:
+        self (Task): A Task
+        attr (str): attribute name
+        value (any): Value to set
+
+    Raises:
+        AttributeError: if no socket is found
+    """
+    try:
+        sck = self.module[f'{self.name}::{attr}']
+        sck.bind(value)
+    except Exception as exc:
+        return object.__setattribute__(self, attr, value)
 
 
 def _getattr_impl(self: Task, sck_name: str) -> Union[tuple, Socket, None]:
@@ -98,6 +115,7 @@ def _call_impl(self: Task,
 
 Task.__call__ = _call_impl
 Task.__getattr__ = _getattr_impl
+Task.__setattr__ = _setattr_impl
 Task.__dir__ = _dir_impl
 
 __all__ = ['Task']

@@ -60,3 +60,4 @@ def max(s_0: Socket,
 
 from ._uop    import *
 
+from ._sequence import *

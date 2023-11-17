@@ -38,56 +38,48 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
       .value("OUT", socket_t::SOUT, "Output socket")
 	  .value("FWD", socket_t::SFWD, "Forward socket");
 
-	py_socket.def_buffer([](Socket &s) -> py::buffer_info{
+	py_socket.def_buffer([](Socket &s) -> py::buffer_info
+	{
 	if(s.get_dataptr() == nullptr)
-	{
 		return py::buffer_info();
-		//std::stringstream message;
-		//message << "Cannot get a buffer.";
-		//throw py::buffer_error(message.str());
-	}
-	if (s.get_name() == "status")
-	{
-		size_t n_w = (size_t)s.get_task().get_module().get_n_frames_per_wave();
-		return py::buffer_info(
-			s.get_dataptr(),            /* Pointer to buffer */
-			s.get_datatype_size(),      /* Size of one scalar */
-			type_map[s.get_datatype()], /* Python struct-style format descriptor */
-			1,                          /* Number of dimensions */
-			{n_w},                        /* Buffer dimensions */
-			{(size_t)s.get_datatype_size()}
+
+	size_t n_frames = s.get_task().get_module().get_n_frames();
+	size_t n_row    = n_frames;
+	size_t n_col    = s.get_n_elmts()/n_frames;
+
+	return py::buffer_info(
+		s.get_dataptr(),            /* Pointer to buffer */
+		s.get_datatype_size(),      /* Size of one scalar */
+		type_map[s.get_datatype()], /* Python struct-style format descriptor */
+		2,                          /* Number of dimensions */
+		{n_row, n_col},             /* Buffer dimensions */
+		{(size_t)s.get_datatype_size()*n_col, (size_t)s.get_datatype_size()},
+		s.get_task().get_socket_type(s) == socket_t::SIN
 		);
-	}
-	else
+	});
+	py_socket.def_property_readonly("wave", [](const aff3ct::runtime::Socket& self) -> py::array
 	{
-		size_t n_frames = s.get_task().get_module().get_n_frames();
-		size_t n_row    = s.get_task().get_module().get_n_frames_per_wave();
-		size_t n_col    = s.get_n_elmts()/n_frames;
-		if (n_row > 1)
-		{
-			return py::buffer_info(
-				s.get_dataptr(),            /* Pointer to buffer */
-				s.get_datatype_size(),      /* Size of one scalar */
-				type_map[s.get_datatype()], /* Python struct-style format descriptor */
-				2,                          /* Number of dimensions */
-				{n_row, n_col},             /* Buffer dimensions */
-				{(size_t)s.get_datatype_size()*n_col, (size_t)s.get_datatype_size()},
-				s.get_task().get_socket_type(s) == socket_t::SIN
-				);
-		}
-		else
-		{
-			return py::buffer_info(
-				s.get_dataptr(),            /* Pointer to buffer */
-				s.get_datatype_size(),      /* Size of one scalar */
-				type_map[s.get_datatype()], /* Python struct-style format descriptor */
-				1,                          /* Number of dimensions */
-				{n_col},                    /* Buffer dimensions */
-				{(size_t)s.get_datatype_size()},
-				s.get_task().get_socket_type(s) == socket_t::SIN
-				);
-		}
-	}
+		if(self.get_dataptr() == nullptr)
+			return py::array(py::buffer_info());
+
+
+		// Use this if the C++ buffer should NOT be deallocated
+		// once Python no longer has a reference to it
+		py::capsule buffer_handle([](){});
+
+		size_t n_frames = self.get_task().get_module().get_n_frames();
+		size_t n_row    = self.get_task().get_module().get_n_frames_per_wave();
+		size_t n_col    = self.get_n_elmts()/n_frames;
+
+		return py::array(py::buffer_info(
+		self.get_dataptr(),            /* Pointer to buffer */
+		self.get_datatype_size(),      /* Size of one scalar */
+		type_map[self.get_datatype()], /* Python struct-style format descriptor */
+		2,                          /* Number of dimensions */
+		{n_row, n_col},             /* Buffer dimensions */
+		{(size_t)self.get_datatype_size()*n_col, (size_t)self.get_datatype_size()},
+		self.get_task().get_socket_type(self) == socket_t::SIN
+		), buffer_handle);
 	});
 	py_socket.def_property_readonly("task", &aff3ct::runtime::Socket::get_task, py::return_value_policy::reference, "Task owning the socket.");
 	py_socket.def_property_readonly("n_elmts", &aff3ct::runtime::Socket::get_n_elmts, "Number of elements per `n_frames`");

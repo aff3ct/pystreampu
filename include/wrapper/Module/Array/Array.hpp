@@ -25,10 +25,10 @@ template <typename T>
 class Array : public Module
 {
 private:
-	std::vector<T> data;
+	std::vector<std::vector<T>> data;
 
 public:
-
+	Array(const std::vector<std::vector<T>>& vec);
 	Array(const std::vector<T>& vec);
 	Array(const int sz, const T val = (T)0);
 	virtual ~Array() = default;

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Union
+from typing import Union, List
 
 from aff3ct._ext.core import Sequence, Socket
 
@@ -14,7 +14,7 @@ def _unique(in_list: list):
 
 
 def _get_firsts(s: Socket):
-    def visit(s: Socket, visited: list[Socket]):
+    def visit(s: Socket, visited: List[Socket]):
         tsk = s.task
         visited.append(tsk)
         if len(tsk.inputs) == 0 and len(tsk.forwards) == 0 and not tsk.is_bound():
@@ -36,7 +36,7 @@ def _get_firsts(s: Socket):
     return visit(s, [])
 
 
-def from_socket(sockets = Union[Socket, list[Socket]], *args: tuple, **kwargs: dict):
+def from_socket(sockets = Union[Socket, List[Socket]], *args: tuple, **kwargs: dict):
     firsts = []
     if not isinstance(sockets, list):
         sockets = [sockets]

@@ -29,8 +29,8 @@ private:
 
 public:
 	Array(const std::vector<std::vector<T>>& vec);
-	Array(const std::vector<T>& vec);
-	Array(const int sz, const T val = (T)0);
+	Array(const std::vector<T>& vec, const int n_frames=1);
+	Array(const int sz, const T val = (T)0, const int n_frames=1);
 	virtual ~Array() = default;
 	virtual Array* clone() const;
 };

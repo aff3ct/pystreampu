@@ -15,23 +15,25 @@ void pyaf::wrapper::wrap_array(py::module_ &scope)
 		std::string TI_str = aff3ct::runtime::type_to_string[typeid(TI)];
 		auto arra_py_class = py::class_<aff3ct::module::Array<TI>, aff3ct::module::Module>(scope, std::string("Array_" + TI_str).c_str());
 
-		arra_py_class.def(py::init<int, TI>(),"sz"_a, "val"_a, R"pbdoc()pbdoc", py::return_value_policy::take_ownership);
-		arra_py_class.def(py::init<const std::vector<TI>&>(),"frame"_a, R"pbdoc()pbdoc", py::return_value_policy::take_ownership, py::keep_alive<0,2>());
-		arra_py_class.def(py::init<const std::vector<std::vector<TI>>&>(),"frames"_a, R"pbdoc()pbdoc", py::return_value_policy::take_ownership, py::keep_alive<0,2>());
+		arra_py_class.def(py::init<int, TI, const int>(),"n_elmts"_a, "value"_a, "n_frames"_a=1,
+		R"pbdoc(Return an Array
+		)pbdoc", py::return_value_policy::take_ownership);
+		arra_py_class.def(py::init<const std::vector<TI>&, const int>(),"frame"_a, "n_frames"_a=1, R"pbdoc()pbdoc", py::return_value_policy::take_ownership);
+		arra_py_class.def(py::init<const std::vector<std::vector<TI>>&>(),"frames"_a, R"pbdoc()pbdoc", py::return_value_policy::take_ownership);
 	});
 }
 
 template <typename T>
 Array<T>
-::Array(const int sz, const T val)
-: Array<T>(std::vector<T>(sz,val))
+::Array(const int sz, const T val, const int n_frames)
+: Array<T>(std::vector<T>(sz,val), n_frames)
 {
 }
 
 template <typename T>
 Array<T>
-::Array(const std::vector<T>& vec)
-: Array<T>(std::vector<std::vector<T>>(1, vec))
+::Array(const std::vector<T>& vec, const int n_frames)
+: Array<T>(std::vector<std::vector<T>>(n_frames, vec))
 {
 }
 

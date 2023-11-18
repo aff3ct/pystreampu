@@ -1,90 +1,48 @@
 """Provides some array factories."""
 from __future__ import annotations
 
+from typing import List, Union
+
 from ._typing import SocketLike
 
 import numpy as np
 
 from . import _ext
 
-
-def _find_common_type(lst: list) -> _ext.dtype:
-    """Return the common type of a list.
-
-    Args:
-        lst (list): input list
-
-    Returns:
-        out (dtype): a common dtype for the list
-    """
-    dtype = _ext.float64
-    if all(isinstance(x, int) for x in lst):
-        dtype = _ext.int64
-    return dtype
-
-
 def array(
-    in_array: SocketLike,
+    value: Union[float, List, List[list], np.array],
+    size: int = 1,
     n_frames: int = 1,
     dtype: _ext.dtype = None
 ) -> _ext.core.Socket:
-    """Build a socket either from a numpy.array or a list.
 
-    Args:
-        in_array (SocketLike): initial numpy array or list.
-        n_frames (int): number of frames.
-        dtype (dtype): socket data type.
+    # Ensures dtype is defined
+    if not dtype and not isinstance(value, np.ndarray):
+        dtype = _ext.float64
+    elif not dtype and isinstance(value, np.ndarray):
+        dtype = value.dtype
 
-    Returns:
-        Socket: a socket containing the same data as in object.
-
-    Examples:
-
-        If all elements in the list are int and no dtype, the dtype of x will
-        be int64
-
-        >>> x = aff3ct.array([1,2,3,4,5])
-        >>> x
-        socket([1 2 3 4 5], dtype=int64, name=X, task=Array.get)
-
-        If one (or more) element is a float and no dtype, the dtype of x will
-        be float64
-
-        >>> x = aff3ct.array([1.0,2,3,4,5])
-        >>> x
-
-        If a dtype is set, x will have this dtype
-        socket([1. 2. 3. 4. 5.], dtype=float64, name=X, task=Array.get)
-
-        >>> x = aff3ct.array([1.0,2,3,4,5], dtype=aff3ct.int8)
-        >>> x
-        socket([1 2 3 4 5], dtype=int8, name=X, task=Array.get)
-
-    See Also:
-        :meth:`aff3ct.ones`, :meth:`aff3ct.zeros`, :meth:`aff3ct.arange`
-
-    """
-    if isinstance(in_array, _ext.core.Socket):
-        return in_array
-
-    if isinstance(in_array, (int, float)):
-        in_array = [in_array]
-
-    if isinstance(in_array, list) and not dtype:
-        dtype = _find_common_type(in_array)
-    elif isinstance(in_array, np.ndarray) and not dtype:
-        dtype = getattr(_ext, in_array.dtype.type.__name__)
-
-    lst = np.array(in_array, dtype=np.dtype(dtype.name))
+    # get module's name
     attr_name = f'Array_{dtype.name}'
 
-    if lst.size == 1:
-        mdl = getattr(_ext.arr, attr_name)(1, lst[0])
-    else:
-        mdl = getattr(_ext.arr, attr_name)(lst)
+    # convert np.array to list
+    if isinstance(value, np.ndarray):
+        value = value.tolist()
 
-    mdl.n_frames = n_frames
-    return mdl.get()
+    # list of list
+    if all(isinstance(elem, list) for elem in value):
+        return getattr(_ext.arr, attr_name)(value).get()
+
+    # list
+    if isinstance(value, list):
+        return getattr(_ext.arr, attr_name)([value]*n_frames).get()
+
+    # scalar
+    if isinstance(value, float):
+        return getattr(_ext.arr, attr_name)([[value*size]]*n_frames).get()
+
+    err_msg = f'Cannot convert type {type(value)} into an AFF3CT Socket.'
+    raise NotImplementedError(err_msg)
 
 
 def zeros(

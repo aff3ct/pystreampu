@@ -21,7 +21,7 @@ def _setattr_impl(self: Task, attr: str, value: Any) -> Union[tuple, Socket, Non
         sck = self.module[f'{self.name}::{attr}']
         sck.bind(value)
     except Exception as exc:
-        return object.__setattribute__(self, attr, value)
+        return object.__setattr__(self, attr, value)
 
 
 def _getattr_impl(self: Task, sck_name: str) -> Union[tuple, Socket, None]:

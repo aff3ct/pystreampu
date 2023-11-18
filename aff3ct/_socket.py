@@ -53,7 +53,15 @@ def _repr(self: Socket) -> str:
     Returns:
         out (str): a str representing the socket
     """
-    data_str = str(self.numpy)
+    data_ = str(self.numpy).splitlines()
+
+    if len(data_) > 1:
+        data_[0] += '\n'
+        data_[-1] = '       ' + data_[-1]
+        for i in range(1, len(data_)-1):
+            data_[i] = '       ' + data_[i] + '\n'
+
+    data_str = ''.join(data_)
     out = f'socket({data_str}, dtype={self.dtype.name}, name={self.name}, '
     out += f'task={self.task.module.name}.{self.task.name})'
     return out

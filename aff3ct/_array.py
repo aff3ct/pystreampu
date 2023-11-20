@@ -9,41 +9,48 @@ import numpy as np
 
 from . import _ext
 
+from multipledispatch import dispatch
+
+@dispatch(list, dtype=_ext.float64)
 def array(
-    value: Union[float, List, List[list], np.array],
+    value: list,
+    dtype: _ext.dtype = _ext.float64
+) -> _ext.core.Socket:
+    """Doc 1"""
+    attr_name = f'Array_{dtype.name}'
+    return getattr(_ext.arr, attr_name)(value).get()
+
+@dispatch(list, n_frames=int, dtype=_ext.dtype)
+def array(
+    value: list,
+    n_frames: int = 1,
+    dtype: _ext.dtype = _ext.float64
+) -> _ext.core.Socket:
+    """Doc 2"""
+    attr_name = f'Array_{dtype.name}'
+    return getattr(_ext.arr, attr_name)([value]*n_frames).get()
+
+@dispatch(float, size=int, n_frames=int, dtype=_ext.dtype)
+def array(
+    value: float,
     size: int = 1,
     n_frames: int = 1,
-    dtype: _ext.dtype = None
+    dtype:_ext.dtype = _ext.float64
 ) -> _ext.core.Socket:
-
-    # Ensures dtype is defined
-    if not dtype and not isinstance(value, np.ndarray):
-        dtype = _ext.float64
-    elif not dtype and isinstance(value, np.ndarray):
-        dtype = value.dtype
-
-    # get module's name
+    """Doc 3"""
     attr_name = f'Array_{dtype.name}'
+    return getattr(_ext.arr, attr_name)([[value]*size]*n_frames).get()
 
-    # convert np.array to list
-    if isinstance(value, np.ndarray):
-        value = value.tolist()
-
-    # list of list
-    if all(isinstance(elem, list) for elem in value):
-        return getattr(_ext.arr, attr_name)(value).get()
-
-    # list
-    if isinstance(value, list):
-        return getattr(_ext.arr, attr_name)([value]*n_frames).get()
-
-    # scalar
-    if isinstance(value, float):
-        return getattr(_ext.arr, attr_name)([[value*size]]*n_frames).get()
-
-    err_msg = f'Cannot convert type {type(value)} into an AFF3CT Socket.'
-    raise NotImplementedError(err_msg)
-
+@dispatch(int, size=int, n_frames=int, dtype=_ext.dtype)
+def array(
+    value:int,
+    size:int = 1,
+    n_frames:int = 1,
+    dtype:_ext.dtype = _ext.float64
+) -> _ext.core.Socket:
+    """Doc 4"""
+    attr_name = f'Array_{dtype.name}'
+    return getattr(_ext.arr, attr_name)([[value]*size]*n_frames).get()
 
 def zeros(
     n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32
@@ -135,7 +142,7 @@ def arange(
         :meth:`aff3ct.array`, :meth:`aff3ct.zeros`, :meth:`aff3ct.ones`
     """
     arr = np.arange(start, stop, step, dtype=np.dtype(dtype.name))
-    return array(arr, n_frames, dtype)
+    return array(arr, n_frames=n_frames, dtype=dtype)
 
 
 __all__ = ['array', 'zeros', 'ones', 'arange']

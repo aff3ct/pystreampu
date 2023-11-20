@@ -14,7 +14,7 @@ def test_array_size(dtype):
     assert (x.n_elmts == 14)
 
 def test_arange(dtype):
-    x  = np  .arange(0, 255, 2.3, dtype = dtype.numpy)
+    x  = np.arange(0, 255, 2.3, dtype = dtype.numpy)
     px = arange(0, 255, 2.3, dtype = dtype)
 
     assert (np.allclose(px.numpy[:], x[:]))

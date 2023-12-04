@@ -11,7 +11,11 @@ from . import _ext
 
 from multipledispatch import dispatch
 
-@dispatch(list, dtype=_ext.float64)
+def array(data:np.ndarray) -> _ext.core.Socket:
+    attr_name = f'Array_{str(data.dtype)}'
+    return getattr(_ext.arr, attr_name)(data).read.data
+
+'''@dispatch(list, dtype=_ext.float64)
 def array(
     value: list,
     dtype: _ext.dtype = _ext.float64
@@ -51,7 +55,7 @@ def array(
     """Doc 4"""
     attr_name = f'Array_{dtype.name}'
     return getattr(_ext.arr, attr_name)([[value]*size]*n_frames).get()
-
+'''
 def zeros(
     n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32
 ) -> _ext.core.Socket:

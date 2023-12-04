@@ -15,54 +15,53 @@ void pyaf::wrapper::wrap_array(py::module_ &scope)
 		std::string TI_str = aff3ct::runtime::type_to_string[typeid(TI)];
 		auto arra_py_class = py::class_<aff3ct::module::Array<TI>, aff3ct::module::Module>(scope, std::string("Array_" + TI_str).c_str());
 
-		arra_py_class.def(py::init<int, TI, const int>(),"n_elmts"_a, "value"_a, "n_frames"_a=1,
-		R"pbdoc(Return an Array
-		)pbdoc", py::return_value_policy::take_ownership);
-		arra_py_class.def(py::init<const std::vector<TI>&, const int>(),"frame"_a, "n_frames"_a=1, R"pbdoc()pbdoc", py::return_value_policy::take_ownership);
-		arra_py_class.def(py::init<const std::vector<std::vector<TI>>&>(),"frames"_a, R"pbdoc()pbdoc", py::return_value_policy::take_ownership);
+		arra_py_class.def(py::init<py::array_t<TI>&>(),"data"_a, py::keep_alive<1,2>(),
+		R"pbdoc()pbdoc", py::return_value_policy::take_ownership);
+		//arra_py_class.def(py::init<const std::vector<TI>&, const int>(),"frame"_a, "n_frames"_a=1, R"pbdoc()pbdoc", py::return_value_policy::take_ownership);
+		//arra_py_class.def(py::init<const std::vector<std::vector<TI>>&>(),"frames"_a, R"pbdoc()pbdoc", py::return_value_policy::take_ownership);
 	});
 }
 
 template <typename T>
 Array<T>
-::Array(const int sz, const T val, const int n_frames)
-: Array<T>(std::vector<T>(sz,val), n_frames)
-{
-}
-
-template <typename T>
-Array<T>
-::Array(const std::vector<T>& vec, const int n_frames)
-: Array<T>(std::vector<std::vector<T>>(n_frames, vec))
-{
-}
-
-template <typename T>
-Array<T>
-::Array(const std::vector<std::vector<T>>& vec)
-: Module(), data(vec)
+::Array( py::array_t<T>& data)
+: Module(), dataptr(data.request().ptr)
 {
 	const std::string name = "Array";
 	this->set_name(name);
-	this->set_n_frames(vec.size());
 
-	auto &p = this->create_task("get");
-	auto ps_x = this->template create_socket_out<T>(p, "X", vec[0].size());
+	py::buffer_info data_buff = data.request();
 
-	auto offset = 0;
-	for (auto i = 0; i<vec.size(); i++)
+	size_t data_sz = 0;
+
+	if (data_buff.ndim == 1)
 	{
-		auto frame_bytes = this->data[i].size()*sizeof(T);
-		std::copy((int8_t*)this->data[i].data(),
-		          (int8_t*)this->data[i].data() + frame_bytes,
-				  (int8_t*)p[ps_x].get_dataptr() + offset);
-		offset += frame_bytes;
+		this->set_n_frames(1);
+		data_sz = data_buff.shape[0];
 	}
+	else if(data_buff.ndim == 2)
+	{
+		this->set_n_frames(data_buff.shape[0]);
+		data_sz = data_buff.shape[1];
+	}
+
+	this->set_single_wave(true);
+
+	auto &p = this->create_task("read");
+	auto ps_x = this->template create_socket_fwd<T>(p, "data", data_sz);
+	p[ps_x].bind(data.request().ptr);
 
 	this->create_codelet(p, [](Module &m, runtime::Task &t, const size_t frame_id) -> int
 	{
 		return runtime::status_t::SUCCESS;
 	});
+}
+
+template <typename T>
+void* Array<T>
+::get_dataptr() const
+{
+	return this->dataptr;
 }
 
 

@@ -77,6 +77,9 @@ R"pbdoc(
 	py::module_ submod_bop = m.def_submodule("bop");
 	pyaf::wrapper::wrap_binaryop(submod_bop);
 
+	py::module_ submod_ini = m.def_submodule("ini");
+	pyaf::wrapper::wrap_initializer(submod_ini);
+
 	py::module_ submod_red = m.def_submodule("red");
 	pyaf::wrapper::wrap_reducer(submod_red);
 

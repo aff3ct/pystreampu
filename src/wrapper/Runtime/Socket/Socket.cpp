@@ -41,7 +41,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 	py_socket.def_buffer([](Socket &s) -> py::buffer_info
 	{
 	if(s.get_dataptr() == nullptr)
-		return py::buffer_info();
+		return py::buffer_info(nullptr, s.get_datatype_size(), type_map[s.get_datatype()],0);
 
 	size_t n_frames = s.get_task().get_module().get_n_frames();
 	size_t n_row    = n_frames;
@@ -60,7 +60,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 	py_socket.def_property_readonly("wave", [](const aff3ct::runtime::Socket& self) -> py::array
 	{
 		if(self.get_dataptr() == nullptr)
-			return py::array(py::buffer_info());
+			return py::array(py::buffer_info(nullptr, 1, type_map[self.get_datatype()],{}));
 
 
 		// Use this if the C++ buffer should NOT be deallocated
@@ -140,7 +140,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		}
 	});
 
-	py_socket.def("__bind__", [](aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& s_out, const int priority)
+	py_socket.def("_bind", [](aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& s_out, const int priority)
 	{
 		self.bind(s_out, priority);
 	}, "Binds the socket to socket 's_out' with priority 'priority'.", "s_out"_a, "priority"_a=1);
@@ -173,8 +173,8 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		self_.attr("__tag__") = py::cast(std::unique_ptr<aff3ct::module::Source_array<float>>(std::move(cst_mdl)));
 	}
 	);*/
-	/*
-	py_socket.def("bind", [](aff3ct::runtime::Socket& self, py::array& arr)
+
+	py_socket.def("_bind", [](aff3ct::runtime::Socket& self, py::array& arr)
 	{
 		size_t n_row = (size_t)self.get_task().get_module().get_n_frames();
 		size_t n_col = (size_t)self.get_n_elmts()/n_row;
@@ -215,7 +215,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		}
 
 		self.bind(buffer.ptr);
-	}, "Binds the socket to the numpy array 'array' with priority 'priority'.", "array"_a);*/
+	}, "Binds the socket to the numpy array 'array' data.", "array"_a);
 	py_socket.def_property_readonly("name", &aff3ct::runtime::Socket::get_name);
 	py_socket.def_property_readonly("doc", &aff3ct::runtime::Socket::get_doc);
 	py_socket.def_property_readonly("direction", [](const aff3ct::runtime::Socket& self)

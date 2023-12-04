@@ -70,7 +70,7 @@ def _repr(self: Socket) -> str:
 Socket.__repr__ = _repr
 
 
-def _bind(self: Socket, s_out: SocketLike, priority: int = 1) -> None:
+def _bind_(self: Socket, s_out: SocketLike, priority: int = 1, raw_data=False) -> None:
     """Binds self to s_out.
 
     If s_out is not a `Socket`, s_out is converted to a `Socket` first.
@@ -79,10 +79,17 @@ def _bind(self: Socket, s_out: SocketLike, priority: int = 1) -> None:
         self (Socket): A socket
         s_out (SocketLike): Socket to bind
         priority (int): Priority of the bind.
+        raw_data (bool): if True converts data to a Socket
     """
+    if raw_data:
+        self._bind(np.array(s_out, copy=False))
+        return
 
     if not isinstance(s_out, Socket):
-        s_out = array(s_out)
+        if hasattr(s_out, "dtype"):
+            s_out = array(s_out, dtype=dtype.of(str(s_out.dtype)))
+        else:
+            s_out = array(s_out)
     else:
         if hasattr(s_out, '_mrv'):
             s_out = s_out._mrv
@@ -94,10 +101,10 @@ def _bind(self: Socket, s_out: SocketLike, priority: int = 1) -> None:
         # then it will be the most recent value of s_out
         s_out._mrv = self
 
-    self.__bind__(s_out, priority)
+    self._bind(s_out, priority)
 
 
-Socket.bind = _bind
+Socket.bind = _bind_
 
 
 def _setitem(self: Socket, key: Union[int, slice], data: SocketLike) -> Socket:

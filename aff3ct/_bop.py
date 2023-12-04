@@ -12,6 +12,7 @@ from aff3ct._ext import dtype, int8, int32
 from aff3ct._ext.core import Module, Socket
 from aff3ct._typing import SocketLike
 
+import numpy as np
 
 class BType(Enum):
     """Binary operator enum."""
@@ -72,8 +73,9 @@ def _bop_factory(
         ex_msg = f"type '{type(output_type)}' does not name an AFF3CT dtype."
         raise TypeError(ex_msg)
 
+    name = f'Binaryop_{str(bop_type)}_{input_type.name}_{output_type.name}'
+
     try:
-        name = f'Binaryop_{str(bop_type)}_{input_type.name}_{output_type.name}'
         return getattr(aff3ct._ext.bop, name)(n_in0, n_in1)
     except AttributeError as exc:
         ex_msg = f"binary operator '{name}' does not exist."
@@ -105,7 +107,12 @@ def bop(bop_type: BType,
     input_dtype = s_0.dtype
 
     if not isinstance(s_1, Socket):
-        s_1 = array(s_1, dtype=s_0.dtype, n_frames=n_frames)
+        if not isinstance(s_1, list):
+            s_1 = [s_1]
+        if not isinstance(s_1[0], list):
+            s_1 = [s_1]*n_frames
+
+        s_1 = array(np.array(s_1, dtype=s_0.dtype.name))
 
     if not output_dtype:
         output_dtype = input_dtype

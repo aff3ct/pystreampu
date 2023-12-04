@@ -106,13 +106,7 @@ def bop(bop_type: BType,
     n_frames = s_0.task.module.n_frames
     input_dtype = s_0.dtype
 
-    if not isinstance(s_1, Socket):
-        if not isinstance(s_1, list):
-            s_1 = [s_1]
-        if not isinstance(s_1[0], list):
-            s_1 = [s_1]*n_frames
-
-        s_1 = array(np.array(s_1, dtype=s_0.dtype.name))
+    s_1 = array(s_1)
 
     if not output_dtype:
         output_dtype = input_dtype

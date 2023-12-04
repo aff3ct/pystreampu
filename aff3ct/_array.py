@@ -11,9 +11,40 @@ from . import _ext
 
 from multipledispatch import dispatch
 
-def array(data:np.ndarray) -> _ext.core.Socket:
+from warnings import warn
+
+def array(data, n_frames=None, dtype=None) -> _ext.core.Socket:
+    if isinstance(data, _ext.core.Socket): # socket case : do nothing
+        return data
+
+    if isinstance(data, np.ndarray):
+        if n_frames:
+            warn_str = "When input 'data' is a 'np.ndarray',"
+            warn_str += " parameter 'n_frames' is ignored."
+            warn_str += "\nIt will be deduced from 'data'."
+            warn(warn_str, stacklevel=2)
+        if dtype:
+            warn_str = "When input 'data' is a 'np.ndarray',"
+            warn_str += " parameter 'dtype' is ignored."
+            warn_str += "\nIt will be deduced from 'data'."
+            warn(warn_str, stacklevel=2)
+    else:
+        if not n_frames:
+            n_frames = 1
+
+        if not dtype:
+            dtype = _ext.float64
+
+        if not isinstance(data, list): # scalar case, TODO : improve this test
+            data = [data]
+        if not isinstance(data[0], list):
+            data = [data]*n_frames
+        data = np.array(data, dtype=dtype.numpy)
+
     attr_name = f'Array_{str(data.dtype)}'
     return getattr(_ext.arr, attr_name)(data).read.data
+
+
 
 '''@dispatch(list, dtype=_ext.float64)
 def array(
@@ -146,7 +177,7 @@ def arange(
         :meth:`aff3ct.array`, :meth:`aff3ct.zeros`, :meth:`aff3ct.ones`
     """
     arr = np.arange(start, stop, step, dtype=np.dtype(dtype.name))
-    return array(arr, n_frames=n_frames, dtype=dtype)
+    return array(arr)
 
 
 __all__ = ['array', 'zeros', 'ones', 'arange']

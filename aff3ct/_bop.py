@@ -106,7 +106,12 @@ def bop(bop_type: BType,
     n_frames = s_0.task.module.n_frames
     input_dtype = s_0.dtype
 
-    s_1 = array(s_1)
+    s_1 = array(s_1, dtype=s_0.dtype)
+
+    if fwd:
+        s = s_1
+        s_1 = s_0
+        s_0 = s
 
     if not output_dtype:
         output_dtype = input_dtype
@@ -117,12 +122,12 @@ def bop(bop_type: BType,
 
     n_in0 = s_0.n_elmts // n_frames
     n_in1 = s_1.n_elmts // n_frames
-
     the_bop = _bop_factory(n_in0, n_in1, bop_type, input_dtype, output_dtype)
     the_bop.n_frames = n_frames
 
     if fwd:
-        return the_bop.fwd_perform(s_0, s_1)
+        the_bop.performf(s_0, s_1)
+        return s_1
 
     if rev:
         return the_bop.perform(s_1, s_0)

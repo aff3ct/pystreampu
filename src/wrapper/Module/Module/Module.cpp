@@ -32,44 +32,42 @@ void Wrapper_Module
 	this->def(py::init<const Module&>());
 	this->def_property("n_frames_per_wave", &Module::get_n_frames_per_wave, &Module_Publicist::set_n_frames_per_wave);
 	this->def_property_readonly("tasks", [](Module& self) -> std::vector<std::shared_ptr<aff3ct::runtime::Task>> { return self.tasks; },  R"pbdoc(Module's list of tasks.)pbdoc");
-	this->def_property("doc", &Module::get_doc, &Module_Publicist::set_doc, R"pbdoc(Module's doc string)pbdoc");
 	this->def_property("name", [](const Module & m){return m.get_custom_name()==""?m.get_name():m.get_custom_name();}, &Module::set_custom_name, R"pbdoc(Name of the module)pbdoc");
 
-	this->def("create_socket_in", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype, const std::string &doc)
+	this->def("create_socket_in", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype)
 	{
-		return mdl.create_socket_in(task, name, n_elmts, utils::str2typeid(dtype.get_name()), doc);
-	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a, "doc"_a="",
+		return mdl.create_socket_in(task, name, n_elmts, utils::str2typeid(dtype.get_name()));
+	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a,
 	R"pbdoc(
         Create a new input socket to a task.
     )pbdoc");
 
-	this->def("create_socket_out", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype, const std::string &doc)
+	this->def("create_socket_out", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype)
 	{
-		return mdl.create_socket_out(task, name, n_elmts, utils::str2typeid(dtype.get_name()), doc);
-	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a, "doc"_a="",
+		return mdl.create_socket_out(task, name, n_elmts, utils::str2typeid(dtype.get_name()));
+	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a,
 	R"pbdoc(
         Create a new output socket to a task.
     )pbdoc");
 
-	this->def("create_socket_fwd", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype, const std::string &doc)
+	this->def("create_socket_fwd", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype)
 	{
-		return mdl.create_socket_fwd(task, name, n_elmts, utils::str2typeid(dtype.get_name()), doc);
-	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a, "doc"_a="",
+		return mdl.create_socket_fwd(task, name, n_elmts, utils::str2typeid(dtype.get_name()));
+	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a,
 	R"pbdoc(
         Create a new forward socket to a task.
     )pbdoc");
 
 	this->def("create_task",
-	[](Module_Publicist& mdl, const std::string &name, const std::string &doc)
+	[](Module_Publicist& mdl, const std::string &name)
 	{
-		return &mdl.create_task(name, doc);
-	}, py::return_value_policy::reference, "name"_a, "doc"_a="",
+		return &mdl.create_task(name);
+	}, py::return_value_policy::reference, "name"_a,
 	R"pbdoc(
         Create a new task.
 
         Args:
             name (str): name of the task
-            doc (str): task doc string
 
         Returns:
             Task: newly created task.

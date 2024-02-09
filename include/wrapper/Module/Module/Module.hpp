@@ -18,7 +18,6 @@ class Module_Publicist : public Module
 	Module_Publicist(const Module& m) : Module(m) {};
 	using Module::create_codelet;
 	using Module::deep_copy;
-	using Module::set_doc;
 	using Module::create_task;
 	using Module::create_socket_in;
 	using Module::create_socket_out;

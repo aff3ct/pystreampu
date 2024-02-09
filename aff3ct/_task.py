@@ -70,17 +70,17 @@ def _get_task_doc(self):
         tsk_doc += f'{sckt.name}, '
     if inputs:
         tsk_doc = tsk_doc[0:-2]
-    tsk_doc += f')\n{self.doc}\n'
+    tsk_doc += f')\n'
 
     for sckt in inputs:
         len_ = sckt.n_elmts // self.module.n_frames
-        str_args += f'\t{sckt.name} (Socket[{len_}'
-        str_args += f', aff3ct.{str(sckt.dtype)}]): {sckt.doc}\n'
+        str_args += f'\t{sckt.name}: Socket[{len_}'
+        str_args += f', aff3ct.{str(sckt.dtype)}]\n'
 
     for sckt in outputs:
         len_ = sckt.n_elmts // self.module.n_frames
-        str_returns += f'\t{sckt.name} (Socket[{len_}'
-        str_returns += f', aff3ct.{str(sckt.dtype)}]): {sckt.doc}\n'
+        str_returns += f'\t{sckt.name}: Socket[{len_}'
+        str_returns += f', aff3ct.{str(sckt.dtype)}]\n'
 
     return f'{tsk_doc}\n{str_args}\n{str_returns}\n'
 

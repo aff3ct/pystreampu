@@ -31,7 +31,7 @@ std::map<std::type_index, std::string> type_map = {{typeid(int8_t  ), py::format
 
 void pyaf::wrapper::wrap_socket(py::handle scope)
 {
-	py::class_<Socket, aff3ct::tools::Interface_reset, std::shared_ptr<Socket>> py_socket(scope, "Socket", py::buffer_protocol(), py::dynamic_attr());
+	py::class_<Socket, aff3ct::tools::Interface_reset, std::shared_ptr<Socket>, aff3ct::runtime::Socket_Publicist> py_socket(scope, "Socket", py::buffer_protocol(), py::dynamic_attr());
 
 	py::enum_<socket_t>(py_socket, "directions", "Enumeration of socket directions")
       .value("IN",  socket_t::SIN, "Input socket")
@@ -54,7 +54,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		2,                          /* Number of dimensions */
 		{n_row, n_col},             /* Buffer dimensions */
 		{(size_t)s.get_datatype_size()*n_col, (size_t)s.get_datatype_size()},
-		s.get_task().get_socket_type(s) == socket_t::SIN
+		s.get_type() == socket_t::SIN
 		);
 	});
 	py_socket.def_property_readonly("wave", [](const aff3ct::runtime::Socket& self) -> py::array
@@ -78,7 +78,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		2,                          /* Number of dimensions */
 		{n_row, n_col},             /* Buffer dimensions */
 		{(size_t)self.get_datatype_size()*n_col, (size_t)self.get_datatype_size()},
-		self.get_task().get_socket_type(self) == socket_t::SIN
+		self.get_type() == socket_t::SIN
 		), buffer_handle);
 	});
 	py_socket.def_property_readonly("task", &aff3ct::runtime::Socket::get_task, py::return_value_policy::reference, "Task owning the socket.");
@@ -217,11 +217,10 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		self.bind(buffer.ptr);
 	}, "Binds the socket to the numpy array 'array' data.", "array"_a);
 	py_socket.def_property_readonly("name", &aff3ct::runtime::Socket::get_name);
-	py_socket.def_property_readonly("doc", &aff3ct::runtime::Socket::get_doc);
 	py_socket.def_property_readonly("direction", [](const aff3ct::runtime::Socket& self)
 	{
 		aff3ct::runtime::Task&   t = self.get_task();
-		return t.get_socket_type(self);
+		return self.get_type();
 	}, "Direction of the socket ()");
 
 };

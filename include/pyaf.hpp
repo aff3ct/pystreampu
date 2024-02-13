@@ -5,6 +5,7 @@
 #include "wrapper/Tools/Interface/Interface_get_set_n_frames.hpp"
 #include "wrapper/Tools/Interface/Interface_is_done.hpp"
 #include "wrapper/Tools/Interface/Interface_reset.hpp"
+#include "wrapper/Tools/Interface/Interface_set_seed.hpp"
 
 #include "wrapper/Common/Wrapper_py/Wrapper_py.hpp"
 #include "wrapper/Common/Tools/type_list.hpp"
@@ -21,6 +22,8 @@
 #include "wrapper/Module/Range/Range.hpp"
 #include "wrapper/Module/Reducer/Reducer.hpp"
 #include "wrapper/Module/Slicer/Slicer.hpp"
+#include "wrapper/Module/Source/Source.hpp"
+#include "wrapper/Module/Source/Random/Source_random.hpp"
 #include "wrapper/Module/Subsequence/Subsequence.hpp"
 #include "wrapper/Module/Switcher/Switcher.hpp"
 #include "wrapper/Module/Unaryop/Unaryop.hpp"

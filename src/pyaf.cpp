@@ -39,6 +39,7 @@ R"pbdoc(
 	pyaf::wrapper::wrap_interface_is_done         (submod_itf);
 	pyaf::wrapper::wrap_interface_reset           (submod_itf);
 	pyaf::wrapper::wrap_interface_get_set_n_frames(submod_itf);
+	pyaf::wrapper::wrap_interface_set_seed        (submod_itf);
 
 	py::module_ m_core = m.def_submodule("core");
 	std::string doc_m_core =
@@ -82,6 +83,10 @@ R"pbdoc(
 
 	py::module_ submod_red = m.def_submodule("red");
 	pyaf::wrapper::wrap_reducer(submod_red);
+
+	py::module_ submod_src = m.def_submodule("src");
+	pyaf::wrapper::wrap_source(submod_src);
+	pyaf::wrapper::wrap_source_random(submod_src);
 
 	py::module_ submod_swi = m.def_submodule("swi");
 	pyaf::wrapper::wrap_switcher(submod_swi);

@@ -31,7 +31,15 @@ void Wrapper_Module
 	this->def(py::init<>());
 	this->def(py::init<const Module&>());
 	this->def_property("n_frames_per_wave", &Module::get_n_frames_per_wave, &Module_Publicist::set_n_frames_per_wave);
-	this->def_property_readonly("tasks", [](Module& self) -> std::vector<std::shared_ptr<aff3ct::runtime::Task>> { return self.tasks; },  R"pbdoc(Module's list of tasks.)pbdoc");
+
+	this->def_property_readonly("tasks", [](Module& self)
+	{
+		std::vector<aff3ct::runtime::Task*> tasks;
+		for(auto t:self.tasks)
+			tasks.push_back(t.get());
+		return tasks;
+	},  R"pbdoc(Module's list of tasks.)pbdoc");
+
 	this->def_property("name", [](const Module & m){return m.get_custom_name()==""?m.get_name():m.get_custom_name();}, &Module::set_custom_name, R"pbdoc(Name of the module)pbdoc");
 
 	this->def("create_socket_in", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype)
@@ -62,7 +70,7 @@ void Wrapper_Module
 	[](Module_Publicist& mdl, const std::string &name)
 	{
 		return &mdl.create_task(name);
-	}, py::return_value_policy::reference, "name"_a,
+	}, "name"_a,
 	R"pbdoc(
         Create a new task.
 

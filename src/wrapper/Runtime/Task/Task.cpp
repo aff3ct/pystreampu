@@ -16,7 +16,7 @@ using namespace aff3ct::runtime;
 
 void pyaf::wrapper::wrap_task(py::handle scope)
 {
-	py::class_ <aff3ct::runtime::Task, std::shared_ptr<aff3ct::runtime::Task>, aff3ct::runtime::Task_Publicist> py_task(scope, "Task");
+	py::class_ <aff3ct::runtime::Task, aff3ct::runtime::Task_Publicist> py_task(scope, "Task");
 
 	py::enum_<status_t>(py_task, "status", "Enumeration of tasks return code.")
       .value("SUCCESS",      status_t::SUCCESS,      "Success code"     )
@@ -25,12 +25,16 @@ void pyaf::wrapper::wrap_task(py::handle scope)
 	  .value("UNKNOWN",      status_t::UNKNOWN,      "Unknown code"     );
 
 	py_task.def_property_readonly("name",    &aff3ct::runtime::Task::get_name);
-	py_task.def_property_readonly("sockets", [](aff3ct::runtime::Task& t) -> std::vector<std::shared_ptr<aff3ct::runtime::Socket>>
+	py_task.def_property_readonly("sockets", [](aff3ct::runtime::Task& t)
 	{
-		return t.sockets;
+		std::vector<aff3ct::runtime::Socket*> sckts;
+
+		for(auto s:t.sockets)
+			sckts.push_back(s.get());
+		return sckts;
 	});
 
-	py_task.def("can_exec",&aff3ct::runtime::Task::can_exec);
+	py_task.def("can_exec", &aff3ct::runtime::Task::can_exec);
 
 	py_task.def_property_readonly("inputs", [](aff3ct::runtime::Task& t)
 	{
@@ -79,8 +83,8 @@ void pyaf::wrapper::wrap_task(py::handle scope)
 	{
 		auto& m = t.get_module();
 		return py::cast(&m[t.get_name() + "::" + s]);
-	}, py::return_value_policy::reference);
-	py_task.def_property_readonly("module", &aff3ct::runtime::Task::get_module, py::return_value_policy::reference);
+	});
+	py_task.def_property_readonly("module", &aff3ct::runtime::Task::get_module);
 	py_task.def_property("debug", &aff3ct::runtime::Task::is_debug, &aff3ct::runtime::Task::set_debug);
 	py_task.def_property("stats", &aff3ct::runtime::Task::is_stats, &aff3ct::runtime::Task::set_stats);
 	py_task.def_property("fast" , &aff3ct::runtime::Task::is_fast,  &aff3ct::runtime::Task::set_fast );

@@ -3,6 +3,20 @@ from __future__ import annotations
 from typing import Union, List
 
 from aff3ct._ext.core import Sequence, Socket
+from aff3ct._ext.sse import Subsequence
+
+
+def get_module(self, module_class, subsequence_modules=True):
+    all_modules = [m for lst in self.get_modules_per_threads() for m in lst]
+    return_list = [m for m in all_modules if isinstance(m, module_class)]
+    if subsequence_modules:
+        sse_list = [mdl for mdl in all_modules if isinstance(mdl, Subsequence)]
+        for sse in sse_list:
+            return_list += sse.sequence.get_module(module_class, True)
+    return return_list
+
+
+Sequence.get_module = get_module
 
 
 def _unique(in_list: list):
@@ -49,6 +63,7 @@ def from_socket(sockets = Union[Socket, List[Socket]], *args: tuple, **kwargs: d
                 firsts.append(first)
 
     return Sequence(firsts, [], [], *args, **kwargs)
+
 
 Sequence.from_socket = from_socket
 __all__ = ["Sequence"]

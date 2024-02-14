@@ -85,8 +85,10 @@ R"pbdoc(
 	pyaf::wrapper::wrap_reducer(submod_red);
 
 	py::module_ submod_src = m.def_submodule("src");
-	pyaf::wrapper::wrap_source(submod_src);
-	pyaf::wrapper::wrap_source_random(submod_src);
+	pyaf::wrapper::wrap_source             (submod_src);
+	pyaf::wrapper::wrap_source_random      (submod_src);
+	pyaf::wrapper::wrap_source_user        (submod_src);	
+	pyaf::wrapper::wrap_source_user_binary (submod_src);
 
 	py::module_ submod_swi = m.def_submodule("swi");
 	pyaf::wrapper::wrap_switcher(submod_swi);

@@ -87,7 +87,7 @@ R"pbdoc(
 	py::module_ submod_src = m.def_submodule("src");
 	pyaf::wrapper::wrap_source             (submod_src);
 	pyaf::wrapper::wrap_source_random      (submod_src);
-	pyaf::wrapper::wrap_source_user        (submod_src);	
+	pyaf::wrapper::wrap_source_user        (submod_src);
 	pyaf::wrapper::wrap_source_user_binary (submod_src);
 
 	py::module_ submod_swi = m.def_submodule("swi");
@@ -98,7 +98,6 @@ R"pbdoc(
 
 	py::module_ submod_uop = m.def_submodule("uop");
 	pyaf::wrapper::wrap_unaryop(submod_uop);
-
 
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;

@@ -51,10 +51,12 @@ void pyaf::wrapper::wrap_sequence(py::handle scope)
 		aff3ct::tools::Stats::show(self.get_modules_per_types(), true);
 	});
 
-	sequence_class.def("get_tasks_per_threads", &aff3ct::runtime::Sequence::get_tasks_per_threads,                          py::return_value_policy::reference);
-	sequence_class.def("get_tasks_per_types",   &aff3ct::runtime::Sequence::get_tasks_per_types,                            py::return_value_policy::reference);
-	sequence_class.def("get_modules_set_seed",  &aff3ct::runtime::Sequence::get_modules<aff3ct::tools::Interface_set_seed>, py::return_value_policy::reference);
-	sequence_class.def("get_modules_reset",     &aff3ct::runtime::Sequence::get_modules<aff3ct::tools::Interface_reset   >, py::return_value_policy::reference);
+	sequence_class.def("get_modules_per_threads", &aff3ct::runtime::Sequence::get_modules_per_threads,                        py::return_value_policy::reference);
+	sequence_class.def("get_modules_per_types",   &aff3ct::runtime::Sequence::get_modules_per_types,                          py::return_value_policy::reference);
+	sequence_class.def("get_tasks_per_threads",   &aff3ct::runtime::Sequence::get_tasks_per_threads,                          py::return_value_policy::reference);
+	sequence_class.def("get_tasks_per_types",     &aff3ct::runtime::Sequence::get_tasks_per_types,                            py::return_value_policy::reference);
+	sequence_class.def("get_modules_set_seed",    &aff3ct::runtime::Sequence::get_modules<aff3ct::tools::Interface_set_seed>, py::return_value_policy::reference);
+	sequence_class.def("get_modules_reset",       &aff3ct::runtime::Sequence::get_modules<aff3ct::tools::Interface_reset   >, py::return_value_policy::reference);
 	sequence_class.def_property_readonly("last_tasks",  &aff3ct::runtime::Sequence::get_lasts_tasks,  py::return_value_policy::reference);
 	sequence_class.def_property_readonly("first_tasks", &aff3ct::runtime::Sequence::get_firsts_tasks, py::return_value_policy::reference);
 };

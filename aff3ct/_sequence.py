@@ -1,8 +1,22 @@
 from __future__ import annotations
 
-from typing import Union
+from typing import Union, List
 
 from aff3ct._ext.core import Sequence, Socket
+from aff3ct._ext.sse import Subsequence
+
+
+def get_module(self, module_class, subsequence_modules=True):
+    all_modules = [m for lst in self.get_modules_per_threads() for m in lst]
+    return_list = [m for m in all_modules if isinstance(m, module_class)]
+    if subsequence_modules:
+        sse_list = [mdl for mdl in all_modules if isinstance(mdl, Subsequence)]
+        for sse in sse_list:
+            return_list += sse.sequence.get_module(module_class, True)
+    return return_list
+
+
+Sequence.get_module = get_module
 
 
 def _unique(in_list: list):
@@ -14,7 +28,7 @@ def _unique(in_list: list):
 
 
 def _get_firsts(s: Socket):
-    def visit(s: Socket, visited: list[Socket]):
+    def visit(s: Socket, visited: List[Socket]):
         tsk = s.task
         visited.append(tsk)
         if len(tsk.inputs) == 0 and len(tsk.forwards) == 0 and not tsk.is_bound():
@@ -36,7 +50,7 @@ def _get_firsts(s: Socket):
     return visit(s, [])
 
 
-def from_socket(sockets = Union[Socket, list[Socket]], *args: tuple, **kwargs: dict):
+def from_socket(sockets = Union[Socket, List[Socket]], *args: tuple, **kwargs: dict):
     firsts = []
     if not isinstance(sockets, list):
         sockets = [sockets]
@@ -49,6 +63,7 @@ def from_socket(sockets = Union[Socket, list[Socket]], *args: tuple, **kwargs: d
                 firsts.append(first)
 
     return Sequence(firsts, [], [], *args, **kwargs)
+
 
 Sequence.from_socket = from_socket
 __all__ = ["Sequence"]

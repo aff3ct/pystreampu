@@ -27,6 +27,4 @@ void pyaf::wrapper::wrap_switcher(py::handle scope)
 		std::type_index  cpp_datatype = pyaf::utils::str2typeid(datatype.get_name());
 		 return new aff3ct::module::Switcher(n_data_sockets, n_elmts, cpp_datatype);
 	}),"n_data_sockets"_a, "n_elmts"_a, "datatype"_a,  R"pbdoc()pbdoc", py::return_value_policy::take_ownership);
-
-	switcher_class.def("reset", &aff3ct::module::Switcher::reset);
 }

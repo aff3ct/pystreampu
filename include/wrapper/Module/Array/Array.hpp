@@ -17,24 +17,21 @@ namespace py = pybind11;
 
 namespace aff3ct
 {
-
 namespace module
 {
-
-template <typename T>
+template <typename T = int>
 class Array : public Module
 {
 private:
-	std::vector<T> data;
+	void* dataptr;
 
 public:
-
-	Array(const std::vector<T>& vec);
-	Array(const int sz, const T val = (T)0);
+	Array(py::array_t<T>& data);
 	virtual ~Array() = default;
 	virtual Array* clone() const;
-};
 
+	void* get_dataptr() const;
+};
 }
 }
 

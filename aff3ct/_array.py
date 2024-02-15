@@ -1,93 +1,92 @@
 """Provides some array factories."""
 from __future__ import annotations
 
+from typing import List, Union
+
 from ._typing import SocketLike
 
 import numpy as np
 
 from . import _ext
 
+from multipledispatch import dispatch
 
-def _find_common_type(lst: list) -> _ext.dtype:
-    """Return the common type of a list.
+from warnings import warn
 
-    Args:
-        lst (list): input list
+def array(data, n_frames=None, dtype=None) -> _ext.core.Socket:
+    if isinstance(data, _ext.core.Socket): # socket case : do nothing
+        return data
 
-    Returns:
-        out (dtype): a common dtype for the list
-    """
-    dtype = _ext.float64
-    if all(isinstance(x, int) for x in lst):
-        dtype = _ext.int64
-    return dtype
-
-
-def array(
-    in_array: SocketLike,
-    n_frames: int = 1,
-    dtype: _ext.dtype = None
-) -> _ext.core.Socket:
-    """Build a socket either from a numpy.array or a list.
-
-    Args:
-        in_array (SocketLike): initial numpy array or list.
-        n_frames (int): number of frames.
-        dtype (dtype): socket data type.
-
-    Returns:
-        Socket: a socket containing the same data as in object.
-
-    Examples:
-
-        If all elements in the list are int and no dtype, the dtype of x will
-        be int64
-
-        >>> x = aff3ct.array([1,2,3,4,5])
-        >>> x
-        socket([1 2 3 4 5], dtype=int64, name=X, task=Array.get)
-
-        If one (or more) element is a float and no dtype, the dtype of x will
-        be float64
-
-        >>> x = aff3ct.array([1.0,2,3,4,5])
-        >>> x
-
-        If a dtype is set, x will have this dtype
-        socket([1. 2. 3. 4. 5.], dtype=float64, name=X, task=Array.get)
-
-        >>> x = aff3ct.array([1.0,2,3,4,5], dtype=aff3ct.int8)
-        >>> x
-        socket([1 2 3 4 5], dtype=int8, name=X, task=Array.get)
-
-    See Also:
-        :meth:`aff3ct.ones`, :meth:`aff3ct.zeros`, :meth:`aff3ct.arange`
-
-    """
-    if isinstance(in_array, _ext.core.Socket):
-        return in_array
-
-    if isinstance(in_array, (int, float)):
-        in_array = [in_array]
-
-    if isinstance(in_array, list) and not dtype:
-        dtype = _find_common_type(in_array)
-    elif isinstance(in_array, np.ndarray) and not dtype:
-        dtype = getattr(_ext, in_array.dtype.type.__name__)
-
-    lst = np.array(in_array, dtype=np.dtype(dtype.name))
-    attr_name = f'Array_{dtype.name}'
-
-    if lst.size == 1:
-        print(lst)
-        mdl = getattr(_ext.arr, attr_name)(1, lst[0])
+    if isinstance(data, np.ndarray):
+        if n_frames:
+            warn_str = "When input 'data' is a 'np.ndarray',"
+            warn_str += " parameter 'n_frames' is ignored."
+            warn_str += "\nIt will be deduced from 'data'."
+            warn(warn_str, stacklevel=2)
+        if dtype:
+            warn_str = "When input 'data' is a 'np.ndarray',"
+            warn_str += " parameter 'dtype' is ignored."
+            warn_str += "\nIt will be deduced from 'data'."
+            warn(warn_str, stacklevel=2)
     else:
-        mdl = getattr(_ext.arr, attr_name)(lst)
+        if not n_frames:
+            n_frames = 1
 
-    mdl.n_frames = n_frames
-    return mdl.get()
+        if not dtype:
+            dtype = _ext.float64
+
+        if not isinstance(data, list): # scalar case, TODO : improve this test
+            data = [data]
+        if not isinstance(data[0], list):
+            data = [data]*n_frames
+        data = np.array(data, dtype=dtype.numpy)
+
+    attr_name = f'Array_{str(data.dtype)}'
+    return getattr(_ext.arr, attr_name)(data).read.data
 
 
+
+'''@dispatch(list, dtype=_ext.float64)
+def array(
+    value: list,
+    dtype: _ext.dtype = _ext.float64
+) -> _ext.core.Socket:
+    """Doc 1"""
+    attr_name = f'Array_{dtype.name}'
+    return getattr(_ext.arr, attr_name)(value).get()
+
+@dispatch(list, n_frames=int, dtype=_ext.dtype)
+def array(
+    value: list,
+    n_frames: int = 1,
+    dtype: _ext.dtype = _ext.float64
+) -> _ext.core.Socket:
+    """Doc 2"""
+    attr_name = f'Array_{dtype.name}'
+    return getattr(_ext.arr, attr_name)([value]*n_frames).get()
+
+@dispatch(float, size=int, n_frames=int, dtype=_ext.dtype)
+def array(
+    value: float,
+    size: int = 1,
+    n_frames: int = 1,
+    dtype:_ext.dtype = _ext.float64
+) -> _ext.core.Socket:
+    """Doc 3"""
+    attr_name = f'Array_{dtype.name}'
+    return getattr(_ext.arr, attr_name)([[value]*size]*n_frames).get()
+
+@dispatch(int, size=int, n_frames=int, dtype=_ext.dtype)
+def array(
+    value:int,
+    size:int = 1,
+    n_frames:int = 1,
+    dtype:_ext.dtype = _ext.float64
+) -> _ext.core.Socket:
+    """Doc 4"""
+    attr_name = f'Array_{dtype.name}'
+    return getattr(_ext.arr, attr_name)([[value]*size]*n_frames).get()
+'''
 def zeros(
     n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32
 ) -> _ext.core.Socket:
@@ -178,7 +177,7 @@ def arange(
         :meth:`aff3ct.array`, :meth:`aff3ct.zeros`, :meth:`aff3ct.ones`
     """
     arr = np.arange(start, stop, step, dtype=np.dtype(dtype.name))
-    return array(arr, n_frames, dtype)
+    return array(arr)
 
 
 __all__ = ['array', 'zeros', 'ones', 'arange']

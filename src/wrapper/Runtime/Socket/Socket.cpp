@@ -15,8 +15,6 @@ using namespace py::literals;
 using namespace pyaf::wrapper;
 using namespace aff3ct::runtime;
 
-#define BOP_RETURN_ARGS py::return_value_policy::reference, py::is_operator(), py::keep_alive<0,1>(), py::keep_alive<0,2>()
-
 std::map<std::type_index, std::string> type_map = {{typeid(int8_t  ), py::format_descriptor<int8_t  >::format()},
                                                    {typeid(int16_t ), py::format_descriptor<int16_t >::format()},
                                                    {typeid(int32_t ), py::format_descriptor<int32_t >::format()},
@@ -31,58 +29,61 @@ std::map<std::type_index, std::string> type_map = {{typeid(int8_t  ), py::format
 
 void pyaf::wrapper::wrap_socket(py::handle scope)
 {
-	py::class_<Socket, aff3ct::tools::Interface_reset, std::shared_ptr<Socket>> py_socket(scope, "Socket", py::buffer_protocol(), py::dynamic_attr());
+	py::class_<Socket, aff3ct::tools::Interface_reset, aff3ct::runtime::Socket_Publicist> py_socket(scope, "Socket", py::buffer_protocol(), py::dynamic_attr());
 
 	py::enum_<socket_t>(py_socket, "directions", "Enumeration of socket directions")
       .value("IN",  socket_t::SIN, "Input socket")
       .value("OUT", socket_t::SOUT, "Output socket")
 	  .value("FWD", socket_t::SFWD, "Forward socket");
 
-	py_socket.def_buffer([](Socket &s) -> py::buffer_info{
-	if (s.get_name() == "status")
+	py_socket.def_buffer([](Socket &s) -> py::buffer_info
 	{
-		size_t n_w = (size_t)s.get_task().get_module().get_n_waves();
-		return py::buffer_info(
-			s.get_dataptr(),            /* Pointer to buffer */
-			s.get_datatype_size(),      /* Size of one scalar */
-			type_map[s.get_datatype()], /* Python struct-style format descriptor */
-			1,                          /* Number of dimensions */
-			{n_w},                        /* Buffer dimensions */
-			{(size_t)s.get_datatype_size()}
+	if(s.get_dataptr() == nullptr)
+		return py::buffer_info(nullptr, s.get_datatype_size(), type_map[s.get_datatype()],0);
+
+	size_t n_frames = s.get_task().get_module().get_n_frames();
+	size_t n_row    = n_frames;
+	size_t n_col    = s.get_n_elmts()/n_frames;
+
+	return py::buffer_info(
+		s.get_dataptr(),            /* Pointer to buffer */
+		s.get_datatype_size(),      /* Size of one scalar */
+		type_map[s.get_datatype()], /* Python struct-style format descriptor */
+		2,                          /* Number of dimensions */
+		{n_row, n_col},             /* Buffer dimensions */
+		{(size_t)s.get_datatype_size()*n_col, (size_t)s.get_datatype_size()},
+		s.get_type() == socket_t::SIN
 		);
-	}
-	else
-	{
-		size_t n_frames = s.get_task().get_module().get_n_frames();
-		size_t n_row    = n_frames;
-		size_t n_col    = s.get_n_elmts()/n_frames;
-		if (n_row > 1)
-		{
-			return py::buffer_info(
-				s.get_dataptr(),            /* Pointer to buffer */
-				s.get_datatype_size(),      /* Size of one scalar */
-				type_map[s.get_datatype()], /* Python struct-style format descriptor */
-				2,                          /* Number of dimensions */
-				{n_row, n_col},             /* Buffer dimensions */
-				{(size_t)s.get_datatype_size()*n_col, (size_t)s.get_datatype_size()});
-		}
-		else
-		{
-			return py::buffer_info(
-				s.get_dataptr(),            /* Pointer to buffer */
-				s.get_datatype_size(),      /* Size of one scalar */
-				type_map[s.get_datatype()], /* Python struct-style format descriptor */
-				1,                          /* Number of dimensions */
-				{n_col},                    /* Buffer dimensions */
-				{(size_t)s.get_datatype_size()});
-		}
-	}
 	});
-	py_socket.def_property_readonly("task", &aff3ct::runtime::Socket::get_task, py::return_value_policy::reference, "Task owning the socket.");
+	py_socket.def_property_readonly("wave", [](const aff3ct::runtime::Socket& self) -> py::array
+	{
+		if(self.get_dataptr() == nullptr)
+			return py::array(py::buffer_info(nullptr, 1, type_map[self.get_datatype()],{}));
+
+
+		// Use this if the C++ buffer should NOT be deallocated
+		// once Python no longer has a reference to it
+		py::capsule buffer_handle([](){});
+
+		size_t n_frames = self.get_task().get_module().get_n_frames();
+		size_t n_row    = self.get_task().get_module().get_n_frames_per_wave();
+		size_t n_col    = self.get_n_elmts()/n_frames;
+
+		return py::array(py::buffer_info(
+		self.get_dataptr(),            /* Pointer to buffer */
+		self.get_datatype_size(),      /* Size of one scalar */
+		type_map[self.get_datatype()], /* Python struct-style format descriptor */
+		2,                          /* Number of dimensions */
+		{n_row, n_col},             /* Buffer dimensions */
+		{(size_t)self.get_datatype_size()*n_col, (size_t)self.get_datatype_size()},
+		self.get_type() == socket_t::SIN
+		), buffer_handle);
+	});
+	py_socket.def_property_readonly("task", &aff3ct::runtime::Socket::get_task, "Task owning the socket.");
 	py_socket.def_property_readonly("n_elmts", &aff3ct::runtime::Socket::get_n_elmts, "Number of elements per `n_frames`");
 	py_socket.def_property_readonly("dtype", [](const aff3ct::runtime::Socket& self){return pyaf::dtype::get(self.get_datatype_string());}, "Data type.");
-	py_socket.def_property_readonly("bound_sockets", &aff3ct::runtime::Socket::get_bound_sockets, py::return_value_policy::reference, "Sockets to wich the socket is bound (for output sockets only).");
-	py_socket.def_property_readonly("bound_socket", static_cast<Socket&(Socket::*)()>(&aff3ct::runtime::Socket::get_bound_socket), py::keep_alive<0, 1>(), "Socket bound to self (for input sockets only).");
+	py_socket.def_property_readonly("bound_sockets", &aff3ct::runtime::Socket::get_bound_sockets, "Sockets to wich the socket is bound (for output sockets only).");
+	py_socket.def_property_readonly("bound_socket", static_cast<Socket&(Socket::*)()>(&aff3ct::runtime::Socket::get_bound_socket), "Socket bound to self (for input sockets only).");
 
 	py_socket.def("has_data", [](const aff3ct::runtime::Socket& self)
 	{
@@ -100,15 +101,6 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		return array;
 	},
 	"Numpy array view of the socket (copy-less).");
-	/*py_socket.def("__getitem__", [](aff3ct::runtime::Socket& sckt, py::handle& index) {
-		py::array array = py::cast(sckt);
-		return array.attr("__getitem__")(index);
-		},py::return_value_policy::reference);
-
-	py_socket.def("__setitem__", [](aff3ct::runtime::Socket& sckt, py::handle& index, py::handle& value) {
-		py::array arr = py::cast(sckt);
-		arr.attr("__setitem__")(index, value);
-		},py::return_value_policy::reference);*/
 
 	py_socket.def("__bool__", [](const aff3ct::runtime::Socket& sckt) {
 		size_t n_frames = sckt.get_task().get_module().get_n_frames();
@@ -137,7 +129,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		}
 	});
 
-	py_socket.def("__bind__", [](aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& s_out, const int priority)
+	py_socket.def("_bind", [](aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& s_out, const int priority)
 	{
 		self.bind(s_out, priority);
 	}, "Binds the socket to socket 's_out' with priority 'priority'.", "s_out"_a, "priority"_a=1);
@@ -170,8 +162,8 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		self_.attr("__tag__") = py::cast(std::unique_ptr<aff3ct::module::Source_array<float>>(std::move(cst_mdl)));
 	}
 	);*/
-	/*
-	py_socket.def("bind", [](aff3ct::runtime::Socket& self, py::array& arr)
+
+	py_socket.def("_bind", [](aff3ct::runtime::Socket& self, py::array& arr)
 	{
 		size_t n_row = (size_t)self.get_task().get_module().get_n_frames();
 		size_t n_col = (size_t)self.get_n_elmts()/n_row;
@@ -212,13 +204,12 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		}
 
 		self.bind(buffer.ptr);
-	}, "Binds the socket to the numpy array 'array' with priority 'priority'.", "array"_a);*/
+	}, "Binds the socket to the numpy array 'array' data.", "array"_a);
 	py_socket.def_property_readonly("name", &aff3ct::runtime::Socket::get_name);
-	py_socket.def_property_readonly("doc", &aff3ct::runtime::Socket::get_doc);
 	py_socket.def_property_readonly("direction", [](const aff3ct::runtime::Socket& self)
 	{
 		aff3ct::runtime::Task&   t = self.get_task();
-		return t.get_socket_type(self);
+		return self.get_type();
 	}, "Direction of the socket ()");
 
 };

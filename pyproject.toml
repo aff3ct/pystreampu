@@ -17,7 +17,8 @@ license = {file = "LICENSE"}
 readme = "README.md"
 dependencies = [
     "graphviz",
-    "numpy"
+    "numpy",
+    "multipledispatch"
 ]
 
 [tool.pytest.ini_options]

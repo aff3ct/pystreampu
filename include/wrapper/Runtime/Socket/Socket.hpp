@@ -8,6 +8,18 @@
 
 namespace py = pybind11;
 
+namespace aff3ct
+{
+namespace runtime
+{
+class Socket_Publicist : public Socket
+{
+	public:
+	virtual ~Socket_Publicist() = default;
+};
+}
+}
+
 namespace pyaf
 {
 namespace wrapper

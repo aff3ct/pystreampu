@@ -4,9 +4,17 @@
 from __future__ import annotations
 
 from typing import Union
+from ._typing import SocketLike
 
 from aff3ct._ext.core import Module, Socket, Task
 
+def _call_impl(self: Module,
+               *args: tuple[SocketLike],
+               raw_data=False,
+               no_doc=False,
+               **kwargs: dict[str, SocketLike]
+               ) -> Union[Socket, tuple[Socket], None]:
+    return self.tasks[0](*args, raw_data=raw_data, no_doc=no_doc, **kwargs)
 
 def getattr_impl(self: Module, attr: str) -> Union[Task, Socket]:
     """Overload __getattr__ of aff3ct._ext.core.Module.
@@ -24,14 +32,11 @@ def getattr_impl(self: Module, attr: str) -> Union[Task, Socket]:
         out (Task): if attr is formatted as 'task_name'
         out (Socket): if attr is formatted as 'task_name::socket_name'
 
-    Raises:
-        AttributeError: if no attribute can be found
     """
-    try:
+    if attr in [t.name for t in self.tasks]:
         return self[attr]
-    except Exception as exc:
-        e_str = f"'{self.__class__.__name__}' object has no attribute '{attr}'"
-        raise AttributeError(e_str) from exc
+
+    return object.__getattribute__(self, attr)
 
 
 def dir_impl(self: Module) -> dict:
@@ -60,6 +65,7 @@ def setitem_impl(self: Module, attr: str, sck: Socket) -> None:
     self[attr].bind(sck)
 
 
+Module.__call__ = _call_impl
 Module.__getattr__ = getattr_impl
 Module.__dir__ = dir_impl
 Module.__setitem__ = setitem_impl

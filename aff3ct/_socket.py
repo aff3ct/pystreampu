@@ -23,7 +23,7 @@ def _str(self: Socket) -> str:
     Returns:
         out (str): str representing the socket's data
     """
-    return str(np.array(self))
+    return str(self.numpy)
 
 
 Socket.__str__ = _str
@@ -53,7 +53,15 @@ def _repr(self: Socket) -> str:
     Returns:
         out (str): a str representing the socket
     """
-    data_str = str(np.array(self))
+    data_ = str(self.numpy).splitlines()
+
+    if len(data_) > 1:
+        data_[0] += '\n'
+        data_[-1] = '       ' + data_[-1]
+        for i in range(1, len(data_)-1):
+            data_[i] = '       ' + data_[i] + '\n'
+
+    data_str = ''.join(data_)
     out = f'socket({data_str}, dtype={self.dtype.name}, name={self.name}, '
     out += f'task={self.task.module.name}.{self.task.name})'
     return out
@@ -62,7 +70,7 @@ def _repr(self: Socket) -> str:
 Socket.__repr__ = _repr
 
 
-def _bind(self: Socket, s_out: SocketLike, priority: int = 1) -> None:
+def _bind_(self: Socket, s_out: SocketLike, priority: int = 1, raw_data=False) -> None:
     """Binds self to s_out.
 
     If s_out is not a `Socket`, s_out is converted to a `Socket` first.
@@ -71,30 +79,32 @@ def _bind(self: Socket, s_out: SocketLike, priority: int = 1) -> None:
         self (Socket): A socket
         s_out (SocketLike): Socket to bind
         priority (int): Priority of the bind.
+        raw_data (bool): if True converts data to a Socket
     """
-    # The __tag__ attribute of module will store the modules which are binded
-    # to the tasks of mdl
-    mdl = self.task.module
-    if not hasattr(mdl, '__tag__'):
-        mdl.__tag__ = dict.fromkeys([tsk.name for tsk in mdl.tasks], {})
+    if raw_data:
+        self._bind(np.array(s_out, copy=False))
+        return
 
     if not isinstance(s_out, Socket):
-        s_out = array(s_out)
+        if hasattr(s_out, "dtype"):
+            s_out = array(s_out, dtype=dtype.of(str(s_out.dtype)))
+        else:
+            s_out = array(s_out)
     else:
-        while hasattr(s_out, '_mrv'):
+        if hasattr(s_out, '_mrv'):
             s_out = s_out._mrv
 
-    mdl.__tag__[self.task.name][self.name] = s_out
+    self._tag = s_out
 
     if self.direction == Socket.directions.FWD:
         # If slf is a forward socket,
         # then it will be the most recent value of s_out
         s_out._mrv = self
 
-    self.__bind__(s_out, priority)
+    self._bind(s_out, priority)
 
 
-Socket.bind = _bind
+Socket.bind = _bind_
 
 
 def _setitem(self: Socket, key: Union[int, slice], data: SocketLike) -> Socket:
@@ -447,7 +457,7 @@ def _req(self: Socket, value: SocketLike) -> Socket:
 Socket.__req__ = _req
 
 
-def _neq(self: Socket, value: SocketLike) -> Socket:
+def _ne(self: Socket, value: SocketLike) -> Socket:
     """Compute self != value.
 
     Args:
@@ -457,10 +467,10 @@ def _neq(self: Socket, value: SocketLike) -> Socket:
     Returns:
         out (Socket):  self != value
     """
-    return _bop.bop(_bop.BType.NEQ, self, value)
+    return _bop.bop(_bop.BType.NE, self, value)
 
 
-Socket.__neq__ = _neq
+Socket.__ne__ = _ne
 
 
 def _rneq(self: Socket, value: SocketLike) -> Socket:

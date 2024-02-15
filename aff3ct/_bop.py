@@ -12,6 +12,7 @@ from aff3ct._ext import dtype, int8, int32
 from aff3ct._ext.core import Module, Socket
 from aff3ct._typing import SocketLike
 
+import numpy as np
 
 class BType(Enum):
     """Binary operator enum."""
@@ -25,7 +26,7 @@ class BType(Enum):
     LE = auto()
     LT = auto()
     EQ = auto()
-    NEQ = auto()
+    NE = auto()
     AND = auto()
     OR = auto()
     XOR = auto()
@@ -72,8 +73,9 @@ def _bop_factory(
         ex_msg = f"type '{type(output_type)}' does not name an AFF3CT dtype."
         raise TypeError(ex_msg)
 
+    name = f'Binaryop_{str(bop_type)}_{input_type.name}_{output_type.name}'
+
     try:
-        name = f'Binaryop_{str(bop_type)}_{input_type.name}_{output_type.name}'
         return getattr(aff3ct._ext.bop, name)(n_in0, n_in1)
     except AttributeError as exc:
         ex_msg = f"binary operator '{name}' does not exist."
@@ -104,8 +106,12 @@ def bop(bop_type: BType,
     n_frames = s_0.task.module.n_frames
     input_dtype = s_0.dtype
 
-    if not isinstance(s_1, Socket):
-        s_1 = array(s_1, dtype=s_0.dtype, n_frames=n_frames)
+    s_1 = array(s_1, dtype=s_0.dtype)
+
+    if fwd:
+        s = s_1
+        s_1 = s_0
+        s_0 = s
 
     if not output_dtype:
         output_dtype = input_dtype
@@ -116,12 +122,12 @@ def bop(bop_type: BType,
 
     n_in0 = s_0.n_elmts // n_frames
     n_in1 = s_1.n_elmts // n_frames
-
     the_bop = _bop_factory(n_in0, n_in1, bop_type, input_dtype, output_dtype)
     the_bop.n_frames = n_frames
 
     if fwd:
-        return the_bop.fwd_perform(s_0, s_1)
+        the_bop.performf(s_0, s_1)
+        return s_1
 
     if rev:
         return the_bop.perform(s_1, s_0)

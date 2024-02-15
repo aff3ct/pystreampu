@@ -15,12 +15,14 @@ class Module_Publicist : public Module
 {
 	public:
 	using Module::Module;
-	using Module::set_doc;
-	using Module::create_task;
-	//using Module::create_socket_in;
-	//using Module::create_socket_out;
-	//using Module::create_socket_fwd;
+	Module_Publicist(const Module& m) : Module(m) {};
 	using Module::create_codelet;
+	using Module::deep_copy;
+	using Module::create_task;
+	using Module::create_socket_in;
+	using Module::create_socket_out;
+	using Module::create_socket_fwd;
+	using Module::set_n_frames_per_wave;
 
 	virtual ~Module_Publicist() = default;
 };

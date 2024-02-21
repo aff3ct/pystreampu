@@ -18,62 +18,43 @@ PYBIND11_MODULE(_ext, m){
 	 //Split in two following https:pybind11.readthedocs.io/en/stable/advanced/misc.html#avoiding-c-types-in-docstrings
 	 //for enhancing python doc
 
-	m.doc() =
-R"pbdoc(
-        Python bindings for C++ AFF3CT library.
-
-        .. autosummary::
-           :toctree:
-           :template: custom-module-template.rst
-
-		   help
-           tools
-)pbdoc";
-
-	pyaf::wrapper::wrap_dtypes(m);
-
-	py::module_ submod_tools = m.def_submodule("tools");
-
-	py::module_ submod_itf   = submod_tools.def_submodule("interfaces");
+	// Interfaces
+	py::module_ submod_itf   = m.def_submodule("interfaces"); // TODO : put in a separate file
 	pyaf::wrapper::wrap_interface_clone           (submod_itf);
 	pyaf::wrapper::wrap_interface_is_done         (submod_itf);
 	pyaf::wrapper::wrap_interface_reset           (submod_itf);
 	pyaf::wrapper::wrap_interface_get_set_n_frames(submod_itf);
 	pyaf::wrapper::wrap_interface_set_seed        (submod_itf);
 
-	py::module_ m_core = m.def_submodule("core");
-	std::string doc_m_core =
-R"pbdoc(
-        Bindings for the "core" of AFF3CT.
-
-        .. autosummary::
-           :toctree:
-           :template: custom-module-template.rst
-)pbdoc";
-	m_core.doc() = doc_m_core.c_str();
-
-	std::vector<std::unique_ptr<pyaf::wrapper::Wrapper_py>> wrappers;
-
+	// Wrap of runtime namespace
+	py::module_ m_core = m.def_submodule("core"); // TODO rename runtime
 	pyaf::wrapper::wrap_socket(m_core);
 	pyaf::wrapper::wrap_task(m_core);
-	wrappers.push_back(std::unique_ptr<pyaf::wrapper::Wrapper_py>(new pyaf::wrapper::Wrapper_Module(m_core)));
-
-	for (size_t i = 0; i < wrappers.size(); i++)
-		wrappers[i]->definitions();
-
-
 	pyaf::wrapper::wrap_sequence(m_core);
+	auto wrap_module(std::unique_ptr<pyaf::wrapper::Wrapper_py>(new pyaf::wrapper::Wrapper_Module(m_core))); // TODO Update to the new way
+	wrap_module->definitions();
 
+	// Wrap of tools namespace
+	// dtypes (class for handling types in the python package)
+	pyaf::wrapper::wrap_dtypes(m);
+
+	// Exceptions
+	py::module_ submod_exc   = m.def_submodule("exceptions");
+	pyaf::wrapper::wrap_exceptions(submod_exc);
+
+	// Help
+	// TODO : put in a separate file
 	m.def("help", [](const aff3ct::module::Module  & module, const bool & verbose){py::print(aff3ct::tools::get_help(module, verbose).c_str());}, "module"_a, "verbose"_a=false);
-	m.def("help", [](const aff3ct::runtime::Task   &   task, const bool & verbose){py::print(aff3ct::tools::get_help(task,   verbose).c_str());}, "module"_a, "verbose"_a=false);
-	m.def("help", [](const aff3ct::runtime::Socket & socket, const bool & verbose){py::print(aff3ct::tools::get_help(socket, verbose).c_str());}, "module"_a, "verbose"_a=false);
+	m.def("help", [](const aff3ct::runtime::Task   &   task, const bool & verbose){py::print(aff3ct::tools::get_help(task,   verbose).c_str());}, "task"_a,   "verbose"_a=false);
+	m.def("help", [](const aff3ct::runtime::Socket & socket, const bool & verbose){py::print(aff3ct::tools::get_help(socket, verbose).c_str());}, "socket"_a, "verbose"_a=false);
+
+	// Wrap of module namespace
+	pyaf::wrapper::wrap_range    (m); // TODO : change python submodule
+	pyaf::wrapper::wrap_slicer   (m); // TODO : change python submodule
+	pyaf::wrapper::wrap_stateless(m); // TODO : change python submodule
 
 	py::module_ submod_arr = m.def_submodule("arr");
 	pyaf::wrapper::wrap_array(submod_arr);
-
-	pyaf::wrapper::wrap_range(m);
-	pyaf::wrapper::wrap_slicer(m);
-	pyaf::wrapper::wrap_stateless(m);
 
 	py::module_ submod_bop = m.def_submodule("bop");
 	pyaf::wrapper::wrap_binaryop(submod_bop);

@@ -6,6 +6,7 @@
 #include "wrapper/Common/Tools/Type/Type.hpp"
 #include "wrapper/Common/Tools/type_functions.h"
 
+#include "wrapper/Tools/Exception/Exception.hpp"
 #include "wrapper/Tools/Interface/Interface_clone.hpp"
 #include "wrapper/Tools/Interface/Interface_get_set_n_frames.hpp"
 #include "wrapper/Tools/Interface/Interface_is_done.hpp"

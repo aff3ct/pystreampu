@@ -36,6 +36,10 @@ void pyaf::wrapper::wrap_task(py::handle scope)
 
 	py_task.def("can_exec", &aff3ct::runtime::Task::can_exec);
 
+	py_task.def("interrupt_processing", [](aff3ct::runtime::Task& t){
+		throw aff3ct::tools::processing_aborted();
+	});
+
 	py_task.def_property_readonly("inputs", [](aff3ct::runtime::Task& t)
 	{
 		std::vector<aff3ct::runtime::Socket*> in;

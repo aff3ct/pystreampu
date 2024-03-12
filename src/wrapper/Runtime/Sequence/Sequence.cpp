@@ -1,5 +1,7 @@
 #include "wrapper/Runtime/Sequence/Sequence.hpp"
 
+#include "wrapper/Common/pystreambuf.h"
+
 #include <pybind11/functional.h>
 #include <pybind11/iostream.h>
 #include <pybind11/stl.h>
@@ -31,9 +33,21 @@ void pyaf::wrapper::wrap_sequence(py::handle scope)
 	sequence_class.def("exec", [](aff3ct::runtime::Sequence& self)
 	{
 		py::gil_scoped_release release{};
-		self.exec(); // gil aquired before exec of stop_condition
-		             // see that pybind11/functionnal.h l.62
+		self.exec();
 	});
+
+	sequence_class.def("exec", [](aff3ct::runtime::Sequence& self, aff3ct::tools::Terminal_dump& terminal, std::ostream& stats_file)
+	{
+		py::gil_scoped_release release{};
+		self.exec([&]() -> bool
+		{
+			py::gil_scoped_acquire gil;
+			terminal.temp_report(stats_file);
+
+			return terminal.is_interrupt();
+		}); // gil aquired before exec of temp_report
+	});
+
 	sequence_class.def("exec_seq",  &aff3ct::runtime::Sequence::exec_seq,  "tid"_a = 0, "frame_id"_a = -1, py::call_guard<py::gil_scoped_release>());
 	sequence_class.def("exec_step", &aff3ct::runtime::Sequence::exec_step, "tid"_a = 0, "frame_id"_a = -1, py::return_value_policy::reference, py::call_guard<py::gil_scoped_release>());
 

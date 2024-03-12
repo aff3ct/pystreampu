@@ -18,7 +18,6 @@ void pyaf::wrapper::wrap_source_user(py::handle scope)
 		using B = typename decltype(b)::type;
 		std::string B_str = aff3ct::runtime::type_to_string[typeid(B)];
 		auto source_class = py::class_<aff3ct::module::Source_user<B>, aff3ct::module::Source<B>>(scope, std::string("Source_user_" + B_str).c_str());
-		source_class.def(py::init<const int, const std::string&, const bool, const int>(),"max_data_size"_a, "filename"_a, "auto_reset"_a, "start_idx"_a = 0, py::return_value_policy::take_ownership);
-		source_class.def(py::init<const int, const std::string&, const int>(),"max_data_size"_a, "filename"_a, "start_idx"_a = 0, py::return_value_policy::take_ownership);
+		source_class.def(py::init<const int, const std::string&, const bool, const int>(),"max_data_size"_a, "filename"_a, "auto_reset"_a=true, "start_idx"_a = 0, py::return_value_policy::take_ownership);
 	});
 }

@@ -60,7 +60,6 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		if(self.get_dataptr() == nullptr)
 			return py::array(py::buffer_info(nullptr, 1, type_map[self.get_datatype()],{}));
 
-
 		// Use this if the C++ buffer should NOT be deallocated
 		// once Python no longer has a reference to it
 		py::capsule buffer_handle([](){});
@@ -79,10 +78,10 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		self.get_type() == socket_t::SIN
 		), buffer_handle);
 	});
-	py_socket.def_property_readonly("task", &aff3ct::runtime::Socket::get_task, "Task owning the socket.");
-	py_socket.def_property_readonly("n_elmts", &aff3ct::runtime::Socket::get_n_elmts, "Number of elements per `n_frames`");
-	py_socket.def_property_readonly("dtype", [](const aff3ct::runtime::Socket& self){return pyaf::dtype::get(self.get_datatype_string());}, "Data type.");
+	py_socket.def_property_readonly("task",          &aff3ct::runtime::Socket::get_task, "Task owning the socket.");
+	py_socket.def_property_readonly("n_elmts",       &aff3ct::runtime::Socket::get_n_elmts, "Number of elements per `n_frames`");
 	py_socket.def_property_readonly("bound_sockets", &aff3ct::runtime::Socket::get_bound_sockets, "Sockets to wich the socket is bound (for output sockets only).");
+	py_socket.def_property_readonly("dtype", [](const aff3ct::runtime::Socket& self){return pyaf::dtype::get(self.get_datatype_string());}, "Data type.");
 	py_socket.def_property_readonly("bound_socket", static_cast<Socket&(Socket::*)()>(&aff3ct::runtime::Socket::get_bound_socket), "Socket bound to self (for input sockets only).");
 
 	py_socket.def("has_data", [](const aff3ct::runtime::Socket& self)
@@ -134,35 +133,6 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		self.bind(s_out, priority);
 	}, "Binds the socket to socket 's_out' with priority 'priority'.", "s_out"_a, "priority"_a=1);
 
-	/*py_socket.def("bind", [](aff3ct::runtime::Socket& self, const float& cst)
-	{
-		aff3ct::module::Task&   t = self.get_task();
-		if (t.get_socket_type(self) == socket_t::SOUT )
-		{
-			std::stringstream message;
-			message << "Binding to constant is only allowed for input sockets.";
-			throw std::runtime_error(message.str());
-		}
-		if (self.get_datatype() != typeid(float))
-		{
-			std::stringstream message;
-			message << "Constant type and socket datatype should be identical.";
-			throw std::runtime_error(message.str());
-		}
-
-		size_t n_frames = (size_t)self.get_task().get_module().get_n_frames();
-		size_t n_elts   = (size_t)self.get_n_elmts()/n_frames;
-		auto cst_mdl = new aff3ct::module::Source_array<float>(std::vector<float>(n_elts, cst));
-
-		cst_mdl->set_n_frames(n_frames);
-		self.reset();
-		self.bind((*cst_mdl)[src::sck::generate::U_K]);
-		(*cst_mdl)[src::tsk::generate].exec();
-		auto self_ = py::cast(&self);
-		self_.attr("__tag__") = py::cast(std::unique_ptr<aff3ct::module::Source_array<float>>(std::move(cst_mdl)));
-	}
-	);*/
-
 	py_socket.def("_bind", [](aff3ct::runtime::Socket& self, py::array& arr)
 	{
 		size_t n_row = (size_t)self.get_task().get_module().get_n_frames();
@@ -205,11 +175,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 
 		self.bind(buffer.ptr);
 	}, "Binds the socket to the numpy array 'array' data.", "array"_a);
-	py_socket.def_property_readonly("name", &aff3ct::runtime::Socket::get_name);
-	py_socket.def_property_readonly("direction", [](const aff3ct::runtime::Socket& self)
-	{
-		aff3ct::runtime::Task&   t = self.get_task();
-		return self.get_type();
-	}, "Direction of the socket ()");
+	py_socket.def_property_readonly("name",      &aff3ct::runtime::Socket::get_name);
+	py_socket.def_property_readonly("direction", &aff3ct::runtime::Socket::get_type, "Direction of the socket");
 
 };

@@ -82,6 +82,7 @@ badges:
       - .cache/pip
       - venv/
   script:
+     - mkdir -p public/badges
      - pip3 install badges-gitlab
      - badges-gitlab -V
      - badges-gitlab

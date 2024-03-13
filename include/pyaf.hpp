@@ -43,5 +43,6 @@
 #include "wrapper/Module/Incrementer/Incrementer.hpp"
 #include "wrapper/Module/Iterator/Iterator.hpp"
 #include "wrapper/Module/Relayer/Relayer.hpp"
+#include "wrapper/Module/Sleeper/Sleeper.hpp"
 
 #endif //PYAF_HPP_

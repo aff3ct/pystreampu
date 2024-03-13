@@ -22,7 +22,7 @@ Sequence.get_module = get_module
 def _unique(in_list: list):
     out_list = []
     for elt in in_list:
-        if elt not in out_list:
+        if id(elt) not in [id(e) for e in out_list]:
             out_list.append(elt)
     return out_list
 

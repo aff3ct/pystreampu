@@ -1,4 +1,4 @@
-from aff3ct._ext import Stateless
+from aff3ct._ext.sts import Stateless
 
 Stateless.__doc__ = R"""
 Class Stateless

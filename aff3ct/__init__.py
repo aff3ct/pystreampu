@@ -29,7 +29,8 @@ from . import rang
 
 # Modules with no factory
 from aff3ct._ext.ite import Iterator
-from aff3ct._ext import Range
+from aff3ct._ext.ran import Range
+from aff3ct._ext.slp import Sleeper
 from aff3ct._ext.sse import Subsequence
 from aff3ct._ext.swi import Switcher
 

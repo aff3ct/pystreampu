@@ -67,9 +67,14 @@ PYBIND11_MODULE(_ext, m){
 	m.def("help", [](const aff3ct::runtime::Socket & socket, const bool & verbose){py::print(aff3ct::tools::get_help(socket, verbose).c_str());}, "socket"_a, "verbose"_a=false);
 
 	// Wrap of module namespace
-	pyaf::wrapper::wrap_range    (m); // TODO : change python submodule
-	pyaf::wrapper::wrap_slicer   (m); // TODO : change python submodule
-	pyaf::wrapper::wrap_stateless(m); // TODO : change python submodule
+	py::module_ submod_ran = m.def_submodule("ran");
+	pyaf::wrapper::wrap_range(submod_ran);
+
+	py::module_ submod_sli = m.def_submodule("sli");
+	pyaf::wrapper::wrap_slicer(submod_sli);
+
+	py::module_ submod_sts = m.def_submodule("sts");
+	pyaf::wrapper::wrap_stateless(submod_sts); // TODO : change python submodule
 
 	py::module_ submod_arr = m.def_submodule("arr");
 	pyaf::wrapper::wrap_array(submod_arr);
@@ -109,6 +114,9 @@ PYBIND11_MODULE(_ext, m){
 
 	py::module_ submod_swi = m.def_submodule("swi");
 	pyaf::wrapper::wrap_switcher(submod_swi);
+
+	py::module_ submod_slp = m.def_submodule("slp");
+	pyaf::wrapper::wrap_sleeper(submod_slp);
 
 	py::module_ submod_sse = m.def_submodule("sse");
 	pyaf::wrapper::wrap_subsequence(submod_sse);

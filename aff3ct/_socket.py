@@ -5,7 +5,7 @@ from typing import Union
 
 import numpy as np
 
-from aff3ct._ext import Slicer
+from aff3ct._ext.sli import Slicer
 from aff3ct._ext.core import Socket
 
 from . import _bop, _uop, _red

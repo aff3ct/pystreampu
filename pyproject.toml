@@ -21,6 +21,11 @@ dependencies = [
     "multipledispatch"
 ]
 
+[project.optional-dependencies]
+tests = [
+  "pytest>=6.0",
+]
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = [

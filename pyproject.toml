@@ -18,7 +18,8 @@ readme = "README.md"
 dependencies = [
     "graphviz",
     "numpy",
-    "multipledispatch"
+    "multipledispatch",
+    "pytest>=6.0"
 ]
 
 [project.optional-dependencies]

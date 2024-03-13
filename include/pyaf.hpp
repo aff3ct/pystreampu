@@ -41,5 +41,6 @@
 #include "wrapper/Module/Delayer/Delayer.hpp"
 #include "wrapper/Module/Finalizer/Finalizer.hpp"
 #include "wrapper/Module/Incrementer/Incrementer.hpp"
+#include "wrapper/Module/Iterator/Iterator.hpp"
 
 #endif //PYAF_HPP_

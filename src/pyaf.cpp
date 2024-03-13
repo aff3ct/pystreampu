@@ -83,6 +83,9 @@ PYBIND11_MODULE(_ext, m){
 	py::module_ submod_ini = m.def_submodule("ini");
 	pyaf::wrapper::wrap_initializer(submod_ini);
 
+	py::module_ submod_ite = m.def_submodule("ite");
+	pyaf::wrapper::wrap_iterator(submod_ite);
+
 	py::module_ submod_dly = m.def_submodule("dly");
 	pyaf::wrapper::wrap_delayer(submod_dly);
 

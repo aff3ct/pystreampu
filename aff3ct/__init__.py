@@ -22,11 +22,11 @@ from ._task import Task
 from ._module import Module
 from aff3ct._ext import help, Range, exceptions, disable_colors, enable_colors
 from aff3ct._ext.terminal import Terminal, Terminal_dump, Terminal_std
+from aff3ct._ext.ite import Iterator
 from aff3ct._ext.sse import Subsequence
 from aff3ct._ext import fmtflags as FormatFlags
 from aff3ct._ext.interfaces import *
 from aff3ct._ext.swi import *
-from aff3ct._ext.ini import *
 from ._bop import (BType, bop, add, sub, mul, div, greater_equal, greater,
                    equal, not_equal, less_equal, less, bitwise_and, bitwise_or,
                    bitwise_xor)

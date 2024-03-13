@@ -19,7 +19,6 @@ before_script:
   - source venv/bin/activate
 
 build:
-  
   cache:
     paths:
       - .cache/pip
@@ -69,7 +68,6 @@ test:
       junit: report.xml
 
 badges:
-  image: python:3.9
   stage: badges
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -79,13 +77,8 @@ badges:
     paths:
       - .cache/pip
       - venv/
-  before_script:
-     - python -V        
-     - pip install virtualenv
-     - virtualenv venv
-     - source venv/bin/activate
   script:
-     - pip install badges-gitlab
+     - pip3 install badges-gitlab
      - badges-gitlab -V
      - badges-gitlab
   artifacts:

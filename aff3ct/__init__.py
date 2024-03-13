@@ -28,6 +28,8 @@ from aff3ct._ext import fmtflags as FormatFlags
 from . import rang
 
 # Modules with no factory
+from aff3ct._ext.ada import *
+from aff3ct._ext.ctl import *
 from aff3ct._ext.ite import Iterator
 from aff3ct._ext.ran import Range
 from aff3ct._ext.slp import Sleeper

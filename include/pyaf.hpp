@@ -44,5 +44,6 @@
 #include "wrapper/Module/Iterator/Iterator.hpp"
 #include "wrapper/Module/Relayer/Relayer.hpp"
 #include "wrapper/Module/Sleeper/Sleeper.hpp"
-
+#include "wrapper/Module/Adaptor/Adaptor.hpp"
+#include "wrapper/Module/Controller/Controller.hpp"
 #endif //PYAF_HPP_

@@ -67,6 +67,12 @@ PYBIND11_MODULE(_ext, m){
 	m.def("help", [](const aff3ct::runtime::Socket & socket, const bool & verbose){py::print(aff3ct::tools::get_help(socket, verbose).c_str());}, "socket"_a, "verbose"_a=false);
 
 	// Wrap of module namespace
+	py::module_ submod_ada = m.def_submodule("ada");
+	pyaf::wrapper::wrap_adaptors(submod_ada);
+
+	py::module_ submod_ctl = m.def_submodule("ctl");
+	pyaf::wrapper::wrap_controllers(submod_ctl);
+
 	py::module_ submod_ran = m.def_submodule("ran");
 	pyaf::wrapper::wrap_range(submod_ran);
 

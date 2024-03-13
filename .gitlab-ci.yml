@@ -1,7 +1,6 @@
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-  PRIVATE_TOKEN: $ACCESS_TOKEN
 
 stages:
   - build

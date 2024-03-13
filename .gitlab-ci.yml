@@ -8,23 +8,24 @@ stages:
   - test
   - badges
 
-image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
+default:
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
 
-cache:
-  key: ${CI_PROJECT_PATH}
-  paths:
-   - .cache/
-   - venv/
+  cache:
+    key: ${CI_PROJECT_PATH}
+    paths:
+    - .cache/
+    - venv/
 
 
-before_script:
-  - apt update
-  - apt install -y python3
-  - apt install -y python3-pip
-  - python3 --version  # For debugging
-  - pip3 install virtualenv
-  - virtualenv venv
-  - source venv/bin/activate
+  before_script:
+    - apt update
+    - apt install -y python3
+    - apt install -y python3-pip
+    - python3 --version  # For debugging
+    - pip3 install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
 
 build:
   stage: build

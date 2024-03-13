@@ -1,6 +1,7 @@
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PRIVATE_TOKEN: $ACCESS_TOKEN
 
 stages:
   - build
@@ -8,6 +9,13 @@ stages:
   - badges
 
 image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
+
+cache:
+  key: ${CI_PROJECT_PATH}
+  paths:
+   - .cache/
+   - venv/
+
 
 before_script:
   - apt update
@@ -19,11 +27,6 @@ before_script:
   - source venv/bin/activate
 
 build:
-  cache:
-    paths:
-      - .cache/pip
-      - venv/
-
   stage: build
   tags:
     - x86_64
@@ -42,11 +45,6 @@ build:
     - pip3 install ../pyaf-core -v
 
 test:
-  cache:
-    paths:
-      - .cache/pip
-      - venv/
-
   stage: test
 
   dependencies:
@@ -69,30 +67,21 @@ test:
 
 badges:
   stage: badges
-  variables:
-    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
-    PRIVATE_TOKEN: $ACCESS_TOKEN
+    
   tags:
     - x86_64
     - linux
-    - docker    
-  cache:
-    key: badges
-    paths:
-      - .cache/pip
-      - venv/
+    - docker
+
   script:
      - mkdir -p public/badges
      - pip3 install badges-gitlab
      - badges-gitlab -V
      - badges-gitlab
+     
   artifacts:
     when: always
     paths:
       - public/badges/*.svg
-    expire_in: 3 months
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: always
-      allow_failure: true
+
 

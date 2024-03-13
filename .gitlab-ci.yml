@@ -5,6 +5,7 @@ variables:
 stages:
   - build
   - test
+  - badges
 
 image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
 

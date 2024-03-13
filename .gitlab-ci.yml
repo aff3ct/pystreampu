@@ -19,7 +19,6 @@ before_script:
   - source venv/bin/activate
 
 build:
-  
   cache:
     paths:
       - .cache/pip

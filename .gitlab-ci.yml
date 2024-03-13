@@ -72,6 +72,10 @@ badges:
   variables:
     PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
     PRIVATE_TOKEN: $ACCESS_TOKEN
+  tags:
+    - x86_64
+    - linux
+    - docker    
   cache:
     key: badges
     paths:

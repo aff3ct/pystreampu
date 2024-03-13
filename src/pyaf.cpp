@@ -98,6 +98,9 @@ PYBIND11_MODULE(_ext, m){
 	py::module_ submod_red = m.def_submodule("red");
 	pyaf::wrapper::wrap_reducer(submod_red);
 
+	py::module_ submod_rel = m.def_submodule("rel");
+	pyaf::wrapper::wrap_relayer(submod_rel);
+
 	py::module_ submod_src = m.def_submodule("src");
 	pyaf::wrapper::wrap_source             (submod_src); // TODO : put in a separate file
 	pyaf::wrapper::wrap_source_random      (submod_src); // TODO : put in a separate file

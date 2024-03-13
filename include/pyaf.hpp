@@ -42,5 +42,6 @@
 #include "wrapper/Module/Finalizer/Finalizer.hpp"
 #include "wrapper/Module/Incrementer/Incrementer.hpp"
 #include "wrapper/Module/Iterator/Iterator.hpp"
+#include "wrapper/Module/Relayer/Relayer.hpp"
 
 #endif //PYAF_HPP_

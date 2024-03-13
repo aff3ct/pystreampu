@@ -43,9 +43,11 @@ from ._initializer import *
 from ._incrementer import *
 from ._probe import *
 from ._red import RType, red, sum, prod, all, any
+from ._relayer import *
 from ._reporter import *
 from ._source import *
 from ._stateless import Stateless
 from ._uop import *
 
+# Proxies for min and max
 from ._minmax import min, max

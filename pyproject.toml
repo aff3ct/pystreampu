@@ -38,10 +38,3 @@ manylinux-x86_64-image = "manylinux2014"
 build-verbosity = 3
 test-requires = "pytest"
 test-command = "pytest --pyargs aff3ct --junitxml=./pyaf-core/report.xml"
-
-[tool.badges_gitlab]
-path = "public/badges"
-# junit_xml = "tests/report.xml"
-# List of Lists Format [["label", "message", "color"]]
-static_badges = [["conventional commits", "1.0.0", "yellow"]]
-link_badges = ['https://img.shields.io/pypi/wheel/badges-gitlab']

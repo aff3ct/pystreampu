@@ -6,7 +6,6 @@ variables:
 stages:
   - build
   - test
-  - badges
 
 default:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
@@ -60,29 +59,9 @@ test:
     - cd ..
     - pip3 show -f aff3ct
     - pytest --pyargs aff3ct --junitxml=./pyaf-core/report.xml
-    
+
   artifacts:
     when: always
     reports:
       junit: report.xml
-
-badges:
-  stage: badges
-    
-  tags:
-    - x86_64
-    - linux
-    - docker
-
-  script:
-     - mkdir -p public/badges
-     - pip3 install badges-gitlab
-     - badges-gitlab -V
-     - badges-gitlab
-     
-  artifacts:
-    when: always
-    paths:
-      - public/badges/*.svg
-
 

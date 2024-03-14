@@ -17,14 +17,17 @@ namespace wrapper
 			PYBIND11_OVERRIDE_PURE(
 				void,                     /* Return type */
 				aff3ct::tools::Terminal,  /* Parent class */
-				legend                    /* Name of function in C++ (must match Python name) */
+				legend,                    /* Name of function in C++ (must match Python name) */
+				stream
 			);
 		}
 		void report(std::ostream &stream = std::cout, bool final = false) override {
 			PYBIND11_OVERRIDE_PURE(
 				void,                     /* Return type */
 				aff3ct::tools::Terminal,  /* Parent class */
-				report                    /* Name of function in C++ (must match Python name) */
+				report,                    /* Name of function in C++ (must match Python name) */
+				stream,
+				final
 			);
 		}
 	};

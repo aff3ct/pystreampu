@@ -24,7 +24,8 @@ namespace wrapper
 			PYBIND11_OVERRIDE_PURE(
 				aff3ct::tools::Reporter::report_t, /* Return type */
 				aff3ct::tools::Reporter,           /* Parent class */
-				report                             /* Name of function in C++ (must match Python name) */
+				report,                             /* Name of function in C++ (must match Python name) */
+				final
 			);
 		}
 	};

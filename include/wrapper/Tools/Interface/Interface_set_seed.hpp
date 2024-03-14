@@ -17,7 +17,8 @@ namespace wrapper
 			PYBIND11_OVERRIDE_PURE(
 				void,                              /* Return type */
 				aff3ct::tools::Interface_set_seed, /* Parent class */
-				set_seed                              /* Name of function in C++ (must match Python name) */
+				set_seed,                              /* Name of function in C++ (must match Python name) */
+				seed
 			);
 		}
 	};

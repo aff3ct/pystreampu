@@ -46,4 +46,5 @@
 #include "wrapper/Module/Sleeper/Sleeper.hpp"
 #include "wrapper/Module/Adaptor/Adaptor.hpp"
 #include "wrapper/Module/Controller/Controller.hpp"
+#include "wrapper/Module/Sink/Sink.hpp"
 #endif //PYAF_HPP_

@@ -15,6 +15,7 @@ using namespace py::literals;
 
 void pyaf::wrapper::wrap_probe(py::handle scope)
 {
+	// AProbe has a protected destructor
 	py::class_<aff3ct::module::AProbe, aff3ct::module::Module, std::unique_ptr<aff3ct::module::AProbe, py::nodelete>>(scope, "AProbe");
 
 	using lT = tl::type_list<ALL_DTYPES>;

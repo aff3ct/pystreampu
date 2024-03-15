@@ -118,6 +118,9 @@ PYBIND11_MODULE(_ext, m){
 	pyaf::wrapper::wrap_source_user        (submod_src); // TODO : put in a separate file
 	pyaf::wrapper::wrap_source_user_binary (submod_src); // TODO : put in a separate file
 
+	py::module_ submod_snk = m.def_submodule("snk");
+	pyaf::wrapper::wrap_sinks(submod_snk);
+
 	py::module_ submod_swi = m.def_submodule("swi");
 	pyaf::wrapper::wrap_switcher(submod_swi);
 

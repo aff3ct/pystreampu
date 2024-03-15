@@ -21,6 +21,7 @@
 #include "wrapper/Runtime/Socket/Socket.hpp"
 #include "wrapper/Runtime/Task/Task.hpp"
 #include "wrapper/Runtime/Sequence/Sequence.hpp"
+#include "wrapper/Runtime/Pipeline/Pipeline.hpp"
 
 #include "wrapper/Module/Module/Module.hpp"
 #include "wrapper/Module/Array/Array.hpp"

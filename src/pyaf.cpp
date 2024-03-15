@@ -1,6 +1,7 @@
 #include "pyaf.hpp"
 
 #include <string>
+#include <thread>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -18,7 +19,8 @@ PYBIND11_MODULE(_ext, m){
 	setControlMode(rang::control::Force);
 	m.def("enable_colors", [](){setControlMode(rang::control::Force);});
 	m.def("disable_colors",[](){setControlMode(rang::control::Off);});
-
+	m.def("setup_signal_handler", &aff3ct::tools::setup_signal_handler);
+	m.def("get_hardware_concurrency", &std::thread::hardware_concurrency);
 	 //Split in two following https:pybind11.readthedocs.io/en/stable/advanced/misc.html#avoiding-c-types-in-docstrings
 	 //for enhancing python doc
 
@@ -48,7 +50,6 @@ PYBIND11_MODULE(_ext, m){
 	// Rang
 	py::module_ m_rang = m.def_submodule("rang");
 	pyaf::wrapper::wrap_rang_flags(m_rang);
-
 
 	// Exceptions
 	py::module_ submod_exc   = m.def_submodule("exceptions");
@@ -134,6 +135,7 @@ PYBIND11_MODULE(_ext, m){
 	pyaf::wrapper::wrap_unaryop(submod_uop);
 
 	pyaf::wrapper::wrap_sequence(m_core);
+	pyaf::wrapper::wrap_pipeline(m_core);
 
 #ifdef VERSION_INFO
     m.attr("__version__") = VERSION_INFO;

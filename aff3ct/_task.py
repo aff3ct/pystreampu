@@ -24,7 +24,7 @@ def _setattr_impl(self: Task, attr: str, value: Any) -> Union[tuple, Socket, Non
     except Exception as exc:
         return object.__setattr__(self, attr, value)
 
-
+'''
 def _getattr_impl(self: Task, sck_name: str) -> Union[tuple, Socket, None]:
     """Overload __getattr__ of aff3ct._ext.core.Task.
 
@@ -47,7 +47,7 @@ def _getattr_impl(self: Task, sck_name: str) -> Union[tuple, Socket, None]:
         msg = f"'{self.__class__.__name__}' "
         msg += f"object has no attribute '{sck_name}'"
         raise AttributeError(msg) from exc
-
+'''
 
 def _dir_impl(self: Task) -> dict:
     new_dir = object.__dir__(self)
@@ -135,7 +135,7 @@ def _call_impl(self: Task,
 
 
 Task.__call__ = _call_impl
-Task.__getattr__ = _getattr_impl
+#Task.__getattr__ = _getattr_impl
 Task.__setattr__ = _setattr_impl
 Task.__dir__ = _dir_impl
 

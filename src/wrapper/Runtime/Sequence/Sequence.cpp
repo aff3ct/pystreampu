@@ -43,9 +43,8 @@ void pyaf::wrapper::wrap_sequence(py::handle scope)
 		{
 			py::gil_scoped_acquire gil;
 			terminal.temp_report(stats_file);
-
-			return terminal.is_interrupt();
-		}); // gil aquired before exec of temp_report
+			return false;
+		});
 	});
 
 	sequence_class.def("exec_seq",  &aff3ct::runtime::Sequence::exec_seq,  "tid"_a = 0, "frame_id"_a = -1, py::call_guard<py::gil_scoped_release>());

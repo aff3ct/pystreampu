@@ -22,7 +22,7 @@ from ._sequence import Sequence
 from aff3ct._ext import exceptions
 from aff3ct._ext import help
 from aff3ct._ext.interfaces import *
-from aff3ct._ext import disable_colors, enable_colors
+from aff3ct._ext import disable_colors, enable_colors, setup_signal_handler
 from aff3ct._ext.terminal import Terminal, Terminal_dump, Terminal_std
 from aff3ct._ext import fmtflags as FormatFlags
 from . import rang

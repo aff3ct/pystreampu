@@ -14,18 +14,15 @@ def _setattr_impl(self: Task, attr: str, value: Any) -> Union[tuple, Socket, Non
         self (Task): A Task
         attr (str): attribute name
         value (any): Value to set
-
-    Raises:
-        AttributeError: if no socket is found
     """
-    try:
+    if attr in [s.name for s in self.sockets]:
         sck = self.module[f'{self.name}::{attr}']
         sck.bind(value)
-    except Exception as exc:
+    else:
         return object.__setattr__(self, attr, value)
 
-'''
-def _getattr_impl(self: Task, sck_name: str) -> Union[tuple, Socket, None]:
+
+def _getattr_impl(self: Task, attr: str) -> Union[tuple, Socket, None]:
     """Overload __getattr__ of aff3ct._ext.core.Task.
 
     task[socket_name] will return the socket named `socket_name`
@@ -33,21 +30,16 @@ def _getattr_impl(self: Task, sck_name: str) -> Union[tuple, Socket, None]:
 
     Args:
         self (Task): A Task
-        sck_name (str): socket name
+        attr (str): socket name
 
     Returns:
         out (Socket): the task socket named 'sck_name'
-
-    Raises:
-        AttributeError: if no socket is found
     """
-    try:
-        return self.module[f'{self.name}::{sck_name}']
-    except Exception as exc:
-        msg = f"'{self.__class__.__name__}' "
-        msg += f"object has no attribute '{sck_name}'"
-        raise AttributeError(msg) from exc
-'''
+    if attr in [s.name for s in self.sockets]:
+        return self.module[f'{self.name}::{attr}']
+    else:
+        return object.__getattr__(self, attr)
+
 
 def _dir_impl(self: Task) -> dict:
     new_dir = object.__dir__(self)
@@ -135,7 +127,7 @@ def _call_impl(self: Task,
 
 
 Task.__call__ = _call_impl
-#Task.__getattr__ = _getattr_impl
+Task.__getattr__ = _getattr_impl
 Task.__setattr__ = _setattr_impl
 Task.__dir__ = _dir_impl
 

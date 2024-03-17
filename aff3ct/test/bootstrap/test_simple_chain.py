@@ -1,8 +1,20 @@
 import aff3ct
 import argparse
+import time
 
+def test_simple_chain(n_threads:int = aff3ct._ext.get_hardware_concurrency(),
+                      n_inter_frames:int = 1,
+                      sleep_time_us:int = 5,
+                      data_length:int = 2048,
+                      n_exec:int = 100000,
+                      dot_filepath:str = '',
+                      copy_mode:bool = False,
+                      print_stats:bool = False,
+                      step_by_step:bool = False,
+                      debug:bool = False,
+                      subseq:bool = False,
+                      verbose:bool = False):
 
-def test_simple_chain(n_threads, n_inter_frames, sleep_time_us, data_length, n_exec, dot_filepath, copy_mode, print_stats, step_by_step, debug, subseq, verbose):
     print("#################################")
     print("# Micro-benchmark: Simple chain #")
     print("#################################")
@@ -37,7 +49,7 @@ def test_simple_chain(n_threads, n_inter_frames, sleep_time_us, data_length, n_e
         y = incs[0].increment(x)
         for i in range(1,6):
             y = incs[i].increment(y)
-        finalizer.finamize(y)
+        finalizer.finalize(y)
     else:
         print("Not done yet.")
 
@@ -55,7 +67,42 @@ def test_simple_chain(n_threads, n_inter_frames, sleep_time_us, data_length, n_e
             tsk.set_debug_limit(16)
             tsk.stats = print_stats
             tsk.fast = True
+    tid = 0
+    cloned_initializers = sequence_chain.get_cloned_modules(initializer)
+    for cur_initializer in cloned_initializers:
+        for f in range(n_inter_frames):
+            cur_initializer.data_init[f][:] = tid * n_inter_frames + f
+        print(cur_initializer.get_init_data())
+        tid += 1
 
+    start = time.time_ns()
+    sequence_chain.exec_n_times(n_exec)
+    stop = time.time_ns()
+    duration = (stop - start) / 1000000.0
+
+    chain_sleep_time = 0
+    for inc in incs:
+        chain_sleep_time += inc.ns
+
+    theoretical_time = (chain_sleep_time * n_exec * n_inter_frames) / 1000000.0 / n_threads
+    tests_passed = True
+
+    tid = 0
+    for cur_finalizer in sequence_chain.get_cloned_modules(finalizer):
+        for f in range(n_inter_frames):
+            final_data = cur_finalizer.final_data[f]
+            for d in range(len(final_data)):
+                expected = len(incs) + tid * n_inter_frames +f
+                expected = expected % 256
+                if final_data[d] != expected:
+                    print(f"# expected = {expected} - obtained = {final_data[d]} (d = {d}, tid = {tid})")
+                    tests_passed = False
+        tid+=1
+    if print_stats:
+        print("#")
+        sequence_chain.show_stats(True, False)
+
+    assert(tests_passed)
 
 if __name__ == '__main__':
     max_threads = aff3ct._ext.get_hardware_concurrency()

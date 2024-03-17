@@ -2,8 +2,34 @@ from __future__ import annotations
 
 from typing import Union, List
 
+from aff3ct._ext import exceptions
 from aff3ct._ext.core import Sequence, Socket
 from aff3ct._ext.sse import Subsequence
+
+
+def get_cloned_modules(self, module_ref):
+    found = False
+    mid = 0
+    all_modules = self.get_modules_per_threads()
+    while mid < len(all_modules[0]) and not found:
+        if id(all_modules[0][mid]) == id(module_ref):
+            found = True
+        else:
+            mid += 1
+    if not found:
+        raise(exceptions.RuntimeError("'module_ref' can't be found in the sequence."))
+
+    cloned_modules = []
+    for tid in range(len(all_modules)):
+        if isinstance(all_modules[tid][mid], type(module_ref)):
+            cloned_modules.append(all_modules[tid][mid])
+        else:
+            raise exceptions.RuntimeError("This should never happen.")
+
+    return cloned_modules
+
+
+Sequence.get_cloned_modules = get_cloned_modules
 
 
 def get_module(self, module_class, subsequence_modules=True):

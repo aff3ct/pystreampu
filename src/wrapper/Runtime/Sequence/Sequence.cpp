@@ -7,6 +7,7 @@
 #include <pybind11/stl.h>
 
 #include <functional>
+#include <atomic>
 #include <chrono>
 #include <iostream>
 
@@ -36,6 +37,13 @@ void pyaf::wrapper::wrap_sequence(py::handle scope)
 		self.exec();
 	});
 
+	sequence_class.def("exec_n_times", [](aff3ct::runtime::Sequence& self, size_t n_exec=1)
+	{
+		py::gil_scoped_release release{};
+		std::atomic<size_t> counter(0);
+		self.exec([&counter, n_exec]() { return ++counter >= n_exec; });
+	});
+
 	sequence_class.def("exec", [](aff3ct::runtime::Sequence& self, aff3ct::tools::Terminal_dump& terminal, std::ostream& stats_file)
 	{
 		py::gil_scoped_release release{};
@@ -55,13 +63,13 @@ void pyaf::wrapper::wrap_sequence(py::handle scope)
 		self.export_dot(f);
 	});
 
-	sequence_class.def("show_stats", [](aff3ct::runtime::Sequence& self)
+	sequence_class.def("show_stats", [](aff3ct::runtime::Sequence& self, const bool ordered = false, const bool display_thr = true)
 	{
 		py::scoped_ostream_redirect stream(
 			std::cout,                               // std::ostream&
 			py::module_::import("sys").attr("stdout")// Python output
 		);
-		aff3ct::tools::Stats::show(self.get_modules_per_types(), true);
+		aff3ct::tools::Stats::show(self.get_modules_per_types(), ordered, display_thr);
 	});
 
 	sequence_class.def("get_modules_per_threads", &aff3ct::runtime::Sequence::get_modules_per_threads,                        py::return_value_policy::reference);

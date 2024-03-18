@@ -1,19 +1,35 @@
 import aff3ct
 import argparse
 import time
+import pytest
 
-def test_simple_chain(n_threads:int = aff3ct._ext.get_hardware_concurrency(),
-                      n_inter_frames:int = 1,
-                      sleep_time_us:int = 5,
-                      data_length:int = 2048,
-                      n_exec:int = 100000,
-                      dot_filepath:str = '',
-                      copy_mode:bool = False,
-                      print_stats:bool = False,
-                      step_by_step:bool = False,
-                      debug:bool = False,
-                      subseq:bool = False,
-                      verbose:bool = False):
+aff3ct.setup_signal_handler()
+HW_CONCURRENCY  = aff3ct._ext.get_hardware_concurrency()
+
+@pytest.mark.parametrize("n_threads", [HW_CONCURRENCY])
+@pytest.mark.parametrize("n_inter_frames", [1, 4])
+@pytest.mark.parametrize("sleep_time_us", [5])
+@pytest.mark.parametrize("data_length", [2048])
+@pytest.mark.parametrize("n_exec", [100])
+@pytest.mark.parametrize("dot_filepath", [''])
+@pytest.mark.parametrize("copy_mode", [False, True])
+@pytest.mark.parametrize("print_stats", [False])
+@pytest.mark.parametrize("step_by_step", [False, True])
+@pytest.mark.parametrize("debug", [False])
+@pytest.mark.parametrize("subseq", [False, True])
+@pytest.mark.parametrize("verbose", [False])
+def test_simple_chain(n_threads:int,
+                      n_inter_frames:int,
+                      sleep_time_us:int,
+                      data_length:int,
+                      n_exec:int,
+                      dot_filepath:str,
+                      copy_mode:bool,
+                      print_stats:bool,
+                      step_by_step:bool,
+                      debug:bool,
+                      subseq:bool,
+                      verbose:bool):
 
     print("#################################")
     print("# Micro-benchmark: Simple chain #")
@@ -51,13 +67,19 @@ def test_simple_chain(n_threads:int = aff3ct._ext.get_hardware_concurrency(),
             y = incs[i].increment(y)
         finalizer.finalize(y)
     else:
-        print("Not done yet.")
+        for i in range(0,5):
+            incs[i+1]["increment::in"] = incs[i]["increment::out"]
+        partial_sequence = aff3ct.Sequence(incs[0].increment, incs[len(incs)-1].increment)
+        subsequence = aff3ct.Subsequence(partial_sequence)
+        x = initializer.initialize()
+        y = subsequence.exec(x)
+        finalizer.finalize(y)
 
     sequence_chain = aff3ct.Sequence(x.task, n_threads)
     sequence_chain.n_frames = n_inter_frames
     sequence_chain.no_copy_mode = not copy_mode
 
-    if (dot_filepath):
+    if dot_filepath:
         sequence_chain.export_dot(dot_filepath)
 
     for mdl in sequence_chain.get_module(aff3ct.Module, False):
@@ -72,11 +94,30 @@ def test_simple_chain(n_threads:int = aff3ct._ext.get_hardware_concurrency(),
     for cur_initializer in cloned_initializers:
         for f in range(n_inter_frames):
             cur_initializer.data_init[f][:] = tid * n_inter_frames + f
-        print(cur_initializer.get_init_data())
         tid += 1
 
+    if verbose:
+        print()
+        print("Helper information:")
+        print("-------------------")
+        aff3ct.help(initializer)
+        for inc in incs:
+            aff3ct.help(inc)
+        aff3ct.help(finalizer)
+
     start = time.time_ns()
-    sequence_chain.exec_n_times(n_exec)
+
+    if not step_by_step:
+        sequence_chain.exec_n_times(n_exec)
+    else:
+        start = time.time_ns()
+        counter = 0
+        while counter < n_exec/n_threads:
+            for tid in range(n_threads):
+                while sequence_chain.exec_step(tid):
+                    pass
+            counter += 1
+
     stop = time.time_ns()
     duration = (stop - start) / 1000000.0
 
@@ -101,6 +142,11 @@ def test_simple_chain(n_threads:int = aff3ct._ext.get_hardware_concurrency(),
     if print_stats:
         print("#")
         sequence_chain.show_stats(True, False)
+
+    if (tests_passed):
+        print(f"#{aff3ct.rang.style.bold}{aff3ct.rang.fg.green} Tests passed! {aff3ct.rang.style.reset}")
+    else:
+        print(f"#{aff3ct.rang.style.bold}{aff3ct.rang.fg.red} Tests failed :-( {aff3ct.rang.style.reset}")
 
     assert(tests_passed)
 

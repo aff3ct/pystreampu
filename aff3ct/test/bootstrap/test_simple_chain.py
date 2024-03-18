@@ -30,6 +30,23 @@ def test_simple_chain(n_threads:int,
                       debug:bool,
                       subseq:bool,
                       verbose:bool):
+    assert simple_chain(n_threads, n_inter_frames, sleep_time_us, data_length,
+                        n_exec, dot_filepath, copy_mode, print_stats,
+                        step_by_step, debug, subseq, verbose)
+
+
+def simple_chain(n_threads:int = HW_CONCURRENCY,
+                 n_inter_frames:int = 1,
+                 sleep_time_us:int = 5,
+                 data_length:int = 2048,
+                 n_exec:int = 100,
+                 dot_filepath:str = '',
+                 copy_mode:bool = False,
+                 print_stats:bool = False,
+                 step_by_step:bool = False,
+                 debug:bool = False,
+                 subseq:bool = False,
+                 verbose:bool = False):
 
     print("#################################")
     print("# Micro-benchmark: Simple chain #")
@@ -148,7 +165,7 @@ def test_simple_chain(n_threads:int,
     else:
         print(f"#{aff3ct.rang.style.bold}{aff3ct.rang.fg.red} Tests failed :-( {aff3ct.rang.style.reset}")
 
-    assert(tests_passed)
+    return tests_passed
 
 if __name__ == '__main__':
     max_threads = aff3ct._ext.get_hardware_concurrency()
@@ -171,4 +188,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    test_simple_chain(**vars(args))
+    simple_chain(**vars(args))

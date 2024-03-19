@@ -18,7 +18,7 @@ void pyaf::wrapper::wrap_task(py::handle scope)
 {
 	py::class_ <aff3ct::runtime::Task, aff3ct::runtime::Task_Publicist> py_task(scope, "Task");
 
-	py::enum_<status_t>(py_task, "status", "Enumeration of tasks return code.")
+	py::enum_<status_t>(py_task, "Status", "Enumeration of tasks return code.")
       .value("SUCCESS",      status_t::SUCCESS,      "Success code"     )
 	  .value("FAILURE",      status_t::FAILURE,      "Failure code"     )
 	  .value("FAILURE_STOP", status_t::FAILURE_STOP, "Failure stop code")

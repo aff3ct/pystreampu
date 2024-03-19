@@ -7,6 +7,8 @@ from aff3ct._ext.core import Socket, Task
 from aff3ct._typing import SocketLike
 import numpy as np
 
+Task.call_auto_exec = True
+
 def _setattr_impl(self: Task, attr: str, value: Any) -> Union[tuple, Socket, None]:
     """Overload __setattr__ of aff3ct._ext.core.Task.
 
@@ -102,7 +104,8 @@ def _call_impl(self: Task,
         self[key].reset()
         self[key].bind(sckt, raw_data=raw_data)
 
-    self.exec()
+    if Task.call_auto_exec:
+        self.exec()
 
     if raw_data:
         out = tuple(np.array(sckt, copy=False) for sckt in outputs)

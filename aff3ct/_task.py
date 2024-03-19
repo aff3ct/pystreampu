@@ -6,6 +6,7 @@ from typing import Union, Any
 from aff3ct._ext.core import Socket, Task
 from aff3ct._typing import SocketLike
 import numpy as np
+from aff3ct._ext import exceptions as exc
 
 Task.call_auto_exec = True
 
@@ -105,7 +106,10 @@ def _call_impl(self: Task,
         self[key].bind(sckt, raw_data=raw_data)
 
     if Task.call_auto_exec:
-        self.exec()
+        try:
+            self.exec()
+        except exc.ProcessingAborted:
+            pass
 
     if raw_data:
         out = tuple(np.array(sckt, copy=False) for sckt in outputs)

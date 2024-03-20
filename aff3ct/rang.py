@@ -14,3 +14,55 @@ bgB.__radd__ = lambda slf, message: message + str(slf)
 
 fgB.__add__ = lambda slf, message: str(slf) + message
 fgB.__radd__ = lambda slf, message: message + str(slf)
+
+
+def warning_tag(instr: str):
+    """
+    Preppend warning tag to a string.
+
+    Args:
+        instr (str): Input string
+
+    Returns:
+        out (str): Tagged string
+    """
+    return style.bold + fg.yellow + "(WW) " + style.reset + instr
+
+
+def error_tag(instr: str):
+    """
+    Preppend error tag to a string.
+
+    Args:
+        instr (str): Input string
+
+    Returns:
+        out (str): Tagged string
+    """
+    return style.bold + fg.red + "(EE) " + style.reset + instr
+
+
+def info_tag(instr: str):
+    """
+    Preppend information tag to a string.
+
+    Args:
+        instr (str): Input string
+
+    Returns:
+        out (str): Tagged string
+    """
+    return style.bold + fg.blue + "(II) " + style.reset + instr
+
+
+def positive_tag(instr: str):
+    """
+    Preppend information tag to a string.
+
+    Args:
+        instr (str): Input string
+
+    Returns:
+        out (str): Tagged string
+    """
+    return style.bold + fg.freen + "(II) " + style.reset + instr

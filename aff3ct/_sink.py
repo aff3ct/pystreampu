@@ -18,7 +18,7 @@ def sink_no(max_data_size: int,
         msg = f"type '{type(dtype)}' does not name an AFF3CT datatype."
         raise TypeError(msg)
     class_name = f'Sink_NO_{str(dtype)}'
-    class_type = getattr(aff3ct._ext.src, class_name)
+    class_type = getattr(aff3ct._ext.snk, class_name)
     return class_type(max_data_size)
 
 
@@ -29,7 +29,7 @@ def sink_user_binary(max_data_size: int,
         msg = f"type '{type(dtype)}' does not name an AFF3CT datatype."
         raise TypeError(msg)
     class_name = f'Sink_user_binary_{str(dtype)}'
-    class_type = getattr(aff3ct._ext.src, class_name)
+    class_type = getattr(aff3ct._ext.snk, class_name)
     return class_type(max_data_size, filename)
 
 

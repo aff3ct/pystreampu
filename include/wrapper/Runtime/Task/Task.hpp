@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-namespace aff3ct
+/*namespace aff3ct
 {
 namespace runtime
 {
@@ -21,7 +21,7 @@ class Task_Publicist : public Task
 	virtual ~Task_Publicist() = default;
 };
 }
-}
+}*/
 
 
 namespace pyaf

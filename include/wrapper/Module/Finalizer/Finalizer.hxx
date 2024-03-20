@@ -1,6 +1,8 @@
 #ifndef WRAPPER_Finalizer_HXX_
 #define WRAPPER_Finalizer_HXX_
 
+#include <pybind11/stl.h>
+
 #include "wrapper/Module/Finalizer/Finalizer.hpp"
 #include "wrapper/Common/Tools/type_functions.h"
 #include "wrapper/Common/Tools/type_list.hpp"

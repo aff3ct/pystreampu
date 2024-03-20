@@ -10,34 +10,41 @@ import pytest
 aff3ct.setup_signal_handler()
 HW_CONCURRENCY  = aff3ct._ext.get_hardware_concurrency()
 
-'''@pytest.mark.parametrize("n_threads", [HW_CONCURRENCY])
+@pytest.mark.parametrize("n_threads", [HW_CONCURRENCY])
 @pytest.mark.parametrize("n_inter_frames", [1, 4])
 @pytest.mark.parametrize("sleep_time_us", [5])
 @pytest.mark.parametrize("data_length", [2048])
-@pytest.mark.parametrize("n_exec", [100])
+@pytest.mark.parametrize("buffer_size", [16])
 @pytest.mark.parametrize("dot_filepath", [''])
-@pytest.mark.parametrize("copy_mode", [False, True])
+@pytest.mark.parametrize("in_filepath", ['file.in'])
+@pytest.mark.parametrize("out_filepath", ['file.out'])
+@pytest.mark.parametrize("copy_mode", [False])
 @pytest.mark.parametrize("print_stats", [False])
-@pytest.mark.parametrize("step_by_step", [False, True])
+@pytest.mark.parametrize("step_by_step", [False])
 @pytest.mark.parametrize("debug", [False])
-@pytest.mark.parametrize("subseq", [False, True])
-@pytest.mark.parametrize("verbose", [False])
-def test_simple_chain(n_threads:int,
-                      n_inter_frames:int,
-                      sleep_time_us:int,
-                      data_length:int,
-                      n_exec:int,
-                      dot_filepath:str,
-                      copy_mode:bool,
-                      print_stats:bool,
-                      step_by_step:bool,
-                      debug:bool,
-                      subseq:bool,
-                      verbose:bool):
-    assert simple_chain(n_threads, n_inter_frames, sleep_time_us, data_length,
-                        n_exec, dot_filepath, copy_mode, print_stats,
-                        step_by_step, debug, subseq, verbose)
-'''
+@pytest.mark.parametrize("force_sequence", [False])
+@pytest.mark.parametrize("active_waiting", [False])
+def test_simple_pipeline(n_threads:int,
+                         n_inter_frames:int,
+                         sleep_time_us:int,
+                         data_length:int,
+                         buffer_size:int,
+                         dot_filepath:str,
+                         in_filepath:str,
+                         out_filepath:str,
+                         copy_mode:bool,
+                         print_stats:bool,
+                         step_by_step:bool,
+                         debug:bool,
+                         force_sequence:bool,
+                         active_waiting:bool):
+    os.system(f'head -c 1048576 </dev/urandom >{in_filepath}')
+    test_result = simple_pipeline(n_threads, n_inter_frames, sleep_time_us, data_length,
+                                  buffer_size, dot_filepath, in_filepath, out_filepath, copy_mode, print_stats,
+                                  step_by_step, debug, force_sequence, active_waiting)
+    os.system(f'rm {in_filepath}')
+    assert test_result
+
 
 
 def repl_empty(input:str):

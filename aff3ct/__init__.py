@@ -17,6 +17,7 @@ from ._array  import *
 from ._socket import Socket
 from ._task import Task
 from ._sequence import Sequence
+from ._pipeline import Pipeline
 
 # Tools
 from aff3ct._ext import exceptions

@@ -16,7 +16,7 @@ using namespace aff3ct::runtime;
 
 void pyaf::wrapper::wrap_task(py::handle scope)
 {
-	py::class_ <aff3ct::runtime::Task, aff3ct::runtime::Task_Publicist> py_task(scope, "Task");
+	py::class_ <aff3ct::runtime::Task> py_task(scope, "Task");
 
 	py::enum_<status_t>(py_task, "Status", "Enumeration of tasks return code.")
       .value("SUCCESS",      status_t::SUCCESS,      "Success code"     )

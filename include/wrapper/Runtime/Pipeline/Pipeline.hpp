@@ -8,7 +8,7 @@ namespace pyaf
 {
 namespace wrapper
 {
-	void wrap_pipeline(py::handle scope);
+    void wrap_pipeline(py::handle scope);
 }
 }
 #endif //WRAPPER_PIPELINE_HPP_

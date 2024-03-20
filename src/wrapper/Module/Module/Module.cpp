@@ -105,7 +105,7 @@ void Wrapper_Module
 
         Returns:
             Task | Socket : task or socket described by the key.
-    )pbdoc");
+    )pbdoc", py::is_operator());
 
 	def("deep_copy",  &Module_Publicist::deep_copy);
 

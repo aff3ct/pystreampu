@@ -49,9 +49,9 @@ def do_while_loop(n_threads:int = HW_CONCURRENCY,
                   debug:bool = False,
                   cpp_binding:bool = False):
 
-    print("#################################")
-    print("# Micro-benchmark: Simple chain #")
-    print("#################################")
+    print("##################################")
+    print("# Micro-benchmark: Do while loop #")
+    print("##################################")
     print("#")
     print("# Command line arguments:")
     print(f"#   - n_threads      = {n_threads}")
@@ -116,7 +116,7 @@ def do_while_loop(n_threads:int = HW_CONCURRENCY,
             cur_initializer.data_init[f][:] = tid * n_inter_frames + f
         tid += 1
 
-    for mdl in sequence_do_while_loop.get_module(aff3ct.Module, False):
+    for mdl in sequence_do_while_loop.get_modules(aff3ct.Module, False):
         for tsk in mdl.tasks:
             tsk.reset()
             tsk.debug = debug

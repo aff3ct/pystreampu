@@ -99,7 +99,7 @@ def simple_chain(n_threads:int = HW_CONCURRENCY,
     if dot_filepath:
         sequence_chain.export_dot(dot_filepath)
 
-    for mdl in sequence_chain.get_module(aff3ct.Module, False):
+    for mdl in sequence_chain.get_modules(aff3ct.Module, False):
         for tsk in mdl.tasks:
             tsk.reset()
             tsk.debug = debug

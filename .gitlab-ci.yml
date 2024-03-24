@@ -5,7 +5,7 @@ variables:
 stages:
   - build
   - test
-  - coverage
+  - coverage-linux
 
 default:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
@@ -66,7 +66,7 @@ test:
       junit: report.xml
 
 coverage-linux:
-  stage: coverage
+  stage: coverage-linux
   tags:
     - x86_64
     - linux

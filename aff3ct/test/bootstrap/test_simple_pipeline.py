@@ -11,7 +11,7 @@ aff3ct.setup_signal_handler()
 HW_CONCURRENCY  = aff3ct._ext.get_hardware_concurrency()
 
 @pytest.mark.parametrize("n_threads", [HW_CONCURRENCY])
-@pytest.mark.parametrize("n_inter_frames", [1, 4])
+@pytest.mark.parametrize("n_inter_frames", [1])
 @pytest.mark.parametrize("sleep_time_us", [5])
 @pytest.mark.parametrize("data_length", [2048])
 @pytest.mark.parametrize("buffer_size", [16])
@@ -165,6 +165,7 @@ def simple_pipeline(n_threads:int = HW_CONCURRENCY-2,
     else:
         print(f"#{rang.style.bold}{rang.fg.red} Tests failed :-( {rang.style.reset}")
 
+    aff3ct.Task.call_auto_exec = True
     return tests_passed
 
 

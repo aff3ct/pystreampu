@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.6)
 cmake_policy(SET CMP0054 NEW)
 
-project (pyaf VERSION ${VERSION_INFO})
+project (${SKBUILD_PROJECT_NAME} LANGUAGES CXX)
+
+#set(CMAKE_INSTALL_LIBDIR aff3ct)
+#set(CMAKE_INSTALL_INCLUDEDIR aff3ct)
 
 # Enable C++17
 set(CMAKE_CXX_STANDARD 17)
@@ -30,14 +33,15 @@ endif()
 
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/pybind11/)
-
+set(PYBIND11_NEWPYTHON ON)
 # `pybind11_add_module` is a wrapper of the CMake `add_library` function
 pybind11_add_module(_ext MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/pyaf.cpp ${SRC_FILES} ${HEADER_FILES})
 
 set(pybind11_INCLUDE_DIRS)
+install(TARGETS _ext DESTINATION .)
 
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/pybind11/include
-        DESTINATION ${CMAKE_INSTALL_PREFIX}
+        DESTINATION .
         FILES_MATCHING PATTERN "*.h")
 
 include_directories(_ext PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -47,3 +51,8 @@ set_target_properties(_ext PROPERTIES OUTPUT_NAME _ext
 
 target_link_libraries(_ext PRIVATE aff3ct-core-static-lib)
 
+message("############################################################")
+message("# CMAKE_BUILD_TYPE : ${CMAKE_BUILD_TYPE}")
+message("# CMAKE_CXX_FLAGS : ${CMAKE_CXX_FLAGS}")
+message("# SKBUILD_PROJECT_NAME : ${SKBUILD_PROJECT_NAME}")
+message("############################################################")

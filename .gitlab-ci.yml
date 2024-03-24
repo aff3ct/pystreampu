@@ -5,6 +5,7 @@ variables:
 stages:
   - build
   - test
+  - coverage
 
 default:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
@@ -64,3 +65,24 @@ test:
     reports:
       junit: report.xml
 
+coverage-linux:
+  stage: coverage
+  tags:
+    - x86_64
+    - linux
+    - docker
+  coverage: '/.*lines\.*: (\d+.\d+\%)/'
+  artifacts:
+     name: code-coverage-report
+     when: always
+     paths:
+       - code_coverage_report/
+  script:
+    - pip3 install pytest-cov
+    - pip3 install lcov-cobertura
+    - apt install -y lcov
+    - export CXX="g++"
+    - export CFLAGS="-g -Wall -funroll-loops -fvisibility=hidden -fvisibility-inlines-hidden -coverage -ftest-coverage -fprofile-arcs"
+    - export LFLAGS="-coverage -ftest-coverage -fprofile-arcs"
+    - pwd
+    - ./ci/coverage-linux.sh

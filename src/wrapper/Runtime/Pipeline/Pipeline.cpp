@@ -29,15 +29,14 @@ void pyaf::wrapper::wrap_pipeline(py::handle scope)
 	                               const std::vector<bool> synchro_active_waiting,
 	                               const std::vector<bool> thread_pinning,
 	                               const std::vector<std::vector<size_t>> puids)
-								   {
-										aff3ct::runtime::Sequence seq(firsts, lasts);
-										for(auto& mdl:seq.get_modules<aff3ct::module::Module>())
-										{
-											auto py_mdl = py::cast(mdl);
-											py_mdl.inc_ref(); // So that pipeline cannot be deleted before
-										}
-										return std::unique_ptr<aff3ct::runtime::Pipeline>(new aff3ct::runtime::Pipeline(firsts, lasts, sep_stages, n_threads, synchro_buffer_sizes, synchro_active_waiting, thread_pinning, puids));
-
+	                               {
+	                                	aff3ct::runtime::Sequence seq(firsts, lasts);
+	                                	for(auto& mdl:seq.get_modules<aff3ct::module::Module>())
+	                                	{
+	                                		auto py_mdl = py::cast(mdl);
+	                                		py_mdl.inc_ref(); // So that pipeline cannot be deleted before
+	                                	}
+	                                	return std::unique_ptr<aff3ct::runtime::Pipeline>(new aff3ct::runtime::Pipeline(firsts, lasts, sep_stages, n_threads, synchro_buffer_sizes, synchro_active_waiting, thread_pinning, puids));
 								   }),
 	                   "firsts"_a,
 	                   "lasts"_a,

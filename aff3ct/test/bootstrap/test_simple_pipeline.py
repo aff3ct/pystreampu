@@ -6,12 +6,13 @@ from math import ceil
 import os
 import time
 import pytest
+import contextlib
 
 aff3ct.setup_signal_handler()
 HW_CONCURRENCY  = aff3ct._ext.get_hardware_concurrency()
 
 @pytest.mark.parametrize("n_threads", [HW_CONCURRENCY])
-@pytest.mark.parametrize("n_inter_frames", [1])
+@pytest.mark.parametrize("n_inter_frames", [1, 4])
 @pytest.mark.parametrize("sleep_time_us", [5])
 @pytest.mark.parametrize("data_length", [2048])
 @pytest.mark.parametrize("buffer_size", [16])
@@ -94,6 +95,7 @@ def simple_pipeline(n_threads:int = HW_CONCURRENCY-2,
         print(rang.warning_tag("'step_by_step' is not available with pipeline"))
     if force_sequence and n_threads > 1:
         print(rang.warning_tag("Sequence mode only supports a single thread (User-Source/Sinks are not clonable)"))
+        n_threads = 1
 
 
     source = aff3ct.source_user_binary(data_length, in_filepath, auto_reset=False, dtype=aff3ct.uint8)
@@ -112,11 +114,37 @@ def simple_pipeline(n_threads:int = HW_CONCURRENCY-2,
         data = rlys[i].relay(data)
     sink.send_count(data, cnt)
 
-    sequence_chain = aff3ct.Sequence(source.generate)
-    if dot_filepath:
-        sequence_chain.export_dot('sequence.dot')
+    sequence_chain = None
+    pipeline_chain = None
+    duration = 0
     if force_sequence:
-        pass
+        sequence_chain = aff3ct.Sequence(source.generate, n_threads)
+        if dot_filepath:
+            sequence_chain.export_dot('sequence.dot')
+        sequence_chain.n_frames = n_inter_frames
+        sequence_chain.no_copy_mode = not copy_mode
+        for mdl in sequence_chain.get_modules(aff3ct.Module, False):
+            for tsk in mdl.tasks:
+                tsk.reset()
+                tsk.debug = debug
+                tsk.set_debug_limit(16)
+                tsk.stats = print_stats
+                tsk.fast = True
+
+        start = time.time_ns()
+        if not step_by_step:
+            sequence_chain.exec()
+        else:
+            while not source.is_done():
+                try:
+                    for tid in range(n_threads):
+                        while sequence_chain.exec_step(tid):
+                            pass
+                except aff3ct.exceptions.ProcessingAborted:
+                    pass
+
+        stop = time.time_ns()
+        duration = (stop - start) / 1000000.0
     else:
         pipeline_chain = aff3ct.Pipeline(
             [source.generate],

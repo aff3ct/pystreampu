@@ -70,7 +70,7 @@ void pyaf::wrapper::wrap_sequence(py::handle scope)
 			py::module_::import("sys").attr("stdout")// Python output
 		);
 		aff3ct::tools::Stats::show(self.get_modules_per_types(), ordered, display_thr);
-	});
+	}, "ordered"_a=false, "display_thr"_a=true);
 
 	sequence_class.def("get_modules_per_threads", &aff3ct::runtime::Sequence::get_modules_per_threads,                        py::return_value_policy::reference);
 	sequence_class.def("get_modules_per_types",   &aff3ct::runtime::Sequence::get_modules_per_types,                          py::return_value_policy::reference);

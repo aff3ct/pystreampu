@@ -22,7 +22,6 @@ lcov --capture --directory build/CMakeFiles/_ext.dir/src\
 rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
 lcov --remove code_coverage_files/_ext.info "*/usr*" "lib/*" --output-file code_coverage_files/_ext_clean.info
 rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-
-lcov_cobertura code_coverage_files/_ext_clean.info --output code_coverage_report/_ext.xml
+lcov --add-tracefile code_coverage_files/_ext_clean.info -a code_coverage_files/aff3ct.info -o code_coverage_files/merged.info
 rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-lcov_cobertura code_coverage_files/aff3ct.info --output code_coverage_report/aff3ct.xml
+lcov_cobertura code_coverage_files/merged.info --output code_coverage_report/aff3ct.xml

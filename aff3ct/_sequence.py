@@ -38,41 +38,47 @@ def _get_firsts(s: Socket):
     return visit(s, [])
 
 
+def get_cloned_modules(self, module_ref):
+    found = False
+    mid = 0
+    all_modules = self.get_modules_per_threads()
+    while mid < len(all_modules[0]) and not found:
+        if id(all_modules[0][mid]) == id(module_ref):
+            found = True
+        else:
+            mid += 1
+    if not found:
+        raise(exceptions.RuntimeError("'module_ref' can't be found in the sequence."))
+
+    cloned_modules = []
+    for tid in range(len(all_modules)):
+        if isinstance(all_modules[tid][mid], type(module_ref)):
+            cloned_modules.append(all_modules[tid][mid])
+        else:
+            raise exceptions.RuntimeError("This should never happen.")
+
+    return cloned_modules
+
+
+_Sequence.get_cloned_modules = get_cloned_modules
+
+
+def get_modules(self, module_class, set_modules=True):
+    all_modules = [m for lst in self.get_modules_per_threads() for m in lst]
+    return_list = [m for m in all_modules if isinstance(m, module_class)]
+    if set_modules:
+        sse_list = [mdl for mdl in all_modules if isinstance(mdl, Set)]
+        for sse in sse_list:
+            return_list += sse.sequence.get_module(module_class, True)
+    return return_list
+
+_Sequence.get_modules = get_modules
+
+
 class Sequence(_Sequence):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.original_modules = super().get_modules_per_threads()[0]
-
-    def get_cloned_modules(self, module_ref):
-        found = False
-        mid = 0
-        all_modules = self.get_modules_per_threads()
-        while mid < len(all_modules[0]) and not found:
-            if id(all_modules[0][mid]) == id(module_ref):
-                found = True
-            else:
-                mid += 1
-        if not found:
-            raise(exceptions.RuntimeError("'module_ref' can't be found in the sequence."))
-
-        cloned_modules = []
-        for tid in range(len(all_modules)):
-            if isinstance(all_modules[tid][mid], type(module_ref)):
-                cloned_modules.append(all_modules[tid][mid])
-            else:
-                raise exceptions.RuntimeError("This should never happen.")
-
-        return cloned_modules
-
-    def get_modules(self, module_class, set_modules=True):
-        all_modules = [m for lst in self.get_modules_per_threads() for m in lst]
-        return_list = [m for m in all_modules if isinstance(m, module_class)]
-        if set_modules:
-            sse_list = [mdl for mdl in all_modules if isinstance(mdl, Set)]
-            for sse in sse_list:
-                return_list += sse.sequence.get_module(module_class, True)
-        return return_list
-
 
     def from_socket(sockets = Union[Socket, List[Socket]], *args: tuple, **kwargs: dict):
         firsts = []

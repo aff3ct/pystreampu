@@ -4,7 +4,7 @@ variables:
 
 stages:
   - build
-  - test
+  - tests
   - coverage-linux
 
 default:
@@ -44,8 +44,8 @@ build:
     - export CXX="g++"
     - pip3 install ../pyaf-core -v
 
-test:
-  stage: test
+tests:
+  stage: tests
 
   dependencies:
   - build

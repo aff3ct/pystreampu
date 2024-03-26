@@ -8,7 +8,7 @@ import time
 import pytest
 import contextlib
 
-aff3ct.setup_signal_handler()
+aff3ct.Signal_handler.init()
 HW_CONCURRENCY = aff3ct._ext.get_hardware_concurrency()
 
 

@@ -18,7 +18,7 @@ using namespace py::literals;
 
 void pyaf::wrapper::wrap_sequence(py::handle scope)
 {
-	auto sequence_class = py::class_<aff3ct::runtime::Sequence, aff3ct::tools::Interface_clone, aff3ct::tools::Interface_get_set_n_frames, aff3ct::tools::Interface_is_done>(scope, "Sequence",py::dynamic_attr());
+	auto sequence_class = py::class_<aff3ct::runtime::Sequence, aff3ct::tools::Interface_clone, aff3ct::tools::Interface_get_set_n_frames, aff3ct::tools::Interface_is_done>(scope, "_Sequence",py::dynamic_attr());
 
 	sequence_class.def(py::init<aff3ct::runtime::Task &, aff3ct::runtime::Task &, const size_t, const bool, const std::vector<size_t> &>(), "first"_a, "last"_a, "n_threads"_a = 1, "thread_pinning"_a = false, "puids"_a = std::vector<size_t>(), py::return_value_policy::take_ownership);
 	sequence_class.def(py::init<aff3ct::runtime::Task &, const size_t, const bool, const std::vector<size_t> &>(), "first"_a, "n_threads"_a = 1, "thread_pinning"_a = false, "puids"_a = std::vector<size_t>(), py::return_value_policy::take_ownership);

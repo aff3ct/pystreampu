@@ -16,10 +16,6 @@ using namespace py::literals;
 #define PYBIND11_DETAILED_ERROR_MESSAGES
 
 PYBIND11_MODULE(_ext, m){
-	setControlMode(rang::control::Force);
-	m.def("enable_colors", [](){setControlMode(rang::control::Force);});
-	m.def("disable_colors",[](){setControlMode(rang::control::Off);});
-	m.def("setup_signal_handler", &aff3ct::tools::setup_signal_handler);
 	m.def("get_hardware_concurrency", &std::thread::hardware_concurrency);
 	 //Split in two following https:pybind11.readthedocs.io/en/stable/advanced/misc.html#avoiding-c-types-in-docstrings
 	 //for enhancing python doc
@@ -47,6 +43,8 @@ PYBIND11_MODULE(_ext, m){
 
 	pyaf::wrapper::wrap_fmtflags(m);
 
+	pyaf::wrapper::wrap_signal_handler(m);
+
 	// Rang
 	py::module_ m_rang = m.def_submodule("rang");
 	pyaf::wrapper::wrap_rang_flags(m_rang);
@@ -60,6 +58,7 @@ PYBIND11_MODULE(_ext, m){
 
 	py::module_ submod_ter   = m.def_submodule("terminal");
 	pyaf::wrapper::wrap_terminal(submod_ter);
+
 
 	// Help
 	// TODO : put in a separate file
@@ -128,8 +127,8 @@ PYBIND11_MODULE(_ext, m){
 	py::module_ submod_slp = m.def_submodule("slp");
 	pyaf::wrapper::wrap_sleeper(submod_slp);
 
-	py::module_ submod_sse = m.def_submodule("sse");
-	pyaf::wrapper::wrap_subsequence(submod_sse);
+	py::module_ submod_set = m.def_submodule("set");
+	pyaf::wrapper::wrap_set(submod_set);
 
 	py::module_ submod_uop = m.def_submodule("uop");
 	pyaf::wrapper::wrap_unaryop(submod_uop);

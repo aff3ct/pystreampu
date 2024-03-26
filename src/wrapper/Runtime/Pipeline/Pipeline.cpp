@@ -18,7 +18,7 @@ using namespace py::literals;
 void pyaf::wrapper::wrap_pipeline(py::handle scope)
 {
 	auto pipeline_class = py::class_<aff3ct::runtime::Pipeline,
-	                                 aff3ct::tools::Interface_get_set_n_frames>(scope, "Pipeline");
+	                                 aff3ct::tools::Interface_get_set_n_frames>(scope, "_Pipeline");
 	pipeline_class.def(py::init([](const std::vector<aff3ct::runtime::Task*> &firsts,
 	                               const std::vector<aff3ct::runtime::Task*> &lasts,
 	                               const std::vector<std::tuple<std::vector<aff3ct::runtime::Task*>,
@@ -30,12 +30,6 @@ void pyaf::wrapper::wrap_pipeline(py::handle scope)
 	                               const std::vector<bool> thread_pinning,
 	                               const std::vector<std::vector<size_t>> puids)
 	                               {
-	                                	aff3ct::runtime::Sequence seq(firsts, lasts);
-	                                	for(auto& mdl:seq.get_modules<aff3ct::module::Module>())
-	                                	{
-	                                		auto py_mdl = py::cast(mdl);
-	                                		py_mdl.inc_ref(); // So that pipeline cannot be deleted before
-	                                	}
 	                                	return std::unique_ptr<aff3ct::runtime::Pipeline>(new aff3ct::runtime::Pipeline(firsts, lasts, sep_stages, n_threads, synchro_buffer_sizes, synchro_active_waiting, thread_pinning, puids));
 								   }),
 	                   "firsts"_a,
@@ -50,6 +44,7 @@ void pyaf::wrapper::wrap_pipeline(py::handle scope)
 	                   "puids"_a                  = std::vector<std::vector<size_t>>(),
 					   py::return_value_policy::take_ownership
 			);
+	pipeline_class.def("get_original_modules", &aff3ct::runtime::Pipeline::get_original_modules);
 
 	pipeline_class.def("exec", [](aff3ct::runtime::Pipeline& self)
 	{

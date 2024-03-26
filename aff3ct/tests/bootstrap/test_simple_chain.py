@@ -3,11 +3,11 @@ import argparse
 import time
 import pytest
 
-aff3ct.setup_signal_handler()
+aff3ct.Signal_handler.init()
 HW_CONCURRENCY  = aff3ct._ext.get_hardware_concurrency()
 
 @pytest.mark.parametrize("verbose", [False])
-@pytest.mark.parametrize("subseq", [False, True])
+@pytest.mark.parametrize("set", [False, True])
 @pytest.mark.parametrize("debug", [False])
 @pytest.mark.parametrize("step_by_step", [False, True])
 @pytest.mark.parametrize("print_stats", [False])
@@ -28,11 +28,11 @@ def test_simple_chain(n_threads:int,
                       print_stats:bool,
                       step_by_step:bool,
                       debug:bool,
-                      subseq:bool,
+                      set:bool,
                       verbose:bool):
     assert simple_chain(n_threads, n_inter_frames, sleep_time_us, data_length,
                         n_exec, dot_filepath, copy_mode, print_stats,
-                        step_by_step, debug, subseq, verbose)
+                        step_by_step, debug, set, verbose)
 
 
 def simple_chain(n_threads:int = HW_CONCURRENCY,
@@ -45,7 +45,7 @@ def simple_chain(n_threads:int = HW_CONCURRENCY,
                  print_stats:bool = False,
                  step_by_step:bool = False,
                  debug:bool = False,
-                 subseq:bool = False,
+                 set:bool = False,
                  verbose:bool = False):
 
     print("#################################")
@@ -63,7 +63,7 @@ def simple_chain(n_threads:int = HW_CONCURRENCY,
     print(f"#   - print_stats    = {print_stats}")
     print(f"#   - step_by_step   = {step_by_step}")
     print(f"#   - debug          = {debug}")
-    print(f"#   - subseq         = {subseq}")
+    print(f"#   - set            = {set}")
     print(f"#   - verbose        = {verbose}")
     print("#")
 
@@ -77,7 +77,7 @@ def simple_chain(n_threads:int = HW_CONCURRENCY,
         inc.name = "Inc" + str(s)
         incs.append(inc)
 
-    if not subseq:
+    if not set:
         x = initializer.initialize()
         y = incs[0].increment(x)
         for i in range(1,6):
@@ -87,9 +87,9 @@ def simple_chain(n_threads:int = HW_CONCURRENCY,
         for i in range(0,5):
             incs[i+1]["increment::in"] = incs[i]["increment::out"]
         partial_sequence = aff3ct.Sequence(incs[0].increment, incs[len(incs)-1].increment)
-        subsequence = aff3ct.Subsequence(partial_sequence)
+        theset = aff3ct.Set(partial_sequence)
         x = initializer.initialize()
-        y = subsequence.exec(x)
+        y = theset.exec(x)
         finalizer.finalize(y)
 
     sequence_chain = aff3ct.Sequence(x.task, n_threads)
@@ -183,7 +183,7 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--print-stats',  action='store_true', dest = 'print_stats',  default = False, help = 'Enable to print per task statistics (performance will be reduced)')
     parser.add_argument('-b', '--step-by-step', action='store_true', dest = 'step_by_step', default = False, help = 'Enable step-by-step sequence execution (performance will be reduced)')
     parser.add_argument('-g', '--debug',        action='store_true', dest = 'debug',        default = False, help = 'Enable task debug mode (print socket data)')
-    parser.add_argument('-u', '--subseq',       action='store_true', dest = 'subseq',       default = False, help = 'Enable subsequence in the executed sequence')
+    parser.add_argument('-u', '--set',          action='store_true', dest = 'set',          default = False, help = 'Enable set in the executed sequence')
     parser.add_argument('-v', '--verbose',      action='store_true', dest = 'verbose',      default = False, help = 'Enable verbose mode')
 
     args = parser.parse_args()

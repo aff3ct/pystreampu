@@ -27,7 +27,7 @@ tests = [
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = [
-    "test"
+    "tests"
 ]
 
 [tool.cibuildwheel]
@@ -41,3 +41,6 @@ build-dir = "build"
 wheel.packages = ["aff3ct"]
 wheel.license-files = ["LICENSE"]
 wheel.install-dir = "aff3ct"
+
+[tool.flake8]
+max-line-length = 120

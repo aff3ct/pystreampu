@@ -105,6 +105,8 @@ def exclusive_paths(n_threads: int = HW_CONCURRENCY,
     inc_data = switcher.select(inc_data0, inc_data1, inc_data2)
     finalizer.finalize(inc_data)
 
+    controller.reset()
+
     sequence_chain = aff3ct.Sequence(data.task, n_threads)
     sequence_chain.n_frames = n_inter_frames
     sequence_chain.no_copy_mode = not copy_mode
@@ -159,7 +161,7 @@ def exclusive_paths(n_threads: int = HW_CONCURRENCY,
     for cur_finalizer in sequence_chain.get_cloned_modules(finalizer):
         real_path = path
         if cyclic_path:
-            real_path = (finalizer.finalize.n_calls - 1) % 3
+            real_path = (cur_finalizer.finalize.n_calls - 1) % 3
         for f in range(n_inter_frames):
             final_data = cur_finalizer.final_data[f]
             for d in range(len(final_data)):

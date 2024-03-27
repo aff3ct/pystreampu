@@ -54,15 +54,15 @@ def dir_impl(self: Module) -> dict:
     return new_dir
 
 
-def setitem_impl(self: Module, attr: str, sck: Socket) -> None:
+def setitem_impl(self: Module, attr: str, tsk_sck: Task|Socket) -> None:
     """Bind self[attr] to the socket sck.
 
     Args:
         self (Module): A Module
         attr (str): attribute name (should name a task or a socket)
-        sck (Socket): socket to bind self[attr].
+        tsk_sck (Task|Socket): socket to bind self[attr].
     """
-    self[attr].bind(sck)
+    self[attr].bind(tsk_sck)
 
 
 Module.__call__ = _call_impl

@@ -131,7 +131,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 	py_socket.def("_bind", [](aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& s_out, const int priority)
 	{
 		self.bind(s_out, priority);
-	}, "Binds the socket to socket 's_out' with priority 'priority'.", "s_out"_a, "priority"_a=1);
+	}, "Binds the socket to socket 's_out' with priority 'priority'.", "s_out"_a, "priority"_a=-1);
 
 	py_socket.def("_bind", [](aff3ct::runtime::Socket& self, py::array& arr)
 	{

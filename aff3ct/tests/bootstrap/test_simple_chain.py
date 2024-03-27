@@ -143,6 +143,10 @@ def simple_chain(n_threads:int = HW_CONCURRENCY,
         chain_sleep_time += inc.ns
 
     theoretical_time = (chain_sleep_time * n_exec * n_inter_frames) / 1000000.0 / n_threads
+
+    print(f"Sequence elapsed time: {duration} ms")
+    print(f"Sequence theoretical time: {theoretical_time} ms")
+
     tests_passed = True
 
     tid = 0

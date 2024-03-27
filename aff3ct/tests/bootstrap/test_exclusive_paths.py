@@ -1,4 +1,6 @@
 import aff3ct
+aff3ct.rang.enable_colors()
+
 import argparse
 import time
 import pytest
@@ -6,34 +8,33 @@ import pytest
 aff3ct.Signal_handler.init()
 HW_CONCURRENCY  = aff3ct._ext.get_hardware_concurrency()
 
-'''@pytest.mark.parametrize("verbose", [False])
-@pytest.mark.parametrize("set", [False, True])
+@pytest.mark.parametrize("cyclic_path", [False, True])
 @pytest.mark.parametrize("debug", [False])
 @pytest.mark.parametrize("step_by_step", [False, True])
 @pytest.mark.parametrize("print_stats", [False])
 @pytest.mark.parametrize("copy_mode", [False, True])
 @pytest.mark.parametrize("dot_filepath", [''])
+@pytest.mark.parametrize("path", [0, 1, 2])
 @pytest.mark.parametrize("n_exec", [100])
 @pytest.mark.parametrize("data_length", [2048])
 @pytest.mark.parametrize("sleep_time_us", [5])
 @pytest.mark.parametrize("n_inter_frames", [1])
 @pytest.mark.parametrize("n_threads", [HW_CONCURRENCY])
-def test_simple_chain(n_threads:int,
-                      n_inter_frames:int,
-                      sleep_time_us:int,
-                      data_length:int,
-                      n_exec:int,
-                      dot_filepath:str,
-                      copy_mode:bool,
-                      print_stats:bool,
-                      step_by_step:bool,
-                      debug:bool,
-                      set:bool,
-                      verbose:bool):
-    assert simple_chain(n_threads, n_inter_frames, sleep_time_us, data_length,
-                        n_exec, dot_filepath, copy_mode, print_stats,
-                        step_by_step, debug, set, verbose)
-'''
+def test_exclusive_paths(n_threads: int,
+                         n_inter_frames: int,
+                         sleep_time_us: int,
+                         data_length: int,
+                         n_exec: int,
+                         path: int,
+                         dot_filepath: str,
+                         copy_mode: bool,
+                         print_stats: bool,
+                         step_by_step: bool,
+                         debug: bool,
+                         cyclic_path: bool):
+    assert exclusive_paths(n_threads, n_inter_frames, sleep_time_us,
+                           data_length, n_exec, path, dot_filepath, copy_mode,
+                           print_stats, step_by_step, debug, cyclic_path)
 
 def exclusive_paths(n_threads: int = HW_CONCURRENCY,
                     n_inter_frames: int = 1,
@@ -78,7 +79,7 @@ def exclusive_paths(n_threads: int = HW_CONCURRENCY,
 
     switcher = aff3ct.Switcher(3, data_length, aff3ct.uint8)
     initializer = aff3ct.initializer(data_length, dtype=aff3ct.uint8)
-    finalizer   = aff3ct.finalizer  (data_length, dtype=aff3ct.uint8)
+    finalizer = aff3ct.finalizer(data_length, dtype=aff3ct.uint8)
 
     incs = []
     for s in range(6):
@@ -89,9 +90,9 @@ def exclusive_paths(n_threads: int = HW_CONCURRENCY,
 
     data = initializer.initialize()
     controller.control.bind(data)
-    path = controller.control()
+    the_path = controller.control()
 
-    sw_path0, sw_path1, sw_path2 = switcher.commute(data, path)
+    sw_path0, sw_path1, sw_path2 = switcher.commute(data, the_path)
     inc_data0 = incs[0].increment(sw_path0)
     inc_data0 = incs[1].increment(inc_data0)
     inc_data0 = incs[2].increment(inc_data0)
@@ -141,25 +142,33 @@ def exclusive_paths(n_threads: int = HW_CONCURRENCY,
     stop = time.time_ns()
     duration = (stop - start) / 1000000.0
 
-    '''chain_sleep_time = 0
+    chain_sleep_time = 0
     for inc in incs:
         chain_sleep_time += inc.ns
 
-    theoretical_time = (chain_sleep_time * n_exec * n_inter_frames) / 1000000.0 / n_threads
+    multipliers = [2, 3, 6]
+    real_path = 1 if cyclic_path else path
+    theoretical_time = ((chain_sleep_time / multipliers[real_path]) * n_exec * n_inter_frames) / 1000000.0 / n_threads
+
+    print(f"Sequence elapsed time: {duration} ms")
+    print(f"Sequence theoretical time: {theoretical_time} ms")
 
     tests_passed = True
 
     tid = 0
     for cur_finalizer in sequence_chain.get_cloned_modules(finalizer):
+        real_path = path
+        if cyclic_path:
+            real_path = (finalizer.finalize.n_calls - 1) % 3
         for f in range(n_inter_frames):
             final_data = cur_finalizer.final_data[f]
             for d in range(len(final_data)):
-                expected = len(incs) + tid * n_inter_frames +f
+                expected = len(incs)/multipliers[real_path] + tid * n_inter_frames + f
                 expected = expected % 256
                 if final_data[d] != expected:
                     print(f"# expected = {expected} - obtained = {final_data[d]} (d = {d}, tid = {tid})")
                     tests_passed = False
-        tid+=1
+        tid += 1
     if print_stats:
         print("#")
         sequence_chain.show_stats(True, False)
@@ -169,8 +178,7 @@ def exclusive_paths(n_threads: int = HW_CONCURRENCY,
     else:
         print(f"#{aff3ct.rang.style.bold}{aff3ct.rang.fg.red} Tests failed :-( {aff3ct.rang.style.reset}")
     return tests_passed
-    '''
-    return True
+
 
 if __name__ == '__main__':
     max_threads = aff3ct._ext.get_hardware_concurrency()

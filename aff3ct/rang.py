@@ -1,4 +1,4 @@
-from ._ext.rang import style, bg, fg, fgB, bgB
+from ._ext.rang import style, bg, fg, fgB, bgB, enable_colors, disable_colors
 
 style.__add__ = lambda slf, message: str(slf) + message
 style.__radd__ = lambda slf, message: message + str(slf)

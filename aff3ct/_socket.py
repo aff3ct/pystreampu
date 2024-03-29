@@ -91,7 +91,7 @@ def _bind_(self: Socket, s_out: SocketLike, priority: int = 1, raw_data=False) -
         else:
             s_out = array(s_out)
     else:
-        if hasattr(s_out, '_mrv'):
+        while hasattr(s_out, '_mrv'):
             s_out = s_out._mrv
 
     self._tag = s_out

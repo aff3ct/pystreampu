@@ -15,7 +15,7 @@ HW_CONCURRENCY  = aff3ct._ext.get_hardware_concurrency()
 @pytest.mark.parametrize("n_exec", [100])
 @pytest.mark.parametrize("data_length", [2048])
 @pytest.mark.parametrize("sleep_time_us", [5])
-@pytest.mark.parametrize("n_inter_frames", [1])
+@pytest.mark.parametrize("n_inter_frames", [1, 4])
 @pytest.mark.parametrize("n_threads", [HW_CONCURRENCY])
 def test_simple_chain_fwd(n_threads:int,
                           n_inter_frames:int,

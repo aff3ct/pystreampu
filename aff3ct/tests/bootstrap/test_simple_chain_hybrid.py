@@ -17,33 +17,33 @@ HW_CONCURRENCY  = aff3ct._ext.get_hardware_concurrency()
 @pytest.mark.parametrize("sleep_time_us", [5])
 @pytest.mark.parametrize("n_inter_frames", [1, 4])
 @pytest.mark.parametrize("n_threads", [HW_CONCURRENCY])
-def test_simple_chain_fwd(n_threads:int,
-                          n_inter_frames:int,
-                          sleep_time_us:int,
-                          data_length:int,
-                          n_exec:int,
-                          dot_filepath:str,
-                          copy_mode:bool,
-                          print_stats:bool,
-                          step_by_step:bool,
-                          debug:bool,
-                          verbose:bool):
-    assert simple_chain_fwd(n_threads, n_inter_frames, sleep_time_us, data_length,
-                            n_exec, dot_filepath, copy_mode, print_stats,
-                            step_by_step, debug, verbose)
+def test_simple_chain_hybrid(n_threads:int,
+                             n_inter_frames:int,
+                             sleep_time_us:int,
+                             data_length:int,
+                             n_exec:int,
+                             dot_filepath:str,
+                             copy_mode:bool,
+                             print_stats:bool,
+                             step_by_step:bool,
+                             debug:bool,
+                             verbose:bool):
+    assert simple_chain_hybrid(n_threads, n_inter_frames, sleep_time_us, data_length,
+                               n_exec, dot_filepath, copy_mode, print_stats,
+                               step_by_step, debug, verbose)
 
 
-def simple_chain_fwd(n_threads:int = HW_CONCURRENCY,
-                     n_inter_frames:int = 1,
-                     sleep_time_us:int = 5,
-                     data_length:int = 2048,
-                     n_exec:int = 100,
-                     dot_filepath:str = '',
-                     copy_mode:bool = False,
-                     print_stats:bool = False,
-                     step_by_step:bool = False,
-                     debug:bool = False,
-                     verbose:bool = False):
+def simple_chain_hybrid(n_threads:int = HW_CONCURRENCY,
+                        n_inter_frames:int = 1,
+                        sleep_time_us:int = 5,
+                        data_length:int = 2048,
+                        n_exec:int = 100,
+                        dot_filepath:str = '',
+                        copy_mode:bool = False,
+                        print_stats:bool = False,
+                        step_by_step:bool = False,
+                        debug:bool = False,
+                        verbose:bool = False):
 
     print("########################################")
     print("# Micro-benchmark: Simple chain hybrid #")
@@ -195,4 +195,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    simple_chain_fwd(**vars(args))
+    simple_chain_hybrid(**vars(args))

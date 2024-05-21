@@ -17,6 +17,7 @@
 #include "wrapper/Tools/Interface/Interface_waiting.hpp"
 #include "wrapper/Tools/Reporter/Reporter.hpp"
 #include "wrapper/Tools/Terminal/Terminal.hpp"
+#include "wrapper/Tools/Signal_handler/Signal_handler.hpp"
 
 #include "wrapper/Runtime/Socket/Socket.hpp"
 #include "wrapper/Runtime/Task/Task.hpp"
@@ -34,7 +35,7 @@
 #include "wrapper/Module/Source/User/Source_user.hpp"
 #include "wrapper/Module/Source/User/Source_user_binary.hpp"
 #include "wrapper/Module/Probe/Probe.hpp"
-#include "wrapper/Module/Subsequence/Subsequence.hpp"
+#include "wrapper/Module/Set/Set.hpp"
 #include "wrapper/Module/Switcher/Switcher.hpp"
 #include "wrapper/Module/Unaryop/Unaryop.hpp"
 #include "wrapper/Module/Stateless/Stateless.hpp"

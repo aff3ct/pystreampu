@@ -1,56 +1,57 @@
 import aff3ct
+aff3ct.rang.enable_colors()
+
 import argparse
 import time
 import pytest
 
-aff3ct.setup_signal_handler()
+aff3ct.Signal_handler.init()
 HW_CONCURRENCY  = aff3ct._ext.get_hardware_concurrency()
 
-@pytest.mark.parametrize("verbose", [False])
-@pytest.mark.parametrize("subseq", [False, True])
+@pytest.mark.parametrize("cyclic_path", [False, True])
 @pytest.mark.parametrize("debug", [False])
 @pytest.mark.parametrize("step_by_step", [False, True])
 @pytest.mark.parametrize("print_stats", [False])
 @pytest.mark.parametrize("copy_mode", [False, True])
 @pytest.mark.parametrize("dot_filepath", [''])
+@pytest.mark.parametrize("path", [0, 1, 2])
 @pytest.mark.parametrize("n_exec", [100])
 @pytest.mark.parametrize("data_length", [2048])
 @pytest.mark.parametrize("sleep_time_us", [5])
-@pytest.mark.parametrize("n_inter_frames", [1])
+@pytest.mark.parametrize("n_inter_frames", [1, 4])
 @pytest.mark.parametrize("n_threads", [HW_CONCURRENCY])
-def test_simple_chain(n_threads:int,
-                      n_inter_frames:int,
-                      sleep_time_us:int,
-                      data_length:int,
-                      n_exec:int,
-                      dot_filepath:str,
-                      copy_mode:bool,
-                      print_stats:bool,
-                      step_by_step:bool,
-                      debug:bool,
-                      subseq:bool,
-                      verbose:bool):
-    assert simple_chain(n_threads, n_inter_frames, sleep_time_us, data_length,
-                        n_exec, dot_filepath, copy_mode, print_stats,
-                        step_by_step, debug, subseq, verbose)
+def test_exclusive_paths(n_threads: int,
+                         n_inter_frames: int,
+                         sleep_time_us: int,
+                         data_length: int,
+                         n_exec: int,
+                         path: int,
+                         dot_filepath: str,
+                         copy_mode: bool,
+                         print_stats: bool,
+                         step_by_step: bool,
+                         debug: bool,
+                         cyclic_path: bool):
+    assert exclusive_paths(n_threads, n_inter_frames, sleep_time_us,
+                           data_length, n_exec, path, dot_filepath, copy_mode,
+                           print_stats, step_by_step, debug, cyclic_path)
 
+def exclusive_paths(n_threads: int = HW_CONCURRENCY,
+                    n_inter_frames: int = 1,
+                    sleep_time_us: int = 5,
+                    data_length: int = 2048,
+                    n_exec: int = 100,
+                    path: int = 0,
+                    dot_filepath: str = '',
+                    copy_mode: bool = False,
+                    print_stats: bool = False,
+                    step_by_step: bool = False,
+                    debug: bool = False,
+                    cyclic_path: bool = False):
 
-def simple_chain(n_threads:int = HW_CONCURRENCY,
-                 n_inter_frames:int = 1,
-                 sleep_time_us:int = 5,
-                 data_length:int = 2048,
-                 n_exec:int = 100,
-                 dot_filepath:str = '',
-                 copy_mode:bool = False,
-                 print_stats:bool = False,
-                 step_by_step:bool = False,
-                 debug:bool = False,
-                 subseq:bool = False,
-                 verbose:bool = False):
-
-    print("#################################")
-    print("# Micro-benchmark: Simple chain #")
-    print("#################################")
+    print("####################################")
+    print("# Micro-benchmark: Exclusive Paths #")
+    print("####################################")
     print("#")
     print("# Command line arguments:")
     print(f"#   - n_threads      = {n_threads}")
@@ -58,17 +59,27 @@ def simple_chain(n_threads:int = HW_CONCURRENCY,
     print(f"#   - sleep_time_us  = {sleep_time_us}")
     print(f"#   - data_length    = {data_length}")
     print(f"#   - n_exec         = {n_exec}")
+    print(f"#   - path           = {path}")
     print(f"#   - dot_filepath   = {dot_filepath if dot_filepath else 'empty'}")
     print(f"#   - no_copy_mode   = {not copy_mode}")
     print(f"#   - print_stats    = {print_stats}")
     print(f"#   - step_by_step   = {step_by_step}")
     print(f"#   - debug          = {debug}")
-    print(f"#   - subseq         = {subseq}")
-    print(f"#   - verbose        = {verbose}")
+    print(f"#   - cyclic_path    = {cyclic_path}")
     print("#")
 
+    if path >= 3:
+        raise aff3ct.exceptions.InvalidArgument("'path' has to be smaller than 3")
+
+    controller = None
+    if cyclic_path:
+        controller = aff3ct.Controller_cyclic(3,0)
+    else:
+        controller = aff3ct.Controller_static(path)
+
+    switcher = aff3ct.Switcher(3, data_length, aff3ct.uint8)
     initializer = aff3ct.initializer(data_length, dtype=aff3ct.uint8)
-    finalizer   = aff3ct.finalizer  (data_length, dtype=aff3ct.uint8)
+    finalizer = aff3ct.finalizer(data_length, dtype=aff3ct.uint8)
 
     incs = []
     for s in range(6):
@@ -77,22 +88,26 @@ def simple_chain(n_threads:int = HW_CONCURRENCY,
         inc.name = "Inc" + str(s)
         incs.append(inc)
 
-    if not subseq:
-        x = initializer.initialize()
-        y = incs[0].increment(x)
-        for i in range(1,6):
-            y = incs[i].increment(y)
-        finalizer.finalize(y)
-    else:
-        for i in range(0,5):
-            incs[i+1]["increment::in"] = incs[i]["increment::out"]
-        partial_sequence = aff3ct.Sequence(incs[0].increment, incs[len(incs)-1].increment)
-        subsequence = aff3ct.Subsequence(partial_sequence)
-        x = initializer.initialize()
-        y = subsequence.exec(x)
-        finalizer.finalize(y)
+    data = initializer.initialize()
+    controller.control.bind(data)
+    the_path = controller.control()
 
-    sequence_chain = aff3ct.Sequence(x.task, n_threads)
+    sw_path0, sw_path1, sw_path2 = switcher.commute(data, the_path)
+    inc_data0 = incs[0].increment(sw_path0)
+    inc_data0 = incs[1].increment(inc_data0)
+    inc_data0 = incs[2].increment(inc_data0)
+
+    inc_data1 = incs[3].increment(sw_path1)
+    inc_data1 = incs[4].increment(inc_data1)
+
+    inc_data2 = incs[5].increment(sw_path2)
+
+    inc_data = switcher.select(inc_data0, inc_data1, inc_data2)
+    finalizer.finalize(inc_data)
+
+    controller.reset()
+
+    sequence_chain = aff3ct.Sequence(data.task, n_threads)
     sequence_chain.n_frames = n_inter_frames
     sequence_chain.no_copy_mode = not copy_mode
 
@@ -112,15 +127,6 @@ def simple_chain(n_threads:int = HW_CONCURRENCY,
         for f in range(n_inter_frames):
             cur_initializer.data_init[f][:] = tid * n_inter_frames + f
         tid += 1
-
-    if verbose:
-        print()
-        print("Helper information:")
-        print("-------------------")
-        aff3ct.help(initializer)
-        for inc in incs:
-            aff3ct.help(inc)
-        aff3ct.help(finalizer)
 
     start = time.time_ns()
 
@@ -142,20 +148,29 @@ def simple_chain(n_threads:int = HW_CONCURRENCY,
     for inc in incs:
         chain_sleep_time += inc.ns
 
-    theoretical_time = (chain_sleep_time * n_exec * n_inter_frames) / 1000000.0 / n_threads
+    multipliers = [2, 3, 6]
+    real_path = 1 if cyclic_path else path
+    theoretical_time = ((chain_sleep_time / multipliers[real_path]) * n_exec * n_inter_frames) / 1000000.0 / n_threads
+
+    print(f"Sequence elapsed time: {duration} ms")
+    print(f"Sequence theoretical time: {theoretical_time} ms")
+
     tests_passed = True
 
     tid = 0
     for cur_finalizer in sequence_chain.get_cloned_modules(finalizer):
+        real_path = path
+        if cyclic_path:
+            real_path = (cur_finalizer.finalize.n_calls - 1) % 3
         for f in range(n_inter_frames):
             final_data = cur_finalizer.final_data[f]
             for d in range(len(final_data)):
-                expected = len(incs) + tid * n_inter_frames +f
+                expected = len(incs)/multipliers[real_path] + tid * n_inter_frames + f
                 expected = expected % 256
                 if final_data[d] != expected:
                     print(f"# expected = {expected} - obtained = {final_data[d]} (d = {d}, tid = {tid})")
                     tests_passed = False
-        tid+=1
+        tid += 1
     if print_stats:
         print("#")
         sequence_chain.show_stats(True, False)
@@ -164,8 +179,8 @@ def simple_chain(n_threads:int = HW_CONCURRENCY,
         print(f"#{aff3ct.rang.style.bold}{aff3ct.rang.fg.green} Tests passed! {aff3ct.rang.style.reset}")
     else:
         print(f"#{aff3ct.rang.style.bold}{aff3ct.rang.fg.red} Tests failed :-( {aff3ct.rang.style.reset}")
-
     return tests_passed
+
 
 if __name__ == '__main__':
     max_threads = aff3ct._ext.get_hardware_concurrency()
@@ -177,15 +192,14 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--sleep-time',     type = int, dest = 'sleep_time_us',  default = 5,           help = 'Sleep time duration in one task (microseconds)')
     parser.add_argument('-d', '--data-length',    type = int, dest = 'data_length',    default = 2048,        help = 'Size of data to process in one task (in bytes)')
     parser.add_argument('-e', '--n-exec',         type = int, dest = 'n_exec',         default = 100000,      help = 'Number of sequence executions')
+    parser.add_argument('-a', '--path',           type = int, dest = 'path',           default = 0,           help = 'Path to take in the switch (0, 1 or 2)')
     parser.add_argument('-o', '--dot-filepath',   type = str, dest = 'dot_filepath',   default = '',          help = 'Path to dot output file')
 
     parser.add_argument('-c', '--copy-mode',    action='store_true', dest = 'copy_mode',    default = False, help = 'Enable to copy data in sequence (performance will be reduced)')
     parser.add_argument('-p', '--print-stats',  action='store_true', dest = 'print_stats',  default = False, help = 'Enable to print per task statistics (performance will be reduced)')
     parser.add_argument('-b', '--step-by-step', action='store_true', dest = 'step_by_step', default = False, help = 'Enable step-by-step sequence execution (performance will be reduced)')
     parser.add_argument('-g', '--debug',        action='store_true', dest = 'debug',        default = False, help = 'Enable task debug mode (print socket data)')
-    parser.add_argument('-u', '--subseq',       action='store_true', dest = 'subseq',       default = False, help = 'Enable subsequence in the executed sequence')
-    parser.add_argument('-v', '--verbose',      action='store_true', dest = 'verbose',      default = False, help = 'Enable verbose mode')
-
+    parser.add_argument('-y', '--cyclic-path',  action='store_true', dest = 'cyclic_path',  default = False, help = "Enable cyclic selection of the path (with this '--path' is ignored)   ")
     args = parser.parse_args()
 
-    simple_chain(**vars(args))
+    exclusive_paths(**vars(args))

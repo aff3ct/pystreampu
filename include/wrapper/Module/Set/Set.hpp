@@ -1,5 +1,5 @@
-#ifndef WRAPPER_SSEQ_HPP_
-#define WRAPPER_SSEQ_HPP_
+#ifndef WRAPPER_SET_HPP_
+#define WRAPPER_SET_HPP_
 
 #include <pybind11/pybind11.h>
 #include <aff3ct-core.hpp>
@@ -10,7 +10,7 @@ namespace pyaf
 {
 namespace wrapper
 {
-	void wrap_subsequence(py::handle scope);
+	void wrap_set(py::handle scope);
 }
 }
-#endif //WRAPPER_SSEQ_HPP_
+#endif //WRAPPER_SET_HPP_

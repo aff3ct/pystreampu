@@ -1,0 +1,17 @@
+#ifndef WRAPPER_SIGNAL_HANDLER_HPP__
+#define WRAPPER_SIGNAL_HANDLER_HPP__
+
+#include <pybind11/pybind11.h>
+#include <aff3ct-core.hpp>
+
+namespace py = pybind11;
+
+namespace pyaf
+{
+namespace wrapper
+{
+	void wrap_signal_handler(py::module_ &scope);
+}
+}
+
+#endif // WRAPPER_SIGNAL_HANDLER_HPP__

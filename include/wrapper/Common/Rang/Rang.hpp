@@ -103,6 +103,10 @@ namespace pyaf
 
         m.def("setWinTermMode", &rang::setWinTermMode);
         m.def("setControlMode", &rang::setControlMode);
+
+    	m.def("enable_colors", [](){setControlMode(rang::control::Force);});
+	    m.def("disable_colors",[](){setControlMode(rang::control::Off);});
+
         }
 }
 }

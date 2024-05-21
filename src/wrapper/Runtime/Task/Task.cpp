@@ -125,7 +125,11 @@ void pyaf::wrapper::wrap_task(py::handle scope)
 	py_task.def("bind", [](aff3ct::runtime::Task& self, aff3ct::runtime::Socket& s_out, const int priority)
 	{
 		self.bind(s_out, priority);
-	}, "Binds the Task to socket 's_out' with priority 'priority'.", "s_out"_a, "priority"_a=1);
+	}, "Binds the Task to socket 's_out' with priority 'priority'.", "s_out"_a, "priority"_a=-1);
+	py_task.def("bind", [](aff3ct::runtime::Task& self, aff3ct::runtime::Task& t_out, const int priority)
+	{
+		self.bind(t_out, priority);
+	}, "Binds the Task to task 't_out' with priority 'priority'.", "t_out"_a, "priority"_a=-1);
 
 	// py_task.def("is_bound"           , &aff3ct::runtime::Task::is_bound                          );
 	py_task.def("set_debug_hex"      , &aff3ct::runtime::Task::set_debug_hex      , "debug_hex"_a);

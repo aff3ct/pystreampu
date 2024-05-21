@@ -20,10 +20,10 @@ from ._sequence import Sequence
 from ._pipeline import Pipeline
 
 # Tools
+from aff3ct._ext import Signal_handler
 from aff3ct._ext import exceptions
 from aff3ct._ext import help
 from aff3ct._ext.interfaces import *
-from aff3ct._ext import disable_colors, enable_colors, setup_signal_handler
 from aff3ct._ext.terminal import Terminal, Terminal_dump, Terminal_std
 from aff3ct._ext import fmtflags as FormatFlags
 from . import rang
@@ -34,7 +34,7 @@ from aff3ct._ext.ctl import *
 from aff3ct._ext.ite import Iterator
 from aff3ct._ext.ran import Range
 from aff3ct._ext.slp import Sleeper
-from aff3ct._ext.sse import Subsequence
+from aff3ct._ext.set import Set
 from aff3ct._ext.swi import Switcher
 
 # Modules with factory

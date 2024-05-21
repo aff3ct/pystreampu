@@ -3,11 +3,11 @@ import argparse
 import time
 import pytest
 
-aff3ct.setup_signal_handler()
+aff3ct.Signal_handler.init()
 HW_CONCURRENCY  = aff3ct._ext.get_hardware_concurrency()
 
 @pytest.mark.parametrize("n_threads", [HW_CONCURRENCY])
-@pytest.mark.parametrize("n_inter_frames", [1])
+@pytest.mark.parametrize("n_inter_frames", [1, 4])
 @pytest.mark.parametrize("sleep_time_us", [5])
 @pytest.mark.parametrize("data_length", [2048])
 @pytest.mark.parametrize("n_exec", [100])
@@ -18,7 +18,7 @@ HW_CONCURRENCY  = aff3ct._ext.get_hardware_concurrency()
 @pytest.mark.parametrize("step_by_step", [False, True])
 @pytest.mark.parametrize("debug", [False])
 @pytest.mark.parametrize("cpp_binding", [False, True])
-def test_do_while_loop(n_threads:int,
+def test_for_loop(n_threads:int,
                        n_inter_frames:int,
                        sleep_time_us:int,
                        data_length:int,
@@ -31,12 +31,12 @@ def test_do_while_loop(n_threads:int,
                        debug:bool,
                        cpp_binding:bool
                       ):
-    assert do_while_loop(n_threads, n_inter_frames, sleep_time_us, data_length,
+    assert for_loop(n_threads, n_inter_frames, sleep_time_us, data_length,
                          n_exec, n_loop, dot_filepath, copy_mode, print_stats,
                          step_by_step, debug, cpp_binding)
 
 
-def do_while_loop(n_threads:int = HW_CONCURRENCY,
+def for_loop(n_threads:int = HW_CONCURRENCY,
                   n_inter_frames:int = 1,
                   sleep_time_us:int = 5,
                   data_length:int = 2048,
@@ -49,9 +49,9 @@ def do_while_loop(n_threads:int = HW_CONCURRENCY,
                   debug:bool = False,
                   cpp_binding:bool = False):
 
-    print("##################################")
-    print("# Micro-benchmark: Do while loop #")
-    print("##################################")
+    print("#############################")
+    print("# Micro-benchmark: For loop #")
+    print("#############################")
     print("#")
     print("# Command line arguments:")
     print(f"#   - n_threads      = {n_threads}")
@@ -82,41 +82,42 @@ def do_while_loop(n_threads:int = HW_CONCURRENCY,
         incs.append(inc)
     if cpp_binding:
         switcher["select::in_data1"  ] = initializer["initialize::out"   ]
-        iterator["iterate"           ] = switcher   ["select::status"    ]
+        iterator["iterate"           ] = switcher   ["select"            ]
+        switcher ["commute::in_data" ] = switcher   ["select::out_data"  ]
         switcher["commute::in_ctrl"  ] = iterator   ["iterate::out"      ]
-        incs[0] ["increment::in"     ] = switcher   ["select::out_data"  ]
+        incs[0] ["increment::in"     ] = switcher   ["commute::out_data0"]
         for i in range(5):
             incs[i+1]["increment::in"] = incs[i]    ["increment::out"    ]
-        switcher ["commute::in_data" ] = incs[5]    ["increment::out"    ]
-        switcher ["select::in_data0" ] = switcher   ["commute::out_data0"]
+        switcher ["select::in_data0" ] = incs[5]    ["increment::out"    ]
         finalizer["finalize::in"     ] = switcher   ["commute::out_data1"]
     else:
         aff3ct.Task.call_auto_exec = False
         ini_data = initializer.initialize()
-        sel_out_data = switcher.select(in_data0 = switcher["commute::out_data0"], in_data1 = ini_data)
-        iterator.iterate.bind(switcher.select.status)
-        y = incs[0].increment(sel_out_data)
+        iterator.iterate.bind(switcher.select)
+        ite = iterator.iterate()
+        [com_out_data0, com_out_data1] = switcher.commute(in_data = switcher["select::out_data"], in_ctrl = ite)
+        y = incs[0].increment(com_out_data0)
         for i in range(5):
             y = incs[i+1].increment(y)
-        it = iterator.iterate()
-        [_, com_out_data1] = switcher.commute(y, it)
+        switcher.select(in_data0 = y, in_data1 = ini_data)
         finalizer.finalize(com_out_data1)
+        aff3ct.Task.call_auto_exec = True
     stop = time.time_ns()
     binding_duration = (stop - start) / 1000000.0
     print(f"Binding elapsed time: {binding_duration} ms")
 
-    sequence_do_while_loop = aff3ct.Sequence(initializer["initialize"], n_threads)
-    sequence_do_while_loop.n_frames = n_inter_frames
-    sequence_do_while_loop.no_copy_mode = not copy_mode
+    sequence_for_loop = aff3ct.Sequence(initializer["initialize"], n_threads)
+    sequence_for_loop.n_frames = n_inter_frames
+    sequence_for_loop.no_copy_mode = not copy_mode
 
     tid = 0
-    cloned_initializers = sequence_do_while_loop.get_cloned_modules(initializer)
+    cloned_initializers = sequence_for_loop.get_cloned_modules(initializer)
     for cur_initializer in cloned_initializers:
         for f in range(n_inter_frames):
             cur_initializer.data_init[f][:] = tid * n_inter_frames + f
         tid += 1
 
-    for mdl in sequence_do_while_loop.get_modules(aff3ct.Module, False):
+    for mdl in sequence_for_loop.get_modules(aff3ct.Module, False):
         for tsk in mdl.tasks:
             tsk.reset()
             tsk.debug = debug
@@ -125,17 +126,17 @@ def do_while_loop(n_threads:int = HW_CONCURRENCY,
             tsk.fast = True
 
     if dot_filepath:
-        sequence_do_while_loop.export_dot(dot_filepath)
+        sequence_for_loop.export_dot(dot_filepath)
 
     start = time.time_ns()
     if not step_by_step:
-        sequence_do_while_loop.exec_n_times(n_exec)
+        sequence_for_loop.exec_n_times(n_exec)
     else:
         start = time.time_ns()
         counter = 0
         while counter < n_exec/n_threads:
             for tid in range(n_threads):
-                while sequence_do_while_loop.exec_step(tid):
+                while sequence_for_loop.exec_step(tid):
                     pass
             counter += 1
 
@@ -152,11 +153,11 @@ def do_while_loop(n_threads:int = HW_CONCURRENCY,
     print(f"Sequence theoretical time: {theoretical_time} ms")
     tests_passed = True
     tid = 0
-    for cur_finalizer in sequence_do_while_loop.get_cloned_modules(finalizer):
+    for cur_finalizer in sequence_for_loop.get_cloned_modules(finalizer):
         for f in range(n_inter_frames):
             final_data = cur_finalizer.final_data[f]
             for d in range(len(final_data)):
-                expected = len(incs)*(1+iterator.limit) + tid * n_inter_frames + f
+                expected = len(incs)*iterator.limit + tid * n_inter_frames + f
                 expected = expected % 256
                 if final_data[d] != expected:
                     print(f"# expected = {expected} - obtained = {final_data[d]} (d = {d}, tid = {tid})")
@@ -164,14 +165,13 @@ def do_while_loop(n_threads:int = HW_CONCURRENCY,
         tid+=1
     if print_stats:
         print("#")
-        sequence_do_while_loop.show_stats(True, False)
+        sequence_for_loop.show_stats(True, False)
 
     if (tests_passed):
         print(f"#{aff3ct.rang.style.bold}{aff3ct.rang.fg.green} Tests passed! {aff3ct.rang.style.reset}")
     else:
         print(f"#{aff3ct.rang.style.bold}{aff3ct.rang.fg.red} Tests failed :-( {aff3ct.rang.style.reset}")
 
-    aff3ct.Task.call_auto_exec = True
     return tests_passed
 
 if __name__ == '__main__':
@@ -195,4 +195,4 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    do_while_loop(**vars(args))
+    for_loop(**vars(args))

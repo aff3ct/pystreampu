@@ -35,6 +35,7 @@ def _get_firsts(s: Socket):
                     print(exc)
                     out.append(b.task)
         return out
+
     return visit(s, [])
 
 
@@ -48,7 +49,7 @@ def get_cloned_modules(self, module_ref):
         else:
             mid += 1
     if not found:
-        raise(exceptions.RuntimeError("'module_ref' can't be found in the sequence."))
+        raise (exceptions.RuntimeError("'module_ref' can't be found in the sequence."))
 
     cloned_modules = []
     for tid in range(len(all_modules)):
@@ -72,6 +73,7 @@ def get_modules(self, module_class, set_modules=True):
             return_list += sse.sequence.get_module(module_class, True)
     return return_list
 
+
 _Sequence.get_modules = get_modules
 
 
@@ -80,7 +82,7 @@ class Sequence(_Sequence):
         super().__init__(*args, **kwargs)
         self.original_modules = super().get_modules_per_threads()[0]
 
-    def from_socket(sockets = Union[Socket, List[Socket]], *args: tuple, **kwargs: dict):
+    def from_socket(sockets=Union[Socket, List[Socket]], *args: tuple, **kwargs: dict):
         firsts = []
         if not isinstance(sockets, list):
             sockets = [sockets]

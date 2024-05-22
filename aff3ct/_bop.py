@@ -14,6 +14,7 @@ from aff3ct._typing import SocketLike
 
 import numpy as np
 
+
 class BType(Enum):
     """Binary operator enum."""
 
@@ -73,7 +74,7 @@ def _bop_factory(
         ex_msg = f"type '{type(output_type)}' does not name an AFF3CT dtype."
         raise TypeError(ex_msg)
 
-    name = f'Binaryop_{str(bop_type)}_{input_type.name}_{output_type.name}'
+    name = f"Binaryop_{str(bop_type)}_{input_type.name}_{output_type.name}"
 
     try:
         return getattr(aff3ct._ext.bop, name)(n_in0, n_in1)
@@ -82,12 +83,14 @@ def _bop_factory(
         raise AttributeError(ex_msg) from exc
 
 
-def bop(bop_type: BType,
-        s_0: Socket,
-        s_1: SocketLike,
-        fwd: bool = False,
-        rev: bool = False,
-        output_dtype: dtype = None) -> Socket:
+def bop(
+    bop_type: BType,
+    s_0: Socket,
+    s_1: SocketLike,
+    fwd: bool = False,
+    rev: bool = False,
+    output_dtype: dtype = None,
+) -> Socket:
     """
     Binary operator factory from Sockets.
 
@@ -116,7 +119,7 @@ def bop(bop_type: BType,
     if not output_dtype:
         output_dtype = input_dtype
 
-    comparisons = ['eq', 'ge', 'gt', 'le', 'lt', 'ne']
+    comparisons = ["eq", "ge", "gt", "le", "lt", "ne"]
     if name in comparisons and not output_dtype:
         output_dtype = int32
 
@@ -135,9 +138,7 @@ def bop(bop_type: BType,
     return the_bop.perform(s_0, s_1)
 
 
-def add(s_0: Socket,
-        s_1: Socket,
-        output_dtype: dtype = None) -> Socket:
+def add(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Add two sockets componentwise.
 
@@ -152,9 +153,7 @@ def add(s_0: Socket,
     return bop(BType.ADD, s_0, s_1, output_dtype=output_dtype)
 
 
-def sub(s_0: Socket,
-        s_1: Socket,
-        output_dtype: dtype = None) -> Socket:
+def sub(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Substract two sockets componentwise.
 
@@ -169,9 +168,7 @@ def sub(s_0: Socket,
     return bop(BType.SUB, s_0, s_1, output_dtype=output_dtype)
 
 
-def mul(s_0: Socket,
-        s_1: Socket,
-        output_dtype: dtype = None) -> Socket:
+def mul(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Multiply two sockets componentwise.
 
@@ -186,9 +183,7 @@ def mul(s_0: Socket,
     return bop(BType.MUL, s_0, s_1, output_dtype=output_dtype)
 
 
-def div(s_0: Socket,
-        s_1: Socket,
-        output_dtype: dtype = None) -> Socket:
+def div(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Divide two sockets componentwise.
 
@@ -203,9 +198,7 @@ def div(s_0: Socket,
     return bop(BType.DIV, s_0, s_1, output_dtype=output_dtype)
 
 
-def greater_equal(s_0: Socket,
-                  s_1: Socket,
-                  output_dtype: dtype = None) -> Socket:
+def greater_equal(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Compare two sockets componentwise (>=).
 
@@ -220,9 +213,7 @@ def greater_equal(s_0: Socket,
     return bop(BType.GE, s_0, s_1, output_dtype=output_dtype)
 
 
-def greater(s_0: Socket,
-            s_1: Socket,
-            output_dtype: dtype = None) -> Socket:
+def greater(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Compare two sockets componentwise (>).
 
@@ -237,9 +228,7 @@ def greater(s_0: Socket,
     return bop(BType.GT, s_0, s_1, output_dtype=output_dtype)
 
 
-def equal(s_0: Socket,
-          s_1: Socket,
-          output_dtype: dtype = None) -> Socket:
+def equal(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Compare two sockets componentwise (==).
 
@@ -254,9 +243,7 @@ def equal(s_0: Socket,
     return bop(BType.EQ, s_0, s_1, output_dtype=output_dtype)
 
 
-def not_equal(s_0: Socket,
-              s_1: Socket,
-              output_dtype: dtype = None) -> Socket:
+def not_equal(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Compare two sockets componentwise (!=).
 
@@ -271,9 +258,7 @@ def not_equal(s_0: Socket,
     return bop(BType.NEQ, s_0, s_1, output_dtype=output_dtype)
 
 
-def less_equal(s_0: Socket,
-               s_1: Socket,
-               output_dtype: dtype = None) -> Socket:
+def less_equal(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Compare two sockets componentwise (<=).
 
@@ -288,9 +273,7 @@ def less_equal(s_0: Socket,
     return bop(BType.LE, s_0, s_1, output_dtype=output_dtype)
 
 
-def less(s_0: Socket,
-         s_1: Socket,
-         output_dtype: dtype = None) -> Socket:
+def less(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Compare two sockets componentwise (<).
 
@@ -305,9 +288,7 @@ def less(s_0: Socket,
     return bop(BType.LT, s_0, s_1, output_dtype=output_dtype)
 
 
-def bitwise_and(s_0: Socket,
-                s_1: Socket,
-                output_dtype: dtype = None) -> Socket:
+def bitwise_and(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Compute bitwise AND between two sockets componentwise.
 
@@ -322,9 +303,7 @@ def bitwise_and(s_0: Socket,
     return bop(BType.AND, s_0, s_1, output_dtype=output_dtype)
 
 
-def bitwise_or(s_0: Socket,
-               s_1: Socket,
-               output_dtype: dtype = None) -> Socket:
+def bitwise_or(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Compute bitwise OR between two sockets componentwise.
 
@@ -339,9 +318,7 @@ def bitwise_or(s_0: Socket,
     return bop(BType.OR, s_0, s_1, output_dtype=output_dtype)
 
 
-def bitwise_xor(s_0: Socket,
-                s_1: Socket,
-                output_dtype: dtype = None) -> Socket:
+def bitwise_xor(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Compute bitwise XOR between two sockets componentwise.
 
@@ -355,9 +332,8 @@ def bitwise_xor(s_0: Socket,
     """
     return bop(BType.XOR, s_0, s_1, output_dtype=output_dtype)
 
-def min(s_0: Socket,
-        s_1: Socket,
-        output_dtype: dtype = None) -> Socket:
+
+def min(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Compute componentwise min.
 
@@ -371,9 +347,8 @@ def min(s_0: Socket,
     """
     return bop(BType.MIN, s_0, s_1, output_dtype=output_dtype)
 
-def max(s_0: Socket,
-        s_1: Socket,
-        output_dtype: dtype = None) -> Socket:
+
+def max(s_0: Socket, s_1: Socket, output_dtype: dtype = None) -> Socket:
     """
     Compute componentwise max.
 
@@ -388,20 +363,22 @@ def max(s_0: Socket,
     return bop(BType.MAX, s_0, s_1, output_dtype=output_dtype)
 
 
-__all__ = ['BType',
-           'bop',
-           'add',
-           'sub',
-           'mul',
-           'div',
-           'greater_equal',
-           'greater',
-           'equal',
-           'not_equal',
-           'less_equal',
-           'less',
-           'bitwise_and',
-           'bitwise_or',
-           'bitwise_xor',
-           'min',
-           'max']
+__all__ = [
+    "BType",
+    "bop",
+    "add",
+    "sub",
+    "mul",
+    "div",
+    "greater_equal",
+    "greater",
+    "equal",
+    "not_equal",
+    "less_equal",
+    "less",
+    "bitwise_and",
+    "bitwise_or",
+    "bitwise_xor",
+    "min",
+    "max",
+]

@@ -1,4 +1,5 @@
 """Add some magic functions to the class Task."""
+
 from __future__ import annotations
 
 from typing import Union, Any
@@ -10,6 +11,7 @@ from aff3ct._ext import exceptions as exc
 
 Task.call_auto_exec = True
 
+
 def _setattr_impl(self: Task, attr: str, value: Any) -> Union[tuple, Socket, None]:
     """Overload __setattr__ of aff3ct._ext.core.Task.
 
@@ -19,7 +21,7 @@ def _setattr_impl(self: Task, attr: str, value: Any) -> Union[tuple, Socket, Non
         value (any): Value to set
     """
     if attr in [s.name for s in self.sockets]:
-        sck = self.module[f'{self.name}::{attr}']
+        sck = self.module[f"{self.name}::{attr}"]
         sck.bind(value)
     else:
         return object.__setattr__(self, attr, value)
@@ -39,7 +41,7 @@ def _getattr_impl(self: Task, attr: str) -> Union[tuple, Socket, None]:
         out (Socket): the task socket named 'sck_name'
     """
     if attr in [s.name for s in self.sockets]:
-        return self.module[f'{self.name}::{attr}']
+        return self.module[f"{self.name}::{attr}"]
     else:
         return object.__getattr__(self, attr)
 
@@ -50,56 +52,60 @@ def _dir_impl(self: Task) -> dict:
         new_dir.append(sckt.name)
     return new_dir
 
+
 def _get_task_doc(self):
     out_dir = Socket.directions.OUT
 
     inputs = [sckt for sckt in self.sockets if sckt.direction != out_dir]
 
     outputs = [sckt for sckt in self.sockets if sckt.direction == out_dir]
-    outputs = [sckt for sckt in outputs if sckt.name != 'status']
+    outputs = [sckt for sckt in outputs if sckt.name != "status"]
 
-    str_args = 'Args:\n'
-    str_returns = 'Returns:\n'
-    tsk_doc = f'{self.name} = {self.name}('
+    str_args = "Args:\n"
+    str_returns = "Returns:\n"
+    tsk_doc = f"{self.name} = {self.name}("
     for sckt in inputs:
-        tsk_doc += f'{sckt.name}, '
+        tsk_doc += f"{sckt.name}, "
     if inputs:
         tsk_doc = tsk_doc[0:-2]
-    tsk_doc += f')\n'
+    tsk_doc += f")\n"
 
     for sckt in inputs:
         len_ = sckt.n_elmts // self.module.n_frames
-        str_args += f'\t{sckt.name}: Socket[{len_}'
-        str_args += f', aff3ct.{str(sckt.dtype)}]\n'
+        str_args += f"\t{sckt.name}: Socket[{len_}"
+        str_args += f", aff3ct.{str(sckt.dtype)}]\n"
 
     for sckt in outputs:
         len_ = sckt.n_elmts // self.module.n_frames
-        str_returns += f'\t{sckt.name}: Socket[{len_}'
-        str_returns += f', aff3ct.{str(sckt.dtype)}]\n'
+        str_returns += f"\t{sckt.name}: Socket[{len_}"
+        str_returns += f", aff3ct.{str(sckt.dtype)}]\n"
 
-    return f'{tsk_doc}\n{str_args}\n{str_returns}\n'
+    return f"{tsk_doc}\n{str_args}\n{str_returns}\n"
+
 
 Task._get_task_doc = _get_task_doc
 
-def _call_impl(self: Task,
-               *args: tuple[SocketLike],
-               raw_data=False,
-               no_doc=False,
-               **kwargs: dict[str, SocketLike]
-               ) -> Union[Socket, tuple[Socket], None]:
+
+def _call_impl(
+    self: Task,
+    *args: tuple[SocketLike],
+    raw_data=False,
+    no_doc=False,
+    **kwargs: dict[str, SocketLike],
+) -> Union[Socket, tuple[Socket], None]:
 
     out_dir = Socket.directions.OUT
 
     inputs = [sckt for sckt in self.sockets if sckt.direction != out_dir]
     outputs = [sckt for sckt in self.sockets if sckt.direction == out_dir]
-    outputs = [sckt for sckt in outputs if sckt.name != 'status']
+    outputs = [sckt for sckt in outputs if sckt.name != "status"]
 
     if not no_doc:
         _call_impl.__doc__ = self._get_task_doc()
 
     for i, arg in enumerate(args):
         inputs[i].reset()
-        inputs[i].bind(arg,raw_data=raw_data)
+        inputs[i].bind(arg, raw_data=raw_data)
 
     for key, sckt in kwargs.items():
         self[key].reset()
@@ -138,4 +144,4 @@ Task.__getattr__ = _getattr_impl
 Task.__setattr__ = _setattr_impl
 Task.__dir__ = _dir_impl
 
-__all__ = ['Task']
+__all__ = ["Task"]

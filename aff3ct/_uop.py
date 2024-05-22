@@ -28,10 +28,9 @@ class UType(Enum):
         return self.name.lower()
 
 
-def _uop_factory(n_elmts: int,
-                 uop_type: UType,
-                 input_dtype: dtype = int8,
-                 output_dtype: dtype = int8) -> Module:
+def _uop_factory(
+    n_elmts: int, uop_type: UType, input_dtype: dtype = int8, output_dtype: dtype = int8
+) -> Module:
     """Return an AFF3CT unary operator module.
 
     Args:
@@ -54,14 +53,12 @@ def _uop_factory(n_elmts: int,
         msg = f"type '{type(input_dtype)}' does not name an AFF3CT datatype."
         raise TypeError(msg)
 
-    name = f'Unaryop_{str(uop_type)}_{input_dtype.name}_{output_dtype.name}'
+    name = f"Unaryop_{str(uop_type)}_{input_dtype.name}_{output_dtype.name}"
     uop_class = getattr(aff3ct._ext.uop, name)
     return uop_class(n_elmts)
 
 
-def uop(uop_type: UType,
-        sckt: Socket,
-        output_dtype: dtype = None) -> Socket:
+def uop(uop_type: UType, sckt: Socket, output_dtype: dtype = None) -> Socket:
     """Apply unary operator on socket data.
 
     Args:
@@ -82,8 +79,7 @@ def uop(uop_type: UType,
     return mdl.perform(sckt)
 
 
-def abs(sckt: Socket,
-         output_dtype: dtype = None) -> Socket:
+def abs(sckt: Socket, output_dtype: dtype = None) -> Socket:
     """Return abs(sckt).
 
     Args:
@@ -96,8 +92,7 @@ def abs(sckt: Socket,
     return uop(UType.ABS, sckt, output_dtype)
 
 
-def neg(sckt: Socket,
-        output_dtype: dtype = None) -> Socket:
+def neg(sckt: Socket, output_dtype: dtype = None) -> Socket:
     """Compute -sckt.
 
     Args:
@@ -110,8 +105,7 @@ def neg(sckt: Socket,
     return uop(UType.NEG, sckt, output_dtype)
 
 
-def bitwise_not(sckt: Socket,
-                output_dtype: dtype = None) -> Socket:
+def bitwise_not(sckt: Socket, output_dtype: dtype = None) -> Socket:
     """Compute ~sckt bitwise.
 
     Args:
@@ -124,8 +118,7 @@ def bitwise_not(sckt: Socket,
     return uop(UType.NOT, sckt, output_dtype)
 
 
-def cast(sckt: Socket,
-         output_dtype: dtype = None) -> Socket:
+def cast(sckt: Socket, output_dtype: dtype = None) -> Socket:
     """Cast sckt to dtype.
 
     Args:
@@ -141,4 +134,4 @@ def cast(sckt: Socket,
     return uop(UType.CAST, sckt, output_dtype)
 
 
-__all__ = ['UType', 'uop', 'abs', 'neg', 'bitwise_not', 'cast']
+__all__ = ["UType", "uop", "abs", "neg", "bitwise_not", "cast"]

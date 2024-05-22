@@ -42,14 +42,15 @@ def _dtype_call(self: dtype, data: Union[Socket, np.array]) -> Socket:
 dtype.__call__ = _dtype_call
 
 __all__ = [
-    'dtype',
-    'uint8',
-    'uint16',
-    'uint32',
-    'uint64',
-    'int8',
-    'int16',
-    'int32',
-    'int64',
-    'float32',
-    'float64']
+    "dtype",
+    "uint8",
+    "uint16",
+    "uint32",
+    "uint64",
+    "int8",
+    "int16",
+    "int32",
+    "int64",
+    "float32",
+    "float64",
+]

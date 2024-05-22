@@ -1,4 +1,5 @@
 """Add some magic functions to the Socket class."""
+
 from __future__ import annotations
 
 from typing import Union
@@ -56,14 +57,14 @@ def _repr(self: Socket) -> str:
     data_ = str(self.numpy).splitlines()
 
     if len(data_) > 1:
-        data_[0] += '\n'
-        data_[-1] = '       ' + data_[-1]
-        for i in range(1, len(data_)-1):
-            data_[i] = '       ' + data_[i] + '\n'
+        data_[0] += "\n"
+        data_[-1] = "       " + data_[-1]
+        for i in range(1, len(data_) - 1):
+            data_[i] = "       " + data_[i] + "\n"
 
-    data_str = ''.join(data_)
-    out = f'socket({data_str}, dtype={self.dtype.name}, name={self.name}, '
-    out += f'task={self.task.module.name}.{self.task.name})'
+    data_str = "".join(data_)
+    out = f"socket({data_str}, dtype={self.dtype.name}, name={self.name}, "
+    out += f"task={self.task.module.name}.{self.task.name})"
     return out
 
 
@@ -91,7 +92,7 @@ def _bind_(self: Socket, s_out: SocketLike, priority: int = 1, raw_data=False) -
         else:
             s_out = array(s_out)
     else:
-        while hasattr(s_out, '_mrv'):
+        while hasattr(s_out, "_mrv"):
             s_out = s_out._mrv
 
     self._tag = s_out
@@ -125,12 +126,12 @@ def _setitem(self: Socket, key: Union[int, slice], data: SocketLike) -> Socket:
         slc = Slicer(self, key)
 
     slc.n_frames = self.task.module.n_frames
-    if hasattr(data, '__len__') and len(data) > 1:
+    if hasattr(data, "__len__") and len(data) > 1:
         slc.write(self, data)
     else:
         slc.write_one(self, data)
 
-    if not hasattr(self, '_slicers'):
+    if not hasattr(self, "_slicers"):
         self._slicers = []
     self._slicers.append(slc)
 
@@ -159,7 +160,7 @@ def _getitem(self: Socket, key: Union[slice, int]) -> Socket:
 
     slc.n_frames = self.task.module.n_frames
 
-    if not hasattr(self, '_slicers'):
+    if not hasattr(self, "_slicers"):
         self._slicers = []
     self._slicers.append(slc)
 
@@ -758,4 +759,4 @@ def _astype(self: Socket, output_dtype: dtype) -> Socket:
 Socket.astype = _astype
 
 
-__all__ = ['Socket']
+__all__ = ["Socket"]

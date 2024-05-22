@@ -1,4 +1,3 @@
-
 """Add some python magic dedicated to aff3ct._ext.core.Module."""
 
 from __future__ import annotations
@@ -8,13 +7,16 @@ from ._typing import SocketLike
 
 from aff3ct._ext.core import Module, Socket, Task
 
-def _call_impl(self: Module,
-               *args: tuple[SocketLike],
-               raw_data=False,
-               no_doc=False,
-               **kwargs: dict[str, SocketLike]
-               ) -> Union[Socket, tuple[Socket], None]:
+
+def _call_impl(
+    self: Module,
+    *args: tuple[SocketLike],
+    raw_data=False,
+    no_doc=False,
+    **kwargs: dict[str, SocketLike],
+) -> Union[Socket, tuple[Socket], None]:
     return self.tasks[0](*args, raw_data=raw_data, no_doc=no_doc, **kwargs)
+
 
 def getattr_impl(self: Module, attr: str) -> Union[Task, Socket]:
     """Overload __getattr__ of aff3ct._ext.core.Module.
@@ -54,7 +56,7 @@ def dir_impl(self: Module) -> dict:
     return new_dir
 
 
-def setitem_impl(self: Module, attr: str, tsk_sck: Task|Socket) -> None:
+def setitem_impl(self: Module, attr: str, tsk_sck: Task | Socket) -> None:
     """Bind self[attr] to the socket sck.
 
     Args:
@@ -70,4 +72,4 @@ Module.__getattr__ = getattr_impl
 Module.__dir__ = dir_impl
 Module.__setitem__ = setitem_impl
 
-__all__ = ['Module']
+__all__ = ["Module"]

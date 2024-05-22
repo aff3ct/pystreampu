@@ -12,6 +12,7 @@ def get_modules(self, module_class, set_modules=True):
 
 _Pipeline.get_modules = get_modules
 
+
 class Pipeline(_Pipeline):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -19,5 +20,6 @@ class Pipeline(_Pipeline):
 
     def __del__(self):
         self.unbind_adaptors()
+
 
 __all__ = ["Pipeline"]

@@ -2,16 +2,28 @@ r"""
 The aff3ct package provides interfaces for C++ Module Task and Socket classes
 of the AFF3CT library.
 """
+
 from __future__ import annotations
 
 
-from ._dtype  import (dtype, uint8, uint16, uint32, uint64, int8,
-                      int16, int32, int64, float32, float64)
+from ._dtype import (
+    dtype,
+    uint8,
+    uint16,
+    uint32,
+    uint64,
+    int8,
+    int16,
+    int32,
+    int64,
+    float32,
+    float64,
+)
 
 from ._module import Module
 
 # array is required for some socket features
-from ._array  import *
+from ._array import *
 
 # Core
 from ._socket import Socket
@@ -38,9 +50,23 @@ from aff3ct._ext.set import Set
 from aff3ct._ext.swi import Switcher
 
 # Modules with factory
-from ._bop import (BType, bop, add, sub, mul, div, greater_equal, greater,
-                   equal, not_equal, less_equal, less, bitwise_and, bitwise_or,
-                   bitwise_xor)
+from ._bop import (
+    BType,
+    bop,
+    add,
+    sub,
+    mul,
+    div,
+    greater_equal,
+    greater,
+    equal,
+    not_equal,
+    less_equal,
+    less,
+    bitwise_and,
+    bitwise_or,
+    bitwise_xor,
+)
 from ._delayer import *
 from ._finalizer import *
 from ._initializer import *

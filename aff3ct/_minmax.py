@@ -1,5 +1,5 @@
-
 """Create elementwize / binary min/max operators."""
+
 from __future__ import annotations
 
 from aff3ct._ext.core import Socket
@@ -8,10 +8,7 @@ from ._bop import min as bop_min, max as bop_max
 from ._red import min as red_min, max as red_max
 
 
-
-def min(s_0: Socket,
-        *args: tuple[Socket, ...],
-        output_dtype: dtype = None) -> Socket:
+def min(s_0: Socket, *args: tuple[Socket, ...], output_dtype: dtype = None) -> Socket:
 
     if len(args) == 0:
         return red_min(s_0, output_dtype=output_dtype)
@@ -22,9 +19,7 @@ def min(s_0: Socket,
     return min_
 
 
-def max(s_0: Socket,
-        *args: tuple[Socket, ...],
-        output_dtype: dtype = None) -> Socket:
+def max(s_0: Socket, *args: tuple[Socket, ...], output_dtype: dtype = None) -> Socket:
 
     if len(args) == 0:
         return red_max(s_0, output_dtype=output_dtype)

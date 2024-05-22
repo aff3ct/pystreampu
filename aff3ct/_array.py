@@ -1,4 +1,5 @@
 """Provides some array factories."""
+
 from __future__ import annotations
 
 from typing import List, Union
@@ -13,8 +14,9 @@ from multipledispatch import dispatch
 
 from warnings import warn
 
+
 def array(data, n_frames=None, dtype=None) -> _ext.core.Socket:
-    if isinstance(data, _ext.core.Socket): # socket case : do nothing
+    if isinstance(data, _ext.core.Socket):  # socket case : do nothing
         return data
 
     if isinstance(data, np.ndarray):
@@ -35,15 +37,14 @@ def array(data, n_frames=None, dtype=None) -> _ext.core.Socket:
         if not dtype:
             dtype = _ext.float64
 
-        if not isinstance(data, list): # scalar case, TODO : improve this test
+        if not isinstance(data, list):  # scalar case, TODO : improve this test
             data = [data]
         if not isinstance(data[0], list):
-            data = [data]*n_frames
+            data = [data] * n_frames
         data = np.array(data, dtype=dtype.numpy)
 
-    attr_name = f'Array_{str(data.dtype)}'
+    attr_name = f"Array_{str(data.dtype)}"
     return getattr(_ext.arr, attr_name)(data).read.data
-
 
 
 '''@dispatch(list, dtype=_ext.float64)
@@ -87,6 +88,8 @@ def array(
     attr_name = f'Array_{dtype.name}'
     return getattr(_ext.arr, attr_name)([[value]*size]*n_frames).get()
 '''
+
+
 def zeros(
     n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32
 ) -> _ext.core.Socket:
@@ -112,7 +115,7 @@ def zeros(
     See Also:
         :meth:`aff3ct.array`, :meth:`aff3ct.ones`, :meth:`aff3ct.arange`
     """
-    mdl = getattr(_ext.arr, f'Array_{dtype.name}')(n_elmts, 0)
+    mdl = getattr(_ext.arr, f"Array_{dtype.name}")(n_elmts, 0)
     if n_frames > 1:
         mdl.n_frames = n_frames
     return mdl.get()
@@ -142,7 +145,7 @@ def ones(
     See Also:
         :meth:`aff3ct.array`, :meth:`aff3ct.zeros`, :meth:`aff3ct.arange`
     """
-    mdl = getattr(_ext.arr, f'Array_{dtype.name}')(n_elmts, 1)
+    mdl = getattr(_ext.arr, f"Array_{dtype.name}")(n_elmts, 1)
     if n_frames > 1:
         mdl.n_frames = n_frames
     return mdl.get()
@@ -180,4 +183,4 @@ def arange(
     return array(arr)
 
 
-__all__ = ['array', 'zeros', 'ones', 'arange']
+__all__ = ["array", "zeros", "ones", "arange"]

@@ -7,16 +7,16 @@
 #include <pybind11/iostream.h>
 
 #include <vector>
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 #include "wrapper/Common/Tools/Type/Type.hpp"
 
 
 namespace py = pybind11;
-using namespace aff3ct;
-using namespace aff3ct::module;
-using namespace aff3ct::tools;
+using namespace spu;
+using namespace spu::module;
+using namespace spu::tools;
 
-namespace aff3ct
+namespace spu
 {
 namespace module
 {
@@ -29,14 +29,14 @@ bool single_value;
 std::vector<int> slice;
 
 public:
-	Slicer(aff3ct::runtime::Socket& sck, const std::vector<int>& slice);
-	Slicer(aff3ct::runtime::Socket& sck, const int idx);
+	Slicer(spu::runtime::Socket& sck, const std::vector<int>& slice);
+	Slicer(spu::runtime::Socket& sck, const int idx);
 
 	virtual ~Slicer() = default;
 	virtual Slicer* clone() const;
 
 private:
-	void task_init(aff3ct::runtime::Socket& sck);
+	void task_init(spu::runtime::Socket& sck);
 
 	template<typename T>
 	void _task_init();

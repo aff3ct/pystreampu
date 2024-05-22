@@ -1,14 +1,14 @@
 #ifndef BIND_TASK_HPP_
 #define BIND_TASK_HPP_
 
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 #include <pybind11/pybind11.h>
 #include <memory>
 #include "wrapper/Common/Wrapper_py/Wrapper_py.hpp"
 
 namespace py = pybind11;
 
-/*namespace aff3ct
+/*namespace spu
 {
 namespace runtime
 {

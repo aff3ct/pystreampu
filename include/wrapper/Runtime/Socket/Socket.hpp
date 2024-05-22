@@ -2,13 +2,13 @@
 #define BIND_SOCKET_HPP_
 
 #include <pybind11/pybind11.h>
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 
 #include "wrapper/Common/Wrapper_py/Wrapper_py.hpp"
 
 namespace py = pybind11;
 
-namespace aff3ct
+namespace spu
 {
 namespace runtime
 {
@@ -25,18 +25,18 @@ namespace pyaf
 namespace wrapper
 {
 /*class Wrapper_Socket : public Wrapper_py,
-                       public py::class_<aff3ct::runtime::Socket, aff3ct::tools::Interface_reset, std::shared_ptr<aff3ct::runtime::Socket>>//, aff3ct::tools::Interface_reset
+                       public py::class_<spu::runtime::Socket, spu::tools::Interface_reset, std::shared_ptr<spu::runtime::Socket>>//, spu::tools::Interface_reset
 {
 	protected:
-	template <typename TI, typename TO, aff3ct::tools::proto_bop<TI,TO> BOP>
-	static py::object bop_wrapping(aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& other);
+	template <typename TI, typename TO, spu::tools::proto_bop<TI,TO> BOP>
+	static py::object bop_wrapping(spu::runtime::Socket& self, spu::runtime::Socket& other);
 
 	public:
 	Wrapper_Socket(py::handle scope);
 	virtual void definitions();
 	virtual ~Wrapper_Socket() = default;
 };*/
-	//py::object bop_wrapping(aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& other);
+	//py::object bop_wrapping(spu::runtime::Socket& self, spu::runtime::Socket& other);
 	void wrap_socket(py::handle scope);
 }
 }

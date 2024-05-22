@@ -10,13 +10,13 @@
 #include <chrono>
 namespace py = pybind11;
 using namespace py::literals;
-using namespace aff3ct::module;
+using namespace spu::module;
 using namespace pyaf::wrapper;
-using namespace aff3ct::runtime;
+using namespace spu::runtime;
 
 void pyaf::wrapper::wrap_task(py::handle scope)
 {
-	py::class_ <aff3ct::runtime::Task> py_task(scope, "Task");
+	py::class_ <spu::runtime::Task> py_task(scope, "Task");
 
 	py::enum_<status_t>(py_task, "Status", "Enumeration of tasks return code.")
       .value("SUCCESS",      status_t::SUCCESS,      "Success code"     )
@@ -24,56 +24,56 @@ void pyaf::wrapper::wrap_task(py::handle scope)
 	  .value("FAILURE_STOP", status_t::FAILURE_STOP, "Failure stop code")
 	  .value("UNKNOWN",      status_t::UNKNOWN,      "Unknown code"     );
 
-	py_task.def_property_readonly("name",    &aff3ct::runtime::Task::get_name);
-	py_task.def_property_readonly("sockets", [](aff3ct::runtime::Task& t)
+	py_task.def_property_readonly("name",    &spu::runtime::Task::get_name);
+	py_task.def_property_readonly("sockets", [](spu::runtime::Task& t)
 	{
-		std::vector<aff3ct::runtime::Socket*> sckts;
+		std::vector<spu::runtime::Socket*> sckts;
 
 		for(auto s:t.sockets)
 			sckts.push_back(s.get());
 		return sckts;
 	});
 
-	py_task.def("can_exec", &aff3ct::runtime::Task::can_exec);
+	py_task.def("can_exec", &spu::runtime::Task::can_exec);
 
-	py_task.def("interrupt_processing", [](aff3ct::runtime::Task& t){
-		throw aff3ct::tools::processing_aborted();
+	py_task.def("interrupt_processing", [](spu::runtime::Task& t){
+		throw spu::tools::processing_aborted();
 	});
 
-	py_task.def_property_readonly("inputs", [](aff3ct::runtime::Task& t)
+	py_task.def_property_readonly("inputs", [](spu::runtime::Task& t)
 	{
-		std::vector<aff3ct::runtime::Socket*> in;
+		std::vector<spu::runtime::Socket*> in;
 
 		for(auto s:t.sockets)
-			if (s->get_type() == aff3ct::runtime::socket_t::SIN)
+			if (s->get_type() == spu::runtime::socket_t::SIN)
 				in.push_back(s.get());
 
 		return in;
 	});
 
-	py_task.def_property_readonly("forwards", [](aff3ct::runtime::Task& t)
+	py_task.def_property_readonly("forwards", [](spu::runtime::Task& t)
 	{
-		std::vector<aff3ct::runtime::Socket*> fwd;
+		std::vector<spu::runtime::Socket*> fwd;
 
 		for(auto s:t.sockets)
-			if (s->get_type() == aff3ct::runtime::socket_t::SFWD)
+			if (s->get_type() == spu::runtime::socket_t::SFWD)
 				fwd.push_back(s.get());
 
 		return fwd;
 	});
 
-	py_task.def_property_readonly("outputs", [](aff3ct::runtime::Task& t)
+	py_task.def_property_readonly("outputs", [](spu::runtime::Task& t)
 	{
-		std::vector<aff3ct::runtime::Socket*> out;
+		std::vector<spu::runtime::Socket*> out;
 		auto sockets = t.sockets;
 		for(auto s:t.sockets)
-			if (s->get_type() == aff3ct::runtime::socket_t::SOUT)
+			if (s->get_type() == spu::runtime::socket_t::SOUT)
 				out.push_back(s.get());
 		return out;
 	});
 
 	py_task.def("exec",
-		[](aff3ct::runtime::Task &self, const int frame_id, const bool managed_memory)
+		[](spu::runtime::Task &self, const int frame_id, const bool managed_memory)
 		{
 			py::scoped_ostream_redirect stream(
 			std::cout,                                // std::ostream&
@@ -83,58 +83,58 @@ void pyaf::wrapper::wrap_task(py::handle scope)
 			self.exec(frame_id, managed_memory);
 		},
 		"frame_id"_a = -1, "managed_memory"_a = true);
-	py_task.def("__getitem__",  [](aff3ct::runtime::Task& t, const std::string& s)
+	py_task.def("__getitem__",  [](spu::runtime::Task& t, const std::string& s)
 	{
 		auto& m = t.get_module();
 		return py::cast(&m[t.get_name() + "::" + s]);
 	});
-	py_task.def_property_readonly("module", &aff3ct::runtime::Task::get_module);
-	py_task.def_property("debug", &aff3ct::runtime::Task::is_debug, &aff3ct::runtime::Task::set_debug);
-	py_task.def_property("stats", &aff3ct::runtime::Task::is_stats, &aff3ct::runtime::Task::set_stats);
-	py_task.def_property("fast" , &aff3ct::runtime::Task::is_fast,  &aff3ct::runtime::Task::set_fast );
-	py_task.def_property_readonly("n_calls",         &aff3ct::runtime::Task::get_n_calls       );
-	py_task.def_property_readonly("total_duration", [](const aff3ct::runtime::Task& self)
+	py_task.def_property_readonly("module", &spu::runtime::Task::get_module);
+	py_task.def_property("debug", &spu::runtime::Task::is_debug, &spu::runtime::Task::set_debug);
+	py_task.def_property("stats", &spu::runtime::Task::is_stats, &spu::runtime::Task::set_stats);
+	py_task.def_property("fast" , &spu::runtime::Task::is_fast,  &spu::runtime::Task::set_fast );
+	py_task.def_property_readonly("n_calls",         &spu::runtime::Task::get_n_calls       );
+	py_task.def_property_readonly("total_duration", [](const spu::runtime::Task& self)
 	{
 		if(self.is_stats())
 			return std::chrono::duration<double>(self.get_duration_total()).count();
 		else
 			return double(0.0f);
 	});
-	py_task.def_property_readonly("avg_duration", [](const aff3ct::runtime::Task& self)
+	py_task.def_property_readonly("avg_duration", [](const spu::runtime::Task& self)
 	{
 		if(self.is_stats())
 			return std::chrono::duration<double>(self.get_duration_avg()).count();
 		else
 			return double(0.0f);
 	});
-	py_task.def_property_readonly("min_duration", [](const aff3ct::runtime::Task& self)
+	py_task.def_property_readonly("min_duration", [](const spu::runtime::Task& self)
 	{
 		if(self.is_stats())
 			return std::chrono::duration<double>(self.get_duration_min()).count();
 		else
 			return double(0.0f);
 	});
-	py_task.def_property_readonly("max_duration", [](const aff3ct::runtime::Task& self)
+	py_task.def_property_readonly("max_duration", [](const spu::runtime::Task& self)
 	{
 		if(self.is_stats())
 			return std::chrono::duration<double>(self.get_duration_max()).count();
 		else
 			return double(0.0f);
 	});
-	py_task.def("reset", &aff3ct::runtime::Task::reset);
-	py_task.def("bind", [](aff3ct::runtime::Task& self, aff3ct::runtime::Socket& s_out, const int priority)
+	py_task.def("reset", &spu::runtime::Task::reset);
+	py_task.def("bind", [](spu::runtime::Task& self, spu::runtime::Socket& s_out, const int priority)
 	{
 		self.bind(s_out, priority);
 	}, "Binds the Task to socket 's_out' with priority 'priority'.", "s_out"_a, "priority"_a=-1);
-	py_task.def("bind", [](aff3ct::runtime::Task& self, aff3ct::runtime::Task& t_out, const int priority)
+	py_task.def("bind", [](spu::runtime::Task& self, spu::runtime::Task& t_out, const int priority)
 	{
 		self.bind(t_out, priority);
 	}, "Binds the Task to task 't_out' with priority 'priority'.", "t_out"_a, "priority"_a=-1);
 
-	// py_task.def("is_bound"           , &aff3ct::runtime::Task::is_bound                          );
-	py_task.def("set_debug_hex"      , &aff3ct::runtime::Task::set_debug_hex      , "debug_hex"_a);
-	py_task.def("set_debug_limit"    , &aff3ct::runtime::Task::set_debug_limit    , "limit"_a    );
-	py_task.def("set_debug_precision", &aff3ct::runtime::Task::set_debug_precision, "prec"_a     );
-	py_task.def("set_debug_frame_max", &aff3ct::runtime::Task::set_debug_frame_max, "limit"_a    );
+	// py_task.def("is_bound"           , &spu::runtime::Task::is_bound                          );
+	py_task.def("set_debug_hex"      , &spu::runtime::Task::set_debug_hex      , "debug_hex"_a);
+	py_task.def("set_debug_limit"    , &spu::runtime::Task::set_debug_limit    , "limit"_a    );
+	py_task.def("set_debug_precision", &spu::runtime::Task::set_debug_precision, "prec"_a     );
+	py_task.def("set_debug_frame_max", &spu::runtime::Task::set_debug_frame_max, "limit"_a    );
 
 };

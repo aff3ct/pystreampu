@@ -2,7 +2,7 @@
 #define WRAPPER_PROBE_HPP_
 
 #include <pybind11/pybind11.h>
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 
 namespace py = pybind11;
 
@@ -12,16 +12,16 @@ namespace wrapper
 {
 	//std::type_index get_datatype() const = 0;
 	template <typename T = uint8_t>
-	class py_Probe : aff3ct::module::Probe<T>{
+	class py_Probe : spu::module::Probe<T>{
 	public:
-		using aff3ct::module::Probe<T>::Probe;
+		using spu::module::Probe<T>::Probe;
 
-		/* Trampoline (need one for each virtual function) */
-		std::type_index get_datatype() const override {
+		void register_reporter(spu::tools::Reporter_probe* reporter) override {
 			PYBIND11_OVERRIDE_PURE(
-				std::type_index,       /* Return type */
-				aff3ct::module::Probe<T>, /* Parent class */
-				get_datatype           /* Name of function in C++ (must match Python name) */
+				void,                  /* Return type */
+				spu::module::Probe<T>, /* Parent class */
+				register_reporter,     /* Name of function in C++ (must match Python name) */
+				reporter               /* Argument(s) (...) */
 			);
 		}
 	};

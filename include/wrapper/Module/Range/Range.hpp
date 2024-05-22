@@ -6,16 +6,16 @@
 #include <pybind11/stl.h>
 #include <pybind11/iostream.h>
 
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 #include "wrapper/Common/Tools/Type/Type.hpp"
 
 
 namespace py = pybind11;
-using namespace aff3ct;
-using namespace aff3ct::module;
-using namespace aff3ct::tools;
+using namespace spu;
+using namespace spu::module;
+using namespace spu::tools;
 
-namespace aff3ct
+namespace spu
 {
 namespace module
 {

@@ -3,11 +3,11 @@
 
 #include <pybind11/pybind11.h>
 #include <string>
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 #include "wrapper/Common/Wrapper_py/Wrapper_py.hpp"
 
 namespace py = pybind11;
-namespace aff3ct
+namespace spu
 {
 namespace module
 {
@@ -34,7 +34,7 @@ namespace pyaf
 namespace wrapper
 {
 class Wrapper_Module : public Wrapper_py,
-                       public py::class_<aff3ct::module::Module, aff3ct::module::Module_Publicist, aff3ct::tools::Interface_clone, aff3ct::tools::Interface_get_set_n_frames>
+                       public py::class_<spu::module::Module, spu::module::Module_Publicist, spu::tools::Interface_clone, spu::tools::Interface_get_set_n_frames>
 {
 	public:
 	Wrapper_Module(py::handle scope);

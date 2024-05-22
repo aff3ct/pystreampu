@@ -7,10 +7,10 @@
 #include <pybind11/stl.h>
 #include <pybind11/iostream.h>
 
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 
 namespace py = pybind11;
-using namespace aff3ct;
+using namespace spu;
 using namespace py::literals;
 
 #define PYBIND11_DETAILED_ERROR_MESSAGES
@@ -62,9 +62,9 @@ PYBIND11_MODULE(_ext, m){
 
 	// Help
 	// TODO : put in a separate file
-	m.def("help", [](const aff3ct::module::Module  & module, const bool & verbose){py::print(aff3ct::tools::get_help(module, verbose).c_str());}, "module"_a, "verbose"_a=false);
-	m.def("help", [](const aff3ct::runtime::Task   &   task, const bool & verbose){py::print(aff3ct::tools::get_help(task,   verbose).c_str());}, "task"_a,   "verbose"_a=false);
-	m.def("help", [](const aff3ct::runtime::Socket & socket, const bool & verbose){py::print(aff3ct::tools::get_help(socket, verbose).c_str());}, "socket"_a, "verbose"_a=false);
+	m.def("help", [](const spu::module::Module  & module, const bool & verbose){py::print(spu::tools::get_help(module, verbose).c_str());}, "module"_a, "verbose"_a=false);
+	m.def("help", [](const spu::runtime::Task   &   task, const bool & verbose){py::print(spu::tools::get_help(task,   verbose).c_str());}, "task"_a,   "verbose"_a=false);
+	m.def("help", [](const spu::runtime::Socket & socket, const bool & verbose){py::print(spu::tools::get_help(socket, verbose).c_str());}, "socket"_a, "verbose"_a=false);
 
 	// Wrap of module namespace
 	py::module_ submod_ada = m.def_submodule("ada");

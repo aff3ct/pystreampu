@@ -4,7 +4,7 @@
 #include <string>
 namespace py = pybind11;
 using namespace py::literals;
-using namespace aff3ct::module;
+using namespace spu::module;
 using namespace pyaf::wrapper;
 
 void pyaf::wrapper::wrap_array(py::module_ &scope)
@@ -12,8 +12,8 @@ void pyaf::wrapper::wrap_array(py::module_ &scope)
 	using lTI = tl::type_list<ALL_DTYPES>;
 	lTI::for_each([&](auto ti) {
 		using TI = typename decltype(ti)::type;
-		std::string TI_str = aff3ct::runtime::type_to_string[typeid(TI)];
-		auto arra_py_class = py::class_<aff3ct::module::Array<TI>, aff3ct::module::Module>(scope, std::string("Array_" + TI_str).c_str());
+		std::string TI_str = spu::runtime::type_to_string[typeid(TI)];
+		auto arra_py_class = py::class_<spu::module::Array<TI>, spu::module::Module>(scope, std::string("Array_" + TI_str).c_str());
 
 		arra_py_class.def(py::init<py::array_t<TI>&>(),"data"_a, py::keep_alive<1,2>(),
 		R"pbdoc()pbdoc", py::return_value_policy::take_ownership);
@@ -74,13 +74,13 @@ Array<T>* Array<T>
 	return m;
 }
 
-template class aff3ct::module::Array<int8_t>;
-template class aff3ct::module::Array<uint8_t>;
-template class aff3ct::module::Array<int16_t>;
-template class aff3ct::module::Array<uint16_t>;
-template class aff3ct::module::Array<int32_t>;
-template class aff3ct::module::Array<uint32_t>;
-template class aff3ct::module::Array<int64_t>;
-template class aff3ct::module::Array<uint64_t>;
-template class aff3ct::module::Array<float>;
-template class aff3ct::module::Array<double>;
+template class spu::module::Array<int8_t>;
+template class spu::module::Array<uint8_t>;
+template class spu::module::Array<int16_t>;
+template class spu::module::Array<uint16_t>;
+template class spu::module::Array<int32_t>;
+template class spu::module::Array<uint32_t>;
+template class spu::module::Array<int64_t>;
+template class spu::module::Array<uint64_t>;
+template class spu::module::Array<float>;
+template class spu::module::Array<double>;

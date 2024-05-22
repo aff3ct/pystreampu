@@ -12,8 +12,8 @@ using namespace py::literals;
 
 void pyaf::wrapper::wrap_controller(py::handle scope)
 {
-    auto py_controller_class = py::class_<aff3ct::module::Controller, aff3ct::module::Module, aff3ct::tools::Interface_reset>(scope, "Controller");
-    py_controller_class.def_property("path", &aff3ct::module::Controller::get_path, &aff3ct::module::Controller::set_path);
+    auto py_controller_class = py::class_<spu::module::Controller, spu::module::Module, spu::tools::Interface_reset>(scope, "Controller");
+    py_controller_class.def_property("path", &spu::module::Controller::get_path, &spu::module::Controller::set_path);
 }
 
 void pyaf::wrapper::wrap_controllers(py::handle scope)

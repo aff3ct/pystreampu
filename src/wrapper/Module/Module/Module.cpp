@@ -14,14 +14,14 @@
 
 namespace py = pybind11;
 using namespace py::literals;
-using namespace aff3ct::module;
+using namespace spu::module;
 using namespace pyaf::wrapper;
-using namespace aff3ct::runtime;
+using namespace spu::runtime;
 
 Wrapper_Module
 ::Wrapper_Module(py::handle scope)
 : Wrapper_py(),
-  py::class_<Module, Module_Publicist, aff3ct::tools::Interface_clone, aff3ct::tools::Interface_get_set_n_frames>(scope, "Module",py::dynamic_attr())
+  py::class_<Module, Module_Publicist, spu::tools::Interface_clone, spu::tools::Interface_get_set_n_frames>(scope, "Module",py::dynamic_attr())
 {
 }
 
@@ -34,7 +34,7 @@ void Wrapper_Module
 
 	this->def_property_readonly("tasks", [](Module& self)
 	{
-		std::vector<aff3ct::runtime::Task*> tasks;
+		std::vector<spu::runtime::Task*> tasks;
 		for(auto t:self.tasks)
 			tasks.push_back(t.get());
 		return tasks;
@@ -42,7 +42,7 @@ void Wrapper_Module
 
 	this->def_property("name", [](const Module & m){return m.get_custom_name()==""?m.get_name():m.get_custom_name();}, &Module::set_custom_name, R"pbdoc(Name of the module)pbdoc");
 
-	this->def("create_socket_in", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype)
+	this->def("create_socket_in", [](Module_Publicist& mdl, spu::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype)
 	{
 		return mdl.create_socket_in(task, name, n_elmts, utils::str2typeid(dtype.get_name()));
 	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a,
@@ -50,7 +50,7 @@ void Wrapper_Module
         Create a new input socket to a task.
     )pbdoc");
 
-	this->def("create_socket_out", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype)
+	this->def("create_socket_out", [](Module_Publicist& mdl, spu::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype)
 	{
 		return mdl.create_socket_out(task, name, n_elmts, utils::str2typeid(dtype.get_name()));
 	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a,
@@ -58,7 +58,7 @@ void Wrapper_Module
         Create a new output socket to a task.
     )pbdoc");
 
-	this->def("create_socket_fwd", [](Module_Publicist& mdl, aff3ct::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype)
+	this->def("create_socket_fwd", [](Module_Publicist& mdl, spu::runtime::Task& task, const std::string &name, const size_t n_elmts, const pyaf::dtype dtype)
 	{
 		return mdl.create_socket_fwd(task, name, n_elmts, utils::str2typeid(dtype.get_name()));
 	},"task"_a, "name"_a, "n_elmts"_a, "dtype"_a,

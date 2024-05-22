@@ -2,7 +2,7 @@
 #define WRAPPER_SWITCHER_HPP_
 
 #include <pybind11/pybind11.h>
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 
 namespace py = pybind11;
 

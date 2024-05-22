@@ -5,14 +5,14 @@
 #include <pybind11/stl.h>
 #include <pybind11/iostream.h>
 
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 #include <string>
 
 #include "wrapper/Common/Wrapper_py/Wrapper_py.hpp"
 
 namespace py = pybind11;
-using namespace aff3ct;
-using namespace aff3ct::module;
+using namespace spu;
+using namespace spu::module;
 
 namespace pyaf
 {

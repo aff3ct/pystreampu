@@ -1,7 +1,7 @@
 #ifndef WRAPPER_PROBE_OCCURRENCE_HPP_
 #define WRAPPER_PROBE_OCCURRENCE_HPP_
 
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 #include <pybind11/pybind11.h>
 namespace py = pybind11;
 

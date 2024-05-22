@@ -2,14 +2,14 @@
 
 namespace py = pybind11;
 using namespace py::literals;
-using namespace aff3ct;
-using namespace aff3ct::module;
-using namespace aff3ct::tools;
+using namespace spu;
+using namespace spu::module;
+using namespace spu::tools;
 using namespace pyaf::wrapper;
 
 void pyaf::wrapper::wrap_range(py::handle scope)
 {
-	auto range_class = py::class_<aff3ct::module::Range,aff3ct::module::Module>(scope, "Range");
+	auto range_class = py::class_<spu::module::Range,spu::module::Module>(scope, "Range");
 	range_class.def(py::init<int, int, int, pyaf::dtype>(),"stop"_a,"start"_a=0,"step"_a=1, "dtype"_a=pyaf::dtype::of<int32_t>(), R"pbdoc(Range:)pbdoc", py::return_value_policy::take_ownership);
 	range_class.def("__iter__", [](Range& self){
 		self.set_it(self.get_start());

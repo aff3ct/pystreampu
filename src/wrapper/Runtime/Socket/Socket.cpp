@@ -13,7 +13,7 @@
 namespace py = pybind11;
 using namespace py::literals;
 using namespace pyaf::wrapper;
-using namespace aff3ct::runtime;
+using namespace spu::runtime;
 
 std::map<std::type_index, std::string> type_map = {{typeid(int8_t  ), py::format_descriptor<int8_t  >::format()},
                                                    {typeid(int16_t ), py::format_descriptor<int16_t >::format()},
@@ -29,7 +29,7 @@ std::map<std::type_index, std::string> type_map = {{typeid(int8_t  ), py::format
 
 void pyaf::wrapper::wrap_socket(py::handle scope)
 {
-	py::class_<Socket, aff3ct::tools::Interface_reset, aff3ct::runtime::Socket_Publicist> py_socket(scope, "Socket", py::buffer_protocol(), py::dynamic_attr());
+	py::class_<Socket, spu::tools::Interface_reset, spu::runtime::Socket_Publicist> py_socket(scope, "Socket", py::buffer_protocol(), py::dynamic_attr());
 
 	py::enum_<socket_t>(py_socket, "directions", "Enumeration of socket directions")
       .value("IN",  socket_t::SIN, "Input socket")
@@ -55,7 +55,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		s.get_type() == socket_t::SIN
 		);
 	});
-	py_socket.def_property_readonly("wave", [](const aff3ct::runtime::Socket& self) -> py::array
+	py_socket.def_property_readonly("wave", [](const spu::runtime::Socket& self) -> py::array
 	{
 		if(self.get_dataptr() == nullptr)
 			return py::array(py::buffer_info(nullptr, 1, type_map[self.get_datatype()],{}));
@@ -78,30 +78,30 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		self.get_type() == socket_t::SIN
 		), buffer_handle);
 	});
-	py_socket.def_property_readonly("task",          &aff3ct::runtime::Socket::get_task, "Task owning the socket.");
-	py_socket.def_property_readonly("n_elmts",       &aff3ct::runtime::Socket::get_n_elmts, "Number of elements per `n_frames`");
-	py_socket.def_property_readonly("bound_sockets", &aff3ct::runtime::Socket::get_bound_sockets, "Sockets to wich the socket is bound (for output sockets only).");
-	py_socket.def_property_readonly("dtype", [](const aff3ct::runtime::Socket& self){return pyaf::dtype::get(self.get_datatype_string());}, "Data type.");
-	py_socket.def_property_readonly("bound_socket", static_cast<Socket&(Socket::*)()>(&aff3ct::runtime::Socket::get_bound_socket), "Socket bound to self (for input sockets only).");
+	py_socket.def_property_readonly("task",          &spu::runtime::Socket::get_task, "Task owning the socket.");
+	py_socket.def_property_readonly("n_elmts",       &spu::runtime::Socket::get_n_elmts, "Number of elements per `n_frames`");
+	py_socket.def_property_readonly("bound_sockets", &spu::runtime::Socket::get_bound_sockets, "Sockets to wich the socket is bound (for output sockets only).");
+	py_socket.def_property_readonly("dtype", [](const spu::runtime::Socket& self){return pyaf::dtype::get(self.get_datatype_string());}, "Data type.");
+	py_socket.def_property_readonly("bound_socket", static_cast<Socket&(Socket::*)()>(&spu::runtime::Socket::get_bound_socket), "Socket bound to self (for input sockets only).");
 
-	py_socket.def("has_data", [](const aff3ct::runtime::Socket& self)
+	py_socket.def("has_data", [](const spu::runtime::Socket& self)
 	{
 		return self.get_dataptr() != nullptr;
 	}, "Return True if the socket has data allocated.");
-	py_socket.def_property_readonly("dataaddr", [](const aff3ct::runtime::Socket& self){
+	py_socket.def_property_readonly("dataaddr", [](const spu::runtime::Socket& self){
 		std::stringstream ss;
 		ss << self.get_dataptr();
 		return ss.str();
 	}, "Return the socket data address as str.");
 
-	py_socket.def_property_readonly("numpy", [](aff3ct::runtime::Socket& self)
+	py_socket.def_property_readonly("numpy", [](spu::runtime::Socket& self)
 	{
 		py::array array = py::cast(self);
 		return array;
 	},
 	"Numpy array view of the socket (copy-less).");
 
-	py_socket.def("__bool__", [](const aff3ct::runtime::Socket& sckt) {
+	py_socket.def("__bool__", [](const spu::runtime::Socket& sckt) {
 		size_t n_frames = sckt.get_task().get_module().get_n_frames();
 		size_t n        = sckt.get_n_elmts()/n_frames;
 		if (n > n_frames)
@@ -128,12 +128,12 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 		}
 	});
 
-	py_socket.def("_bind", [](aff3ct::runtime::Socket& self, aff3ct::runtime::Socket& s_out, const int priority)
+	py_socket.def("_bind", [](spu::runtime::Socket& self, spu::runtime::Socket& s_out, const int priority)
 	{
 		self.bind(s_out, priority);
 	}, "Binds the socket to socket 's_out' with priority 'priority'.", "s_out"_a, "priority"_a=-1);
 
-	py_socket.def("_bind", [](aff3ct::runtime::Socket& self, py::array& arr)
+	py_socket.def("_bind", [](spu::runtime::Socket& self, py::array& arr)
 	{
 		size_t n_row = (size_t)self.get_task().get_module().get_n_frames();
 		size_t n_col = (size_t)self.get_n_elmts()/n_row;
@@ -175,7 +175,7 @@ void pyaf::wrapper::wrap_socket(py::handle scope)
 
 		self.bind(buffer.ptr);
 	}, "Binds the socket to the numpy array 'array' data.", "array"_a);
-	py_socket.def_property_readonly("name",      &aff3ct::runtime::Socket::get_name);
-	py_socket.def_property_readonly("direction", &aff3ct::runtime::Socket::get_type, "Direction of the socket");
+	py_socket.def_property_readonly("name",      &spu::runtime::Socket::get_name);
+	py_socket.def_property_readonly("direction", &spu::runtime::Socket::get_type, "Direction of the socket");
 
 };

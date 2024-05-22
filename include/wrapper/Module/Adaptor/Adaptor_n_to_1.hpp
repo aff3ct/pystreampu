@@ -3,13 +3,13 @@
 
 #include <pybind11/pybind11.h>
 
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 
 #include "wrapper/Common/Wrapper_py/Wrapper_py.hpp"
 
 namespace py = pybind11;
-using namespace aff3ct;
-using namespace aff3ct::module;
+using namespace spu;
+using namespace spu::module;
 
 namespace pyaf
 {

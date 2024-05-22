@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 
 namespace py = pybind11;
 
@@ -15,15 +15,15 @@ namespace pyaf
 {
 namespace wrapper
 {
-	class py_Reporter : aff3ct::tools::Reporter{
+	class py_Reporter : spu::tools::Reporter{
 	public:
-		//using aff3ct::tools::Reporter::Reporter;
+		//using spu::tools::Reporter::Reporter;
 
 		/* Trampoline (need one for each virtual function) */
-		aff3ct::tools::Reporter::report_t report(bool final = false) override {
+		spu::tools::Reporter::report_t report(bool final = false) override {
 			PYBIND11_OVERRIDE_PURE(
-				aff3ct::tools::Reporter::report_t, /* Return type */
-				aff3ct::tools::Reporter,           /* Parent class */
+				spu::tools::Reporter::report_t, /* Return type */
+				spu::tools::Reporter,           /* Parent class */
 				report,                             /* Name of function in C++ (must match Python name) */
 				final
 			);

@@ -11,14 +11,14 @@ using namespace py::literals;
 
 void pyaf::wrapper::wrap_adaptor(py::handle scope)
 {
-    auto py_adaptor_class = py::class_<aff3ct::module::Adaptor, aff3ct::module::Module, aff3ct::tools::Interface_waiting>(scope, "Adaptor");
+    auto py_adaptor_class = py::class_<spu::module::Adaptor, spu::module::Module, spu::tools::Interface_waiting>(scope, "Adaptor");
 
-    py_adaptor_class.def_property_readonly("n_elmts", &aff3ct::module::Adaptor::get_n_elmts);
-    py_adaptor_class.def_property_readonly("n_bytes", &aff3ct::module::Adaptor::get_n_bytes);
-    py_adaptor_class.def_property_readonly("dtype", [](const aff3ct::module::Adaptor& self){
+    py_adaptor_class.def_property_readonly("n_elmts", &spu::module::Adaptor::get_n_elmts);
+    py_adaptor_class.def_property_readonly("n_bytes", &spu::module::Adaptor::get_n_bytes);
+    py_adaptor_class.def_property_readonly("dtype", [](const spu::module::Adaptor& self){
         return pyaf::dtype::get(pyaf::utils::typeid2str(self.get_datatype()));
     });
-    py_adaptor_class.def_property("n_frames", &aff3ct::module::Adaptor::get_n_frames, &aff3ct::module::Adaptor::set_n_frames);
+    py_adaptor_class.def_property("n_frames", &spu::module::Adaptor::get_n_frames, &spu::module::Adaptor::set_n_frames);
 }
 
 void pyaf::wrapper::wrap_adaptors(py::handle scope)

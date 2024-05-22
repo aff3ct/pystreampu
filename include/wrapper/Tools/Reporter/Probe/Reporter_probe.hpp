@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 
 namespace py = pybind11;
 

@@ -16,8 +16,8 @@ void pyaf::wrapper::wrap_sink_user_binary(py::handle scope)
 	using lB = tl::type_list<ALL_DTYPES>;
 	lB::for_each([&](auto b){
 		using B = typename decltype(b)::type;
-		std::string B_str = aff3ct::runtime::type_to_string[typeid(B)];
-		auto sink_class = py::class_<aff3ct::module::Sink_user_binary<B>, aff3ct::module::Sink<B>>(scope, std::string("Sink_user_binary_" + B_str).c_str());
+		std::string B_str = spu::runtime::type_to_string[typeid(B)];
+		auto sink_class = py::class_<spu::module::Sink_user_binary<B>, spu::module::Sink<B>>(scope, std::string("Sink_user_binary_" + B_str).c_str());
 		sink_class.def(py::init<const int, const std::string&>(),"max_data_size"_a, "filename"_a, py::return_value_policy::take_ownership);
 	});
 }

@@ -9,8 +9,8 @@
 
 namespace py = pybind11;
 using namespace py::literals;
-using namespace aff3ct;
-using namespace aff3ct::module;
+using namespace spu;
+using namespace spu::module;
 
 namespace pyaf
 {
@@ -21,10 +21,10 @@ template <typename T>
 void wrap_finalizer_internal(py::handle scope, const std::string& name)
 {
     auto doc_str = R"pbdoc()pbdoc";
-    auto py_finalizer_class = py::class_<aff3ct::module::Finalizer<T>, aff3ct::module::Module>(scope, name.c_str());
+    auto py_finalizer_class = py::class_<spu::module::Finalizer<T>, spu::module::Module>(scope, name.c_str());
     py_finalizer_class.def(py::init<const size_t>(),"n_elmts"_a, doc_str, py::return_value_policy::take_ownership);
-    py_finalizer_class.def_property_readonly("final_data", &aff3ct::module::Finalizer<T>::get_final_data);
-    py_finalizer_class.def_property("n_frames", &aff3ct::module::Finalizer<T>::get_n_frames, &aff3ct::module::Finalizer<T>::set_n_frames);
+    py_finalizer_class.def_property_readonly("final_data", &spu::module::Finalizer<T>::get_final_data);
+    py_finalizer_class.def_property("n_frames", &spu::module::Finalizer<T>::get_n_frames, &spu::module::Finalizer<T>::set_n_frames);
 }
 
 }

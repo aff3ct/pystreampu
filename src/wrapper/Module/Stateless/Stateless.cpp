@@ -11,12 +11,12 @@ using namespace py::literals;
 
 void pyaf::wrapper::wrap_stateless(py::handle scope)
 {
-	auto stateless_class = py::class_<aff3ct::module::Stateless, aff3ct::module::Module>(scope, "Stateless",
+	auto stateless_class = py::class_<spu::module::Stateless, spu::module::Module>(scope, "Stateless",
 	R"pbdoc(
     Stateless modules are modules that can be cloned automatically.
     )pbdoc"
 	);
 	stateless_class.def(py::init<>(), "Build a Stateless module", py::return_value_policy::take_ownership);
-	stateless_class.def_property("name", &aff3ct::module::Stateless::get_name,
-	                                     &aff3ct::module::Stateless::set_name);
+	stateless_class.def_property("name", &spu::module::Stateless::get_name,
+	                                     &spu::module::Stateless::set_name);
 }

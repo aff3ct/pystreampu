@@ -2,20 +2,20 @@
 
 namespace py = pybind11;
 using namespace py::literals;
-using namespace aff3ct;
-using namespace aff3ct::module;
-using namespace aff3ct::tools;
+using namespace spu;
+using namespace spu::module;
+using namespace spu::tools;
 using namespace pyaf::wrapper;
 
 void pyaf::wrapper::wrap_slicer(py::handle scope)
 {
-	auto slicer_class = py::class_<aff3ct::module::Slicer,aff3ct::module::Module>(scope, "Slicer");
-	slicer_class.def(py::init<aff3ct::runtime::Socket&, const std::vector<int>&>(),"sck"_a, "slice"_a, R"pbdoc(Range:)pbdoc", py::return_value_policy::take_ownership);
-	slicer_class.def(py::init<aff3ct::runtime::Socket&, const int>(),"sck"_a, "idx"_a, R"pbdoc(Range:)pbdoc", py::return_value_policy::take_ownership);
+	auto slicer_class = py::class_<spu::module::Slicer,spu::module::Module>(scope, "Slicer");
+	slicer_class.def(py::init<spu::runtime::Socket&, const std::vector<int>&>(),"sck"_a, "slice"_a, R"pbdoc(Range:)pbdoc", py::return_value_policy::take_ownership);
+	slicer_class.def(py::init<spu::runtime::Socket&, const int>(),"sck"_a, "idx"_a, R"pbdoc(Range:)pbdoc", py::return_value_policy::take_ownership);
 }
 
 Slicer
-::Slicer(aff3ct::runtime::Socket& sck, const std::vector<int>& slice)
+::Slicer(spu::runtime::Socket& sck, const std::vector<int>& slice)
 : Module(), n_elmts(sck.get_n_elmts()/sck.get_task().get_module().get_n_frames()), slice(slice)
 {
 	const std::string name = "Slicer";
@@ -27,13 +27,13 @@ Slicer
 }
 
 Slicer
-::Slicer(aff3ct::runtime::Socket& sck, const int idx)
+::Slicer(spu::runtime::Socket& sck, const int idx)
 : Slicer(sck, std::vector<int>(1,idx))
 {
 }
 
 void Slicer
-::task_init(aff3ct::runtime::Socket& sck)
+::task_init(spu::runtime::Socket& sck)
 {
 		 if (sck.get_datatype() == typeid(int8_t  )) this->_task_init<int8_t  >();
 	else if (sck.get_datatype() == typeid(int16_t )) this->_task_init<int16_t >();

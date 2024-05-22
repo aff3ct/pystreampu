@@ -1,7 +1,7 @@
 #ifndef TYPE_HPP_
 #define TYPE_HPP_
 
-#include <aff3ct-core.hpp>
+#include <streampu.hpp>
 #include <type_traits>
 #include <pybind11/pybind11.h>
 
@@ -15,7 +15,7 @@ using namespace py::literals;
 namespace pyaf
 {
 
-// Class for handling scalar AFF3CT data types
+// Class for handling scalar StreamPU data types
 class dtype
 {
 protected:
@@ -53,22 +53,22 @@ public:
     template< typename T = float>
     static pyaf::dtype of()
     {
-        std::string name = aff3ct::runtime::type_to_string[typeid(T)].c_str();
+        std::string name = spu::runtime::type_to_string[typeid(T)].c_str();
         return pyaf::dtype(name, sizeof(T), std::is_signed<T>::value, std::is_floating_point<T>::value);
     }
 
     static pyaf::dtype get(const std::string & name)
     {
-             if (name == aff3ct::runtime::type_to_string[typeid(uint8_t )].c_str()) return pyaf::dtype::of<uint8_t >();
-        else if (name == aff3ct::runtime::type_to_string[typeid(uint16_t)].c_str()) return pyaf::dtype::of<uint16_t>();
-        else if (name == aff3ct::runtime::type_to_string[typeid(uint32_t)].c_str()) return pyaf::dtype::of<uint32_t>();
-        else if (name == aff3ct::runtime::type_to_string[typeid(uint64_t)].c_str()) return pyaf::dtype::of<uint64_t>();
-        else if (name == aff3ct::runtime::type_to_string[typeid(int8_t  )].c_str()) return pyaf::dtype::of<int8_t  >();
-        else if (name == aff3ct::runtime::type_to_string[typeid(int16_t )].c_str()) return pyaf::dtype::of<int16_t >();
-        else if (name == aff3ct::runtime::type_to_string[typeid(int32_t )].c_str()) return pyaf::dtype::of<int32_t >();
-        else if (name == aff3ct::runtime::type_to_string[typeid(int64_t )].c_str()) return pyaf::dtype::of<int64_t >();
-        else if (name == aff3ct::runtime::type_to_string[typeid(float   )].c_str()) return pyaf::dtype::of<float   >();
-        else if (name == aff3ct::runtime::type_to_string[typeid(double  )].c_str()) return pyaf::dtype::of<double  >();
+             if (name == spu::runtime::type_to_string[typeid(uint8_t )].c_str()) return pyaf::dtype::of<uint8_t >();
+        else if (name == spu::runtime::type_to_string[typeid(uint16_t)].c_str()) return pyaf::dtype::of<uint16_t>();
+        else if (name == spu::runtime::type_to_string[typeid(uint32_t)].c_str()) return pyaf::dtype::of<uint32_t>();
+        else if (name == spu::runtime::type_to_string[typeid(uint64_t)].c_str()) return pyaf::dtype::of<uint64_t>();
+        else if (name == spu::runtime::type_to_string[typeid(int8_t  )].c_str()) return pyaf::dtype::of<int8_t  >();
+        else if (name == spu::runtime::type_to_string[typeid(int16_t )].c_str()) return pyaf::dtype::of<int16_t >();
+        else if (name == spu::runtime::type_to_string[typeid(int32_t )].c_str()) return pyaf::dtype::of<int32_t >();
+        else if (name == spu::runtime::type_to_string[typeid(int64_t )].c_str()) return pyaf::dtype::of<int64_t >();
+        else if (name == spu::runtime::type_to_string[typeid(float   )].c_str()) return pyaf::dtype::of<float   >();
+        else if (name == spu::runtime::type_to_string[typeid(double  )].c_str()) return pyaf::dtype::of<double  >();
 		else
 		{
 			std::stringstream message;
@@ -85,17 +85,16 @@ inline void wrap_generic_dtype(py::module_ &m)
 {
     py::class_<pyaf::dtype>(m, "dtype", py::dynamic_attr(),
     R"mydelimiter(
-AFF3CT abstract class for data type object.)mydelimiter")
+StreamPU abstract class for data type object.)mydelimiter")
         .def_property_readonly("name",              &pyaf::dtype::get_name, "dtype's name")
         .def_property_readonly("is_signed",         &pyaf::dtype::is_signed, "True if dtype names a signed type, False otherwise.")
         .def_property_readonly("is_floating_point", &pyaf::dtype::is_floating_point, "True if dtype names a floating point type, False otherwise.")
         .def_property_readonly("size",              &pyaf::dtype::get_size, "Byte size of the dtype.")
         .def_property_readonly("numpy", [](const pyaf::dtype& slf){return py::module_::import("numpy").attr("dtype")(slf.get_name().c_str()).attr("type");}, "Get the corresponding numpy dtype.")
         .def_static           ("of",                &pyaf::dtype::get, "name"_a, "Dtype factory.")
-        .def                  ("__repr__", [](const pyaf::dtype& slf){return "aff3ct." + slf.get_name();})
+        .def                  ("__repr__", [](const pyaf::dtype& slf){return "spu." + slf.get_name();})
         .def                  ("__str__", [](const pyaf::dtype& slf){return slf.get_name();})
-        .doc(
-);
+        .doc();
 }
 
 inline void wrap_dtypes(py::module_ &m)
@@ -104,7 +103,7 @@ inline void wrap_dtypes(py::module_ &m)
     using full_lT = tl::type_list<ALL_DTYPES>;
     full_lT::for_each([&](auto t) {
 		using T = typename decltype(t)::type;
-        m.attr(aff3ct::runtime::type_to_string[typeid(T)].c_str()) = py::cast(pyaf::dtype::of<T>());
+        m.attr(spu::runtime::type_to_string[typeid(T)].c_str()) = py::cast(pyaf::dtype::of<T>());
     }
     );
 }

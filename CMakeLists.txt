@@ -3,14 +3,14 @@ cmake_policy(SET CMP0054 NEW)
 
 project (${SKBUILD_PROJECT_NAME} LANGUAGES CXX)
 
-#set(CMAKE_INSTALL_LIBDIR aff3ct)
-#set(CMAKE_INSTALL_INCLUDEDIR aff3ct)
+#set(CMAKE_INSTALL_LIBDIR streampu)
+#set(CMAKE_INSTALL_INCLUDEDIR streampu)
 
 # Enable C++17
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Link with the "Threads library (required to link with AFF3CT after)
+# Link with the "Threads library (required to link with streampu after)
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -19,15 +19,15 @@ find_package(Threads REQUIRED)
 file(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/*)
 
-# aff3ct-core
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/aff3ct-core/include/aff3ct-core.hpp")
-    option(AFF3CT_CORE_COMPILE_STATIC_LIB "" ON)
-    option(AFF3CT_CORE_COMPILE_SHARED_LIB "" OFF)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/aff3ct-core/)
+# streampu
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/lib/streampu/include/streampu.hpp")
+    option(SPU_COMPILE_STATIC_LIB "" ON)
+    option(SPU_COMPILE_SHARED_LIB "" OFF)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/streampu/)
 
-    message(STATUS "Sub-project found: aff3ct-core")
+    message(STATUS "Sub-project found: streampu")
 else()
-    message(FATAL_ERROR "aff3ct-core can't be found, try to init the submodule with the following cmd:\n"
+    message(FATAL_ERROR "streampu can't be found, try to init the submodule with the following cmd:\n"
                         "$ git submodule update --init --recursive")
 endif()
 
@@ -49,7 +49,7 @@ set_target_properties(_ext PROPERTIES OUTPUT_NAME _ext
                            POSITION_INDEPENDENT_CODE ON
                            PRIVATE VERSION_INFO=${VERSION_INFO}) #  set -fpic
 
-target_link_libraries(_ext PRIVATE aff3ct-core-static-lib)
+target_link_libraries(_ext PRIVATE spu-static-lib)
 
 message("############################################################")
 message("# CMAKE_BUILD_TYPE : ${CMAKE_BUILD_TYPE}")

@@ -2,13 +2,14 @@ import os
 import sys
 
 # Add source folder to path for autodoc
-sys.path.insert(0, os.path.abspath("../../aff3ct"))
+sys.path.insert(0, os.path.abspath("../../streampu"))
 
 import sphinx_rtd_theme
 import IPython
+
 # -- Project information -----------------------------------------------------
 
-project = 'aff3ct'
+project = "streampu"
 
 # -- General configuration ---------------------------------------------------
 
@@ -25,9 +26,9 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinx.ext.autosectionlabel",
-    'IPython.sphinxext.ipython_console_highlighting',
-    'IPython.sphinxext.ipython_directive'
-    ]
+    "IPython.sphinxext.ipython_console_highlighting",
+    "IPython.sphinxext.ipython_directive",
+]
 
 # generate autosummary even if no references
 autosummary_generate = True
@@ -39,7 +40,7 @@ autosectionlabel_prefix_document = True
 napoleon_use_ivar = True
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -52,12 +53,9 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 
-html_theme_options = {
-    "collapse_navigation": False,
-    "display_version": True
-}
+html_theme_options = {"collapse_navigation": False, "display_version": True}
 
 source_suffix = ".rst"
 
@@ -67,9 +65,9 @@ master_doc = "index"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
-intersphinx_mapping = {'numpy': ('http://docs.scipy.org/doc/numpy/', None)}
+intersphinx_mapping = {"numpy": ("http://docs.scipy.org/doc/numpy/", None)}
 
 '''
 def process_docstring(app, what_, name, obj, options, lines):

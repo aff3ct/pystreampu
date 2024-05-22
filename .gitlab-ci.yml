@@ -34,9 +34,9 @@ build:
     - docker
 
   artifacts:
-    name: aff3ct
+    name: streampu
     paths:
-      - aff3ct
+      - streampu
       - venv
 
   script:
@@ -57,8 +57,8 @@ tests:
 
   script:
     - cd ..
-    - pip3 show -f aff3ct
-    - pytest --pyargs aff3ct --junitxml=./pyaf-core/report.xml
+    - pip3 show -f streampu
+    - pytest --pyargs streampu --junitxml=./pyaf-core/report.xml
 
   artifacts:
     when: always

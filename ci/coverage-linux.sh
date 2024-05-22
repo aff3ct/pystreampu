@@ -12,9 +12,9 @@ pip3 install --verbose -Ccmake.define.CMAKE_BUILD_TYPE=Debug \
                        -Ccmake.define.CMAKE_EXE_LINKER_FLAGS="$LFLAGS" \
                        -Ccmake.define.CMAKE_CXX_FLAGS_DEBUG="-O0" -e $WD
 
-python3 -m pytest --pyargs aff3ct --cov=aff3ct --cov-report=lcov --cov-report=term
+python3 -m pytest --pyargs streampu --cov=streampu --cov-report=lcov --cov-report=term
 
-mv coverage.lcov code_coverage_files/aff3ct.info
+mv coverage.lcov code_coverage_files/streampu.info
 
 lcov --capture --directory build/CMakeFiles/_ext.dir/src\
      --output-file code_coverage_files/_ext.info
@@ -22,6 +22,6 @@ lcov --capture --directory build/CMakeFiles/_ext.dir/src\
 rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
 lcov --remove code_coverage_files/_ext.info "*/usr*" "lib/*" --output-file code_coverage_files/_ext_clean.info
 rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-lcov --add-tracefile code_coverage_files/_ext_clean.info -a code_coverage_files/aff3ct.info -o code_coverage_files/merged.info
+lcov --add-tracefile code_coverage_files/_ext_clean.info -a code_coverage_files/streampu.info -o code_coverage_files/merged.info
 rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
-lcov_cobertura code_coverage_files/merged.info --output code_coverage_report/aff3ct.xml
+lcov_cobertura code_coverage_files/merged.info --output code_coverage_report/streampu.xml

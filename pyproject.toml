@@ -6,11 +6,11 @@ requires = ["scikit-build-core",
 build-backend = "scikit_build_core.build"
 
 [project]
-name = "aff3ct"
+name = "streampu"
 version = "0.0.1"
 authors = [{name = "Romain Tajan", email= "romain.tajan@ims-bordeaux.fr"}]
 requires-python = ">=3.8"
-description = "Python wrapper for AFF3CT-core library."
+description = "Python wrapper for StreamPU library."
 license = {file = "LICENSE"}
 readme = "README.md"
 dependencies = [
@@ -34,13 +34,13 @@ testpaths = [
 manylinux-x86_64-image = "manylinux2014"
 build-verbosity = 3
 test-requires = "pytest"
-test-command = "pytest --pyargs aff3ct --junitxml=./pyaf-core/report.xml"
+test-command = "pytest --pyargs streampu --junitxml=./pyaf-core/report.xml"
 
 [tool.scikit-build]
 build-dir = "build"
-wheel.packages = ["aff3ct"]
+wheel.packages = ["streampu"]
 wheel.license-files = ["LICENSE"]
-wheel.install-dir = "aff3ct"
+wheel.install-dir = "streampu"
 
 [tool.flake8]
 max-line-length = 120

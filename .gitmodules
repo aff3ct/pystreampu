@@ -3,4 +3,4 @@
 	url = https://github.com/pybind/pybind11.git
 [submodule "lib/streampu"]
 	path = lib/streampu
-	url = ../streampu/
+	url = ../streampu

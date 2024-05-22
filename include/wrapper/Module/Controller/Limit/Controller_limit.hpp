@@ -11,12 +11,10 @@ namespace py = pybind11;
 using namespace spu;
 using namespace spu::module;
 
-namespace pyaf
-{
-namespace wrapper
-{
+namespace pyaf {
+namespace wrapper {
 void wrap_controller_limit(py::handle scope);
 }
-}
+} // namespace pyaf
 
-#endif //WRAPPER_CONTROLLER_LIMIT_HPP_
+#endif // WRAPPER_CONTROLLER_LIMIT_HPP_

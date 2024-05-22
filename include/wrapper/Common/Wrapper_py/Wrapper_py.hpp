@@ -4,18 +4,15 @@
 #include <pybind11/pybind11.h>
 namespace py = pybind11;
 
-namespace pyaf
-{
-namespace wrapper
-{
-class Wrapper_py
-{
+namespace pyaf {
+namespace wrapper {
+class Wrapper_py {
 public:
-	Wrapper_py();
-	virtual void definitions();
-	virtual ~Wrapper_py() = default;
+  Wrapper_py();
+  virtual void definitions();
+  virtual ~Wrapper_py() = default;
 };
-}
-}
+} // namespace wrapper
+} // namespace pyaf
 
 #endif

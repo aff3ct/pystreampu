@@ -10,24 +10,22 @@
 
 namespace py = pybind11;
 
-namespace pyaf
-{
-namespace wrapper
-{
-	class py_Interface_reset : public spu::tools::Interface_reset {
-	public:
-		/* Trampoline (need one for each virtual function) */
-		void reset() override {
-			PYBIND11_OVERRIDE_PURE(
-				void,                            /* Return type */
-				spu::tools::Interface_reset,  /* Parent class */
-				reset                            /* Name of function in C++ (must match Python name) */
-			);
-		};
-	};
+namespace pyaf {
+namespace wrapper {
+class py_Interface_reset : public spu::tools::Interface_reset {
+public:
+  /* Trampoline (need one for each virtual function) */
+  void reset() override {
+    PYBIND11_OVERRIDE_PURE(
+        void,                        /* Return type */
+        spu::tools::Interface_reset, /* Parent class */
+        reset /* Name of function in C++ (must match Python name) */
+    );
+  };
+};
 
-	void wrap_interface_reset(py::module_ &scope);
-}
-}
+void wrap_interface_reset(py::module_ &scope);
+} // namespace wrapper
+} // namespace pyaf
 
 #endif // WRAPPER_INTERFACE_RESET_HPP__

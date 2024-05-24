@@ -53,44 +53,10 @@ def _dir_impl(self: Task) -> dict:
     return new_dir
 
 
-def _get_task_doc(self):
-    out_dir = Socket.directions.OUT
-
-    inputs = [sckt for sckt in self.sockets if sckt.direction != out_dir]
-
-    outputs = [sckt for sckt in self.sockets if sckt.direction == out_dir]
-    outputs = [sckt for sckt in outputs if sckt.name != "status"]
-
-    str_args = "Args:\n"
-    str_returns = "Returns:\n"
-    tsk_doc = f"{self.name} = {self.name}("
-    for sckt in inputs:
-        tsk_doc += f"{sckt.name}, "
-    if inputs:
-        tsk_doc = tsk_doc[0:-2]
-    tsk_doc += f")\n"
-
-    for sckt in inputs:
-        len_ = sckt.n_elmts // self.module.n_frames
-        str_args += f"\t{sckt.name}: Socket[{len_}"
-        str_args += f", streampu.{str(sckt.dtype)}]\n"
-
-    for sckt in outputs:
-        len_ = sckt.n_elmts // self.module.n_frames
-        str_returns += f"\t{sckt.name}: Socket[{len_}"
-        str_returns += f", streampu.{str(sckt.dtype)}]\n"
-
-    return f"{tsk_doc}\n{str_args}\n{str_returns}\n"
-
-
-Task._get_task_doc = _get_task_doc
-
-
 def _call_impl(
     self: Task,
     *args: tuple[SocketLike],
     raw_data=False,
-    no_doc=False,
     **kwargs: dict[str, SocketLike],
 ) -> Union[Socket, tuple[Socket], None]:
 
@@ -99,9 +65,6 @@ def _call_impl(
     inputs = [sckt for sckt in self.sockets if sckt.direction != out_dir]
     outputs = [sckt for sckt in self.sockets if sckt.direction == out_dir]
     outputs = [sckt for sckt in outputs if sckt.name != "status"]
-
-    if not no_doc:
-        _call_impl.__doc__ = self._get_task_doc()
 
     for i, arg in enumerate(args):
         inputs[i].reset()

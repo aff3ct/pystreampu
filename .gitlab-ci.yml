@@ -42,7 +42,7 @@ build:
   script:
     - export CC="gcc"
     - export CXX="g++"
-    - pip3 install ../pyaf-core -v
+    - pip3 install ../pystreampu -v
 
 tests:
   stage: tests
@@ -58,7 +58,7 @@ tests:
   script:
     - cd ..
     - pip3 show -f streampu
-    - pytest --pyargs streampu --junitxml=./pyaf-core/report.xml
+    - pytest --pyargs streampu --junitxml=./pystreampu/report.xml
 
   artifacts:
     when: always

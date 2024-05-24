@@ -42,8 +42,8 @@ def _getattr_impl(self: Task, attr: str) -> Union[tuple, Socket, None]:
     """
     if attr in [s.name for s in self.sockets]:
         return self.module[f"{self.name}::{attr}"]
-    else:
-        return object.__getattr__(self, attr)
+
+    return object.__getattribute__(self, attr)
 
 
 def _dir_impl(self: Task) -> dict:

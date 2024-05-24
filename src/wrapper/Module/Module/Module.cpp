@@ -89,7 +89,7 @@ void Wrapper_Module ::definitions() {
   this->def(
       "create_task",
       [](Module_Publicist &mdl, const std::string &name) {
-        return mdl.create_task(name);
+        return &mdl.create_task(name);
       },
       "name"_a,
       R"pbdoc(

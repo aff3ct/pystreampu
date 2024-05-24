@@ -87,10 +87,7 @@ def _bind_(self: Socket, s_out: SocketLike, priority: int = 1, raw_data=False) -
         return
 
     if not isinstance(s_out, Socket):
-        if hasattr(s_out, "dtype"):
-            s_out = array(s_out, dtype=dtype.of(str(s_out.dtype)))
-        else:
-            s_out = array(s_out)
+        s_out = array(s_out)
     else:
         while hasattr(s_out, "_mrv"):
             s_out = s_out._mrv

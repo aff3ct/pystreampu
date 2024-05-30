@@ -1,11 +1,13 @@
+# -*- coding: utf-8 -*-
 """Add some python magic dedicated to streampu._ext.core.Module."""
 
 from __future__ import annotations
 
 from typing import Union
-from ._typing import SocketLike
 
 from streampu._ext.core import Module, Socket, Task
+
+from ._typing import SocketLike
 
 
 def _call_impl(

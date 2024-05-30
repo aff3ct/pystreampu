@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
 """Add some magic functions to the class Task."""
 
 from __future__ import annotations
 
-from typing import Union, Any
+from typing import Any, Union
 
+import numpy as np
+
+from streampu._ext import exceptions as exc
 from streampu._ext.core import Socket, Task
 from streampu._typing import SocketLike
-import numpy as np
-from streampu._ext import exceptions as exc
 
 Task.call_auto_exec = True
 
@@ -18,13 +20,13 @@ def _setattr_impl(self: Task, attr: str, value: Any) -> Union[tuple, Socket, Non
     Args:
         self (Task): A Task
         attr (str): attribute name
-        value (any): Value to set
+        value (Any): Value to set
     """
     if attr in [s.name for s in self.sockets]:
         sck = self.module[f"{self.name}::{attr}"]
         sck.bind(value)
     else:
-        return object.__setattr__(self, attr, value)
+        object.__setattr__(self, attr, value)
 
 
 def _getattr_impl(self: Task, attr: str) -> Union[tuple, Socket, None]:
@@ -59,7 +61,6 @@ def _call_impl(
     raw_data=False,
     **kwargs: dict[str, SocketLike],
 ) -> Union[Socket, tuple[Socket], None]:
-
     out_dir = Socket.directions.OUT
 
     inputs = [sckt for sckt in self.sockets if sckt.direction != out_dir]

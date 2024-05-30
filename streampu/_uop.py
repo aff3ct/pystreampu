@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Provides elementwise unary operators (uop).
 
@@ -80,7 +81,7 @@ def uop(uop_type: UType, sckt: Socket, output_dtype: dtype = None) -> Socket:
 
 
 def abs(sckt: Socket, output_dtype: dtype = None) -> Socket:
-    """Return abs(sckt).
+    """Compute absolute value of a Socket.
 
     Args:
         sckt (Socket): input data.
@@ -93,7 +94,7 @@ def abs(sckt: Socket, output_dtype: dtype = None) -> Socket:
 
 
 def neg(sckt: Socket, output_dtype: dtype = None) -> Socket:
-    """Compute -sckt.
+    """Compute the opposite of a Socket.
 
     Args:
         sckt (Socket): input data.
@@ -106,7 +107,7 @@ def neg(sckt: Socket, output_dtype: dtype = None) -> Socket:
 
 
 def bitwise_not(sckt: Socket, output_dtype: dtype = None) -> Socket:
-    """Compute ~sckt bitwise.
+    """Compute bitwise not of socket's elements.
 
     Args:
         sckt (Socket): input data.

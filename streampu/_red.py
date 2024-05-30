@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
 from enum import Enum, auto
 
 import streampu._ext
-from streampu._ext import dtype, int8, int32
+from streampu._ext import dtype, int8
 from streampu._ext.core import Module, Socket
-from streampu._typing import SocketLike
 
 
 class RType(Enum):

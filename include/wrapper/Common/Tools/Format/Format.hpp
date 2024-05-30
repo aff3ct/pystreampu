@@ -30,7 +30,7 @@ inline fmtflags operator|(fmtflags a, fmtflags b) {
 }
 namespace wrapper {
 inline void wrap_fmtflags(py::module_ &m) {
-  py::enum_<fmtflags>(m, "fmtflags", py::arithmetic())
+  py::enum_<fmtflags>(m, "FormatFlags", py::arithmetic())
       .value("dec", pyaf::fmtflags::dec)
       .value("oct", pyaf::fmtflags::oct)
       .value("hex", pyaf::fmtflags::hex)

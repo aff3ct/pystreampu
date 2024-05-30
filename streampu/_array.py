@@ -1,42 +1,43 @@
+# -*- coding: utf-8 -*-
 """Provides some array factories."""
 
+
 from __future__ import annotations
-
-from typing import List, Union
-
-from ._typing import SocketLike
 
 import numpy as np
 
 from . import _ext
-
-from multipledispatch import dispatch
-
-from warnings import warn
+from ._typing import SocketLike
 
 
-def array(data, n_frames=None, dtype=None) -> _ext.core.Socket:
+def array(
+    data: SocketLike, n_frames: int = None, dtype: _ext.dtype = None
+) -> _ext.core.Socket:
+    """Build a socket from data.
+
+    Args:
+        data (SocketLike): data contained in the socket
+        n_frames (int): number of frames
+        dtype (dtype): socket data type
+
+    Returns:
+        Socket: a socket filled with data
+
+    Examples:
+        .. code-block:: python
+
+           x = streampu.array([1, 2, 3], dtype=streampu.int16)
+           print(x)
+
+           [1 2 3]
+
+    See Also:
+        :meth:`streampu.zeros`, :meth:`streampu.ones`, :meth:`streampu.arange`
+    """
     if isinstance(data, _ext.core.Socket):  # socket case : do nothing
         return data
 
-    if isinstance(data, np.ndarray):
-        if n_frames:
-            warn_str = "When input 'data' is a 'np.ndarray',"
-            warn_str += " parameter 'n_frames' is ignored."
-            warn_str += "\nIt will be deduced from 'data'."
-            warn(warn_str, stacklevel=2)
-        if dtype:
-            warn_str = "When input 'data' is a 'np.ndarray',"
-            warn_str += " parameter 'dtype' is ignored."
-            warn_str += "\nIt will be deduced from 'data'."
-            warn(warn_str, stacklevel=2)
-    else:
-        if not n_frames:
-            n_frames = 1
-
-        if not dtype:
-            dtype = _ext.float64
-
+    if not isinstance(data, np.ndarray):
         if not isinstance(data, list):  # scalar case, TODO : improve this test
             data = [data]
         if not isinstance(data[0], list):
@@ -45,49 +46,6 @@ def array(data, n_frames=None, dtype=None) -> _ext.core.Socket:
 
     attr_name = f"Array_{str(data.dtype)}"
     return getattr(_ext.arr, attr_name)(data).read.data
-
-
-'''@dispatch(list, dtype=_ext.float64)
-def array(
-    value: list,
-    dtype: _ext.dtype = _ext.float64
-) -> _ext.core.Socket:
-    """Doc 1"""
-    attr_name = f'Array_{dtype.name}'
-    return getattr(_ext.arr, attr_name)(value).get()
-
-@dispatch(list, n_frames=int, dtype=_ext.dtype)
-def array(
-    value: list,
-    n_frames: int = 1,
-    dtype: _ext.dtype = _ext.float64
-) -> _ext.core.Socket:
-    """Doc 2"""
-    attr_name = f'Array_{dtype.name}'
-    return getattr(_ext.arr, attr_name)([value]*n_frames).get()
-
-@dispatch(float, size=int, n_frames=int, dtype=_ext.dtype)
-def array(
-    value: float,
-    size: int = 1,
-    n_frames: int = 1,
-    dtype:_ext.dtype = _ext.float64
-) -> _ext.core.Socket:
-    """Doc 3"""
-    attr_name = f'Array_{dtype.name}'
-    return getattr(_ext.arr, attr_name)([[value]*size]*n_frames).get()
-
-@dispatch(int, size=int, n_frames=int, dtype=_ext.dtype)
-def array(
-    value:int,
-    size:int = 1,
-    n_frames:int = 1,
-    dtype:_ext.dtype = _ext.float64
-) -> _ext.core.Socket:
-    """Doc 4"""
-    attr_name = f'Array_{dtype.name}'
-    return getattr(_ext.arr, attr_name)([[value]*size]*n_frames).get()
-'''
 
 
 def zeros(
@@ -104,7 +62,6 @@ def zeros(
         Socket: a socket filled with 0
 
     Examples:
-
         .. code-block:: python
 
            x = streampu.zeros(8, dtype=streampu.int16)

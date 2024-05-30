@@ -18,15 +18,5 @@ void pyaf::wrapper::wrap_reporter_probe(py::module_ &scope) {
   // Constructor
   rep_probe_class.def(py::init<const std::string &, const std::string &>(),
                       "group_name"_a, "group_description"_a);
-
-  // Probe factory
-  using lT = tl::type_list<ALL_DTYPES>;
-  lT::for_each([&](auto t) {
-    using T = typename decltype(t)::type;
-    std::string T_str = spu::runtime::type_to_string[typeid(T)];
-    // rep_probe_class.def(std::string("_create_probe_value_" + T_str).c_str(),
-    // &spu::tools::Reporter_probe::create_probe_value<T>, "name"_a, "unit"_a =
-    // "", "buffer_size"_a = 100, "socket_size"_a = 1, "format"_a =
-    // pyaf::fmtflags::scientific, "precision"_a = 3);
-  });
+  rep_probe_class.def("register_probes", &spu::tools::Reporter_probe::register_probes);
 }

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Add some python magic for handling dtypes."""
 
 from __future__ import annotations

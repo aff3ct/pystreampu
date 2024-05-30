@@ -1,4 +1,7 @@
-from ._ext.rang import style, bg, fg, fgB, bgB, enable_colors, disable_colors
+# -*- coding: utf-8 -*-
+"""Add fonctionnality to 'rang'."""
+
+from ._ext.rang import bg, bgB, disable_colors, enable_colors, fg, fgB, style
 
 enable_colors()
 
@@ -68,3 +71,18 @@ def positive_tag(instr: str):
         out (str): Tagged string
     """
     return style.bold + fg.freen + "(II) " + style.reset + instr
+
+
+__all__ = [
+    "bg",
+    "bgB",
+    "disable_colors",
+    "enable_colors",
+    "fg",
+    "fgB",
+    "style",
+    "positive_tag",
+    "info_tag",
+    "error_tag",
+    "warning_tag",
+]

@@ -1,14 +1,19 @@
-import streampu
+# -*- coding: utf-8 -*-
+"""Python implementation of StreamPU Simple chain."""
+
 import argparse
 import time
+
 import pytest
+
+import streampu
 
 streampu.Signal_handler.init()
 HW_CONCURRENCY = streampu._ext.get_hardware_concurrency()
 
 
 @pytest.mark.parametrize("verbose", [False])
-@pytest.mark.parametrize("set", [False, True])
+@pytest.mark.parametrize("set_flag", [False, True])
 @pytest.mark.parametrize("debug", [False])
 @pytest.mark.parametrize("step_by_step", [False, True])
 @pytest.mark.parametrize("print_stats", [False])
@@ -30,9 +35,25 @@ def test_simple_chain(
     print_stats: bool,
     step_by_step: bool,
     debug: bool,
-    set: bool,
+    set_flag: bool,
     verbose: bool,
 ):
+    """Simple chain test.
+
+    Args:
+        n_threads (int): number of threads to run in parallel
+        n_inter_frames (int): number of frames to process in one task
+        sleep_time_us (int): sleep time duration in one task (microseconds)
+        data_length (int): size of data to process in one task (in bytes)
+        n_exec (int): number of sequence executions
+        dot_filepath (str): path to dot output file
+        copy_mode (bool): enable to copy data in sequence (performance will be reduced)
+        print_stats (bool): enable to print per task statistics (performance will be reduced)
+        step_by_step (bool): enable step-by-step sequence execution (performance will be reduced)
+        debug (bool): Enable task debug mode (print socket data)
+        set_flag (bool): Enable set_flag in the executed sequence
+        verbose (bool): Enable verbose mode
+    """
     assert simple_chain(
         n_threads,
         n_inter_frames,
@@ -44,7 +65,7 @@ def test_simple_chain(
         print_stats,
         step_by_step,
         debug,
-        set,
+        set_flag,
         verbose,
     )
 
@@ -60,10 +81,28 @@ def simple_chain(
     print_stats: bool = False,
     step_by_step: bool = False,
     debug: bool = False,
-    set: bool = False,
+    set_flag: bool = False,
     verbose: bool = False,
 ):
+    """Test a simple chain.
 
+    Args:
+        n_threads (int): number of threads to run in parallel
+        n_inter_frames (int): number of frames to process in one task
+        sleep_time_us (int): sleep time duration in one task (microseconds)
+        data_length (int): size of data to process in one task (in bytes)
+        n_exec (int): number of sequence executions
+        dot_filepath (str): path to dot output file
+        copy_mode (bool): enable to copy data in sequence (performance will be reduced)
+        print_stats (bool): enable to print per task statistics (performance will be reduced)
+        step_by_step (bool): enable step-by-step sequence execution (performance will be reduced)
+        debug (bool): Enable task debug mode (print socket data)
+        set_flag (bool): Enable set_flag in the executed sequence
+        verbose (bool): Enable verbose mode
+
+    Returns:
+        out (bool): Test status
+    """
     print("#################################")
     print("# Micro-benchmark: Simple chain #")
     print("#################################")
@@ -79,7 +118,7 @@ def simple_chain(
     print(f"#   - print_stats    = {print_stats}")
     print(f"#   - step_by_step   = {step_by_step}")
     print(f"#   - debug          = {debug}")
-    print(f"#   - set            = {set}")
+    print(f"#   - set_flag       = {set_flag}")
     print(f"#   - verbose        = {verbose}")
     print("#")
 
@@ -93,7 +132,7 @@ def simple_chain(
         inc.name = "Inc" + str(s)
         incs.append(inc)
 
-    if not set:
+    if not set_flag:
         x = initializer.initialize()
         y = incs[0].increment(x)
         for i in range(1, 6):
@@ -289,11 +328,11 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "-u",
-        "--set",
+        "--set_flag",
         action="store_true",
-        dest="set",
+        dest="set_flag",
         default=False,
-        help="Enable set in the executed sequence",
+        help="Enable set_flag in the executed sequence",
     )
     parser.add_argument(
         "-v",

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Add some magic functions to the Socket class."""
 
 from __future__ import annotations
@@ -6,10 +7,10 @@ from typing import Union
 
 import numpy as np
 
-from streampu._ext.sli import Slicer
 from streampu._ext.core import Socket
+from streampu._ext.sli import Slicer
 
-from . import _bop, _uop, _red
+from . import _bop, _uop
 from ._array import array
 from ._dtype import dtype
 from ._typing import SocketLike

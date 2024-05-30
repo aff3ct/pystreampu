@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Provides elementwise binary operators (bop).
 
@@ -11,8 +12,6 @@ from streampu import array
 from streampu._ext import dtype, int8, int32
 from streampu._ext.core import Module, Socket
 from streampu._typing import SocketLike
-
-import numpy as np
 
 
 class BType(Enum):

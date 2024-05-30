@@ -1,11 +1,16 @@
-import streampu
-import streampu.rang as rang
+# -*- coding: utf-8 -*-
+"""Python implementation of StreamPU Simple Pipeline."""
+
 import argparse
 import filecmp
-from math import ceil
 import os
 import time
+from math import ceil
+
 import pytest
+
+import streampu
+import streampu.rang as rang
 
 streampu.Signal_handler.init()
 HW_CONCURRENCY = streampu._ext.get_hardware_concurrency()
@@ -59,7 +64,6 @@ def test_simple_pipeline(
         force_sequence(bool) : Force sequence instead of pipeline
         active_waiting(bool) : Enable active waiting in the pipeline sync
     """
-
     with open(in_filepath, "wb") as fout:
         fout.write(os.urandom(1048576))
 
@@ -121,6 +125,7 @@ def simple_pipeline(
         debug(bool) : Enable task debug mode (print socket data)
         force_sequence(bool) : Force sequence instead of pipeline
         active_waiting(bool) : Enable active waiting in the pipeline sync
+
     Returns:
         tests_passed(bool) : Bool value indicating test success
     """
@@ -245,13 +250,10 @@ def simple_pipeline(
 
     in_filesize = os.stat(in_filepath).st_size
     n_frames = ceil(in_filesize * 8.0 / (data_length * n_inter_frames))
-    theoretical_time = (
-        n_frames
-        * (len(rlys) * sleep_time_us * 1000)
-        * n_inter_frames
-        / 1000000.0
-        / n_threads
+    theoretical_time_us_allthreads = (
+        n_frames * (len(rlys) * sleep_time_us * 1000) * n_inter_frames
     )
+    theoretical_time = theoretical_time_us_allthreads / 1000000.0 / n_threads
 
     print(f"Sequence elapsed time: {duration} ms")
     print(f"Sequence theoretical time: {theoretical_time} ms")

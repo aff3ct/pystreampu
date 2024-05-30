@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from streampu._ext.sts import Stateless
 
 Stateless.__doc__ = R"""

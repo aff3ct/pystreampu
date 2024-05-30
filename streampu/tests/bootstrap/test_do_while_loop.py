@@ -1,7 +1,11 @@
-import streampu
+# -*- coding: utf-8 -*-
+"""Python implementation of StreamPU Do While loop test."""
 import argparse
 import time
+
 import pytest
+
+import streampu
 
 streampu.Signal_handler.init()
 HW_CONCURRENCY = streampu._ext.get_hardware_concurrency()
@@ -33,7 +37,23 @@ def test_do_while_loop(
     debug: bool,
     cpp_binding: bool,
 ):
-    assert do_while_loop(
+    """Do - While loop test.
+
+    Args:
+        n_threads (int): number of threads to run in parallel
+        n_inter_frames (int): number of frames to process in one task
+        sleep_time_us (int): sleep time duration in one task (microseconds)
+        data_length (int): size of data to process in one task (in bytes)
+        n_exec (int): number of sequence executions
+        n_loop (int): number of iterations to perform in the loop
+        dot_filepath (str): path to dot output file
+        copy_mode (bool): enable to copy data in sequence (performance will be reduced)
+        print_stats (bool): enable to print per task statistics (performance will be reduced)
+        step_by_step (bool): enable step-by-step sequence execution (performance will be reduced)
+        debug (bool): Enable task debug mode (print socket data)
+        cpp_binding (bool): perform binding with C++ style
+    """
+    assert do_while_loop_impl(
         n_threads,
         n_inter_frames,
         sleep_time_us,
@@ -49,7 +69,7 @@ def test_do_while_loop(
     )
 
 
-def do_while_loop(
+def do_while_loop_impl(
     n_threads: int = HW_CONCURRENCY,
     n_inter_frames: int = 1,
     sleep_time_us: int = 5,
@@ -63,7 +83,25 @@ def do_while_loop(
     debug: bool = False,
     cpp_binding: bool = False,
 ):
+    """Do - While loop test.
 
+    Args:
+        n_threads (int): number of threads to run in parallel
+        n_inter_frames (int): number of frames to process in one task
+        sleep_time_us (int): sleep time duration in one task (microseconds)
+        data_length (int): size of data to process in one task (in bytes)
+        n_exec (int): number of sequence executions
+        n_loop (int): number of iterations to perform in the loop
+        dot_filepath (str): path to dot output file
+        copy_mode (bool): enable to copy data in sequence (performance will be reduced)
+        print_stats (bool): enable to print per task statistics (performance will be reduced)
+        step_by_step (bool): enable step-by-step sequence execution (performance will be reduced)
+        debug (bool): Enable task debug mode (print socket data)
+        cpp_binding (bool): perform binding with C++ style
+
+    Returns:
+        out (bool): Test status
+    """
     print("##################################")
     print("# Micro-benchmark: Do while loop #")
     print("##################################")
@@ -308,4 +346,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    do_while_loop(**vars(args))
+    do_while_loop_impl(**vars(args))

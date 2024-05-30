@@ -1,14 +1,17 @@
+# -*- coding: utf-8 -*-
+"""PyTest configuration file."""
+
 from streampu import (
-    uint8,
-    uint16,
-    uint32,
-    uint64,
+    float32,
+    float64,
     int8,
     int16,
     int32,
     int64,
-    float32,
-    float64,
+    uint8,
+    uint16,
+    uint32,
+    uint64,
 )
 
 list_types = [
@@ -26,7 +29,6 @@ list_types = [
 
 
 def pytest_generate_tests(metafunc):
-
     if "dtype" in metafunc.fixturenames:
         lt = list_types
         metafunc.parametrize("dtype", lt, ids=[t.name for t in lt])

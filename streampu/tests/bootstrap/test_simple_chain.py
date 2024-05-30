@@ -141,9 +141,7 @@ def simple_chain(
     else:
         for i in range(0, 5):
             incs[i + 1]["increment::in"] = incs[i]["increment::out"]
-        partial_sequence = streampu.Sequence(
-            incs[0].increment, incs[len(incs) - 1].increment
-        )
+        partial_sequence = streampu.Sequence(incs[0].increment, incs[len(incs) - 1].increment)
         theset = streampu.Set(partial_sequence)
         x = initializer.initialize()
         y = theset.exec(x)
@@ -199,9 +197,7 @@ def simple_chain(
     for inc in incs:
         chain_sleep_time += inc.ns
 
-    theoretical_time = (
-        (chain_sleep_time * n_exec * n_inter_frames) / 1000000.0 / n_threads
-    )
+    theoretical_time = (chain_sleep_time * n_exec * n_inter_frames) / 1000000.0 / n_threads
 
     print(f"Sequence elapsed time: {duration} ms")
     print(f"Sequence theoretical time: {theoretical_time} ms")
@@ -216,9 +212,7 @@ def simple_chain(
                 expected = len(incs) + tid * n_inter_frames + f
                 expected = expected % 256
                 if final_data[d] != expected:
-                    print(
-                        f"# expected = {expected} - obtained = {final_data[d]} (d = {d}, tid = {tid})"
-                    )
+                    print(f"# expected = {expected} - obtained = {final_data[d]} (d = {d}, tid = {tid})")
                     tests_passed = False
         tid += 1
     if print_stats:
@@ -226,13 +220,9 @@ def simple_chain(
         sequence_chain.show_stats(True, False)
 
     if tests_passed:
-        print(
-            f"#{streampu.rang.style.bold}{streampu.rang.fg.green} Tests passed! {streampu.rang.style.reset}"
-        )
+        print(f"#{streampu.rang.style.bold}{streampu.rang.fg.green} Tests passed! {streampu.rang.style.reset}")
     else:
-        print(
-            f"#{streampu.rang.style.bold}{streampu.rang.fg.red} Tests failed :-( {streampu.rang.style.reset}"
-        )
+        print(f"#{streampu.rang.style.bold}{streampu.rang.fg.red} Tests failed :-( {streampu.rang.style.reset}")
 
     return tests_passed
 

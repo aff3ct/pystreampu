@@ -6,6 +6,7 @@ stages:
   - build
   - tests
   - coverage-linux
+  - linting
 
 default:
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
@@ -15,7 +16,6 @@ default:
     paths:
     - .cache/
     - venv/
-
 
   before_script:
     - apt update
@@ -86,3 +86,45 @@ coverage-linux:
     - export LFLAGS="-coverage -ftest-coverage -fprofile-arcs"
     - pwd
     - ./ci/coverage-linux.sh
+
+isort:
+  stage: linting
+  dependencies:
+  - build
+  tags:
+  - x86_64
+  - linux
+  - docker
+  script:
+  - pip3 install isort
+  - isort ./streampu --check-only
+  only:
+  - merge requests
+
+black:
+  stage: linting
+  dependencies:
+  - build
+  tags:
+  - x86_64
+  - linux
+  - docker
+  script:
+  - pip3 install black
+  - black --check ./streampu
+  only:
+  - merge_requests
+
+flake8:
+  stage: linting
+  dependencies:
+  - build
+  tags:
+  - x86_64
+  - linux
+  - docker
+  script:
+  - pip3 install flake8
+  - flake8 ./streampu
+  only:
+  - merge requests

@@ -15,25 +15,32 @@
 using namespace spu::module;
 namespace py = pybind11;
 
-namespace spu {
-namespace module {
-template <typename T = int> class Array : public Module {
-private:
-  void *dataptr;
+namespace spu
+{
+namespace module
+{
+template<typename T = int>
+class Array : public Module
+{
+  private:
+    void* dataptr;
 
-public:
-  Array(py::array_t<T> &data);
-  virtual ~Array() = default;
-  virtual Array *clone() const;
+  public:
+    Array(py::array_t<T>& data);
+    virtual ~Array() = default;
+    virtual Array* clone() const;
 
-  void *get_dataptr() const;
+    void* get_dataptr() const;
 };
 } // namespace module
 } // namespace spu
 
-namespace pyaf {
-namespace wrapper {
-void wrap_array(py::module_ &scope);
+namespace pyaf
+{
+namespace wrapper
+{
+void
+wrap_array(py::module_& scope);
 }
 } // namespace pyaf
 

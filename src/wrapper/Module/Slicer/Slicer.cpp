@@ -7,62 +7,75 @@ using namespace spu::module;
 using namespace spu::tools;
 using namespace pyaf::wrapper;
 
-void pyaf::wrapper::wrap_slicer(py::handle scope) {
-  auto slicer_class =
-      py::class_<spu::module::Slicer, spu::module::Module>(scope, "Slicer");
-  slicer_class.def(py::init<spu::runtime::Socket &, const std::vector<int> &>(),
-                   "sck"_a, "slice"_a, R"pbdoc(Range:)pbdoc",
-                   py::return_value_policy::take_ownership);
-  slicer_class.def(py::init<spu::runtime::Socket &, const int>(), "sck"_a,
-                   "idx"_a, R"pbdoc(Range:)pbdoc",
-                   py::return_value_policy::take_ownership);
+void
+pyaf::wrapper::wrap_slicer(py::handle scope)
+{
+    auto slicer_class = py::class_<spu::module::Slicer, spu::module::Module>(scope, "Slicer");
+    slicer_class.def(py::init<spu::runtime::Socket&, const std::vector<int>&>(),
+                     "sck"_a,
+                     "slice"_a,
+                     R"pbdoc(Range:)pbdoc",
+                     py::return_value_policy::take_ownership);
+    slicer_class.def(py::init<spu::runtime::Socket&, const int>(),
+                     "sck"_a,
+                     "idx"_a,
+                     R"pbdoc(Range:)pbdoc",
+                     py::return_value_policy::take_ownership);
 }
 
-Slicer ::Slicer(spu::runtime::Socket &sck, const std::vector<int> &slice)
-    : Module(),
-      n_elmts(sck.get_n_elmts() / sck.get_task().get_module().get_n_frames()),
-      slice(slice) {
-  const std::string name = "Slicer";
-  this->set_name(name);
+Slicer ::Slicer(spu::runtime::Socket& sck, const std::vector<int>& slice)
+  : Module()
+  , n_elmts(sck.get_n_elmts() / sck.get_task().get_module().get_n_frames())
+  , slice(slice)
+{
+    const std::string name = "Slicer";
+    this->set_name(name);
 
-  this->task_init(sck);
+    this->task_init(sck);
 
-  this->set_n_frames(sck.get_task().get_module().get_n_frames());
+    this->set_n_frames(sck.get_task().get_module().get_n_frames());
 }
 
-Slicer ::Slicer(spu::runtime::Socket &sck, const int idx)
-    : Slicer(sck, std::vector<int>(1, idx)) {}
-
-void Slicer ::task_init(spu::runtime::Socket &sck) {
-  if (sck.get_datatype() == typeid(int8_t))
-    this->_task_init<int8_t>();
-  else if (sck.get_datatype() == typeid(int16_t))
-    this->_task_init<int16_t>();
-  else if (sck.get_datatype() == typeid(int32_t))
-    this->_task_init<int32_t>();
-  else if (sck.get_datatype() == typeid(int64_t))
-    this->_task_init<int64_t>();
-  else if (sck.get_datatype() == typeid(uint8_t))
-    this->_task_init<uint8_t>();
-  else if (sck.get_datatype() == typeid(uint16_t))
-    this->_task_init<uint16_t>();
-  else if (sck.get_datatype() == typeid(uint32_t))
-    this->_task_init<uint32_t>();
-  else if (sck.get_datatype() == typeid(uint64_t))
-    this->_task_init<uint64_t>();
-  else if (sck.get_datatype() == typeid(float))
-    this->_task_init<float>();
-  else if (sck.get_datatype() == typeid(double))
-    this->_task_init<double>();
-  else {
-    std::stringstream message;
-    message << "Unhandled socket type '" << sck.get_datatype_string() << "'.";
-    throw std::runtime_error(message.str());
-  }
+Slicer ::Slicer(spu::runtime::Socket& sck, const int idx)
+  : Slicer(sck, std::vector<int>(1, idx))
+{
 }
 
-Slicer *Slicer ::clone() const {
-  auto m = new Slicer(*this);
-  m->deep_copy(*this);
-  return m;
+void
+Slicer ::task_init(spu::runtime::Socket& sck)
+{
+    if (sck.get_datatype() == typeid(int8_t))
+        this->_task_init<int8_t>();
+    else if (sck.get_datatype() == typeid(int16_t))
+        this->_task_init<int16_t>();
+    else if (sck.get_datatype() == typeid(int32_t))
+        this->_task_init<int32_t>();
+    else if (sck.get_datatype() == typeid(int64_t))
+        this->_task_init<int64_t>();
+    else if (sck.get_datatype() == typeid(uint8_t))
+        this->_task_init<uint8_t>();
+    else if (sck.get_datatype() == typeid(uint16_t))
+        this->_task_init<uint16_t>();
+    else if (sck.get_datatype() == typeid(uint32_t))
+        this->_task_init<uint32_t>();
+    else if (sck.get_datatype() == typeid(uint64_t))
+        this->_task_init<uint64_t>();
+    else if (sck.get_datatype() == typeid(float))
+        this->_task_init<float>();
+    else if (sck.get_datatype() == typeid(double))
+        this->_task_init<double>();
+    else
+    {
+        std::stringstream message;
+        message << "Unhandled socket type '" << sck.get_datatype_string() << "'.";
+        throw std::runtime_error(message.str());
+    }
+}
+
+Slicer*
+Slicer ::clone() const
+{
+    auto m = new Slicer(*this);
+    m->deep_copy(*this);
+    return m;
 }

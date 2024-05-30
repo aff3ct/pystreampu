@@ -8,17 +8,22 @@
 
 namespace py = pybind11;
 
-namespace spu {
-namespace runtime {
-class Socket_Publicist : public Socket {
-public:
-  virtual ~Socket_Publicist() = default;
+namespace spu
+{
+namespace runtime
+{
+class Socket_Publicist : public Socket
+{
+  public:
+    virtual ~Socket_Publicist() = default;
 };
 } // namespace runtime
 } // namespace spu
 
-namespace pyaf {
-namespace wrapper {
+namespace pyaf
+{
+namespace wrapper
+{
 /*class Wrapper_Socket : public Wrapper_py,
                        public py::class_<spu::runtime::Socket,
 spu::tools::Interface_reset, std::shared_ptr<spu::runtime::Socket>>//,
@@ -36,7 +41,8 @@ spu::runtime::Socket& other);
 };*/
 // py::object bop_wrapping(spu::runtime::Socket& self, spu::runtime::Socket&
 // other);
-void wrap_socket(py::handle scope);
+void
+wrap_socket(py::handle scope);
 } // namespace wrapper
 } // namespace pyaf
 

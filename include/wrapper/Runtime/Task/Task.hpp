@@ -23,9 +23,12 @@ class Task_Publicist : public Task
 }
 }*/
 
-namespace pyaf {
-namespace wrapper {
-void wrap_task(py::handle scope);
+namespace pyaf
+{
+namespace wrapper
+{
+void
+wrap_task(py::handle scope);
 }
 } // namespace pyaf
 

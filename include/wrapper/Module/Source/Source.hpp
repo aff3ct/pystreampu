@@ -6,9 +6,12 @@
 
 namespace py = pybind11;
 
-namespace pyaf {
-namespace wrapper {
-void wrap_source(py::handle scope);
+namespace pyaf
+{
+namespace wrapper
+{
+void
+wrap_source(py::handle scope);
 }
 } // namespace pyaf
 #endif // WRAPPER_SOURCE_HPP_

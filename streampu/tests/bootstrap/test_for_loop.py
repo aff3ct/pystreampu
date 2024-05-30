@@ -148,9 +148,7 @@ def for_loop(
         ini_data = initializer.initialize()
         iterator.iterate.bind(switcher.select)
         ite = iterator.iterate()
-        [com_out_data0, com_out_data1] = switcher.commute(
-            in_data=switcher["select::out_data"], in_ctrl=ite
-        )
+        [com_out_data0, com_out_data1] = switcher.commute(in_data=switcher["select::out_data"], in_ctrl=ite)
         y = incs[0].increment(com_out_data0)
         for i in range(5):
             y = incs[i + 1].increment(y)
@@ -202,9 +200,7 @@ def for_loop(
     for inc in incs:
         chain_sleep_time += inc.ns
 
-    theoretical_time = (
-        (chain_sleep_time * n_exec * n_inter_frames) / 1000000.0 / n_threads
-    )
+    theoretical_time = (chain_sleep_time * n_exec * n_inter_frames) / 1000000.0 / n_threads
     theoretical_time *= iterator.limit + 1
 
     print(f"Sequence theoretical time: {theoretical_time} ms")
@@ -217,9 +213,7 @@ def for_loop(
                 expected = len(incs) * iterator.limit + tid * n_inter_frames + f
                 expected = expected % 256
                 if final_data[d] != expected:
-                    print(
-                        f"# expected = {expected} - obtained = {final_data[d]} (d = {d}, tid = {tid})"
-                    )
+                    print(f"# expected = {expected} - obtained = {final_data[d]} (d = {d}, tid = {tid})")
                     tests_passed = False
         tid += 1
     if print_stats:
@@ -227,13 +221,9 @@ def for_loop(
         sequence_for_loop.show_stats(True, False)
 
     if tests_passed:
-        print(
-            f"#{streampu.rang.style.bold}{streampu.rang.fg.green} Tests passed! {streampu.rang.style.reset}"
-        )
+        print(f"#{streampu.rang.style.bold}{streampu.rang.fg.green} Tests passed! {streampu.rang.style.reset}")
     else:
-        print(
-            f"#{streampu.rang.style.bold}{streampu.rang.fg.red} Tests failed :-( {streampu.rang.style.reset}"
-        )
+        print(f"#{streampu.rang.style.bold}{streampu.rang.fg.red} Tests failed :-( {streampu.rang.style.reset}")
 
     return tests_passed
 

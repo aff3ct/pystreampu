@@ -11,9 +11,12 @@
 
 namespace py = pybind11;
 
-namespace pyaf {
-namespace wrapper {
-void wrap_reporter_probe(py::module_ &scope);
+namespace pyaf
+{
+namespace wrapper
+{
+void
+wrap_reporter_probe(py::module_& scope);
 }
 } // namespace pyaf
 

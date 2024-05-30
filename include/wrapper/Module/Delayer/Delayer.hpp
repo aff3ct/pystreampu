@@ -11,12 +11,16 @@ namespace py = pybind11;
 using namespace spu;
 using namespace spu::module;
 
-namespace pyaf {
-namespace wrapper {
-template <typename T = int>
-inline void wrap_delayer_internal(py::handle scope, const std::string &name);
+namespace pyaf
+{
+namespace wrapper
+{
+template<typename T = int>
+inline void
+wrap_delayer_internal(py::handle scope, const std::string& name);
 
-void wrap_delayer(py::handle scope);
+void
+wrap_delayer(py::handle scope);
 } // namespace wrapper
 } // namespace pyaf
 

@@ -24,9 +24,7 @@ def sink_no(max_data_size: int, dtype: streampu._ext.dtype = int16):
     return class_type(max_data_size)
 
 
-def sink_user_binary(
-    max_data_size: int, filename: str, dtype: streampu._ext.dtype = int16
-):
+def sink_user_binary(max_data_size: int, filename: str, dtype: streampu._ext.dtype = int16):
     """Build a new Sink_user_binary.
 
     Args:

@@ -3,9 +3,7 @@ import streampu._ext
 from streampu._ext import int16
 
 
-def source_random(
-    max_data_size: int, seed: int = 0, dtype: streampu._ext.dtype = int16
-):
+def source_random(max_data_size: int, seed: int = 0, dtype: streampu._ext.dtype = int16):
     """Build a new Source_random.
 
     Args:

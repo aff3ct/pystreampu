@@ -14,29 +14,32 @@ using namespace spu;
 using namespace spu::module;
 using namespace spu::tools;
 
-namespace spu {
-namespace module {
-class Range : public Module {
-protected:
-  int stop;
-  int start;
-  int step;
-  int it;
-  bool throw_to_stop;
+namespace spu
+{
+namespace module
+{
+class Range : public Module
+{
+  protected:
+    int stop;
+    int start;
+    int step;
+    int it;
+    bool throw_to_stop;
 
-public:
-  Range(int stop, int start = 0, int step = 1,
-        pyaf::dtype dtype = pyaf::dtype::of<float>());
+  public:
+    Range(int stop, int start = 0, int step = 1, pyaf::dtype dtype = pyaf::dtype::of<float>());
 
-  virtual ~Range() = default;
-  virtual Range *clone() const;
+    virtual ~Range() = default;
+    virtual Range* clone() const;
 
-  void set_it(int it);
-  int get_start() const;
-  bool get_throw_to_stop() const;
-  void set_throw_to_stop(bool _throw_to_stop);
+    void set_it(int it);
+    int get_start() const;
+    bool get_throw_to_stop() const;
+    void set_throw_to_stop(bool _throw_to_stop);
 
-  template <typename T> void task_init();
+    template<typename T>
+    void task_init();
 };
 } // namespace module
 } // namespace spu
@@ -45,9 +48,12 @@ public:
 #include "wrapper/Module/Range/Range.hxx"
 #endif
 
-namespace pyaf {
-namespace wrapper {
-void wrap_range(py::handle scope);
+namespace pyaf
+{
+namespace wrapper
+{
+void
+wrap_range(py::handle scope);
 }
 } // namespace pyaf
 #endif // Wrapper_Range_HPP_

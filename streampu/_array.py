@@ -10,9 +10,7 @@ from . import _ext
 from ._typing import SocketLike
 
 
-def array(
-    data: SocketLike, n_frames: int = None, dtype: _ext.dtype = None
-) -> _ext.core.Socket:
+def array(data: SocketLike, n_frames: int = None, dtype: _ext.dtype = None) -> _ext.core.Socket:
     """Build a socket from data.
 
     Args:
@@ -48,9 +46,7 @@ def array(
     return getattr(_ext.arr, attr_name)(data).read.data
 
 
-def zeros(
-    n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32
-) -> _ext.core.Socket:
+def zeros(n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32) -> _ext.core.Socket:
     """Build a socket filled with zeros.
 
     Args:
@@ -78,9 +74,7 @@ def zeros(
     return mdl.get()
 
 
-def ones(
-    n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32
-) -> _ext.core.Socket:
+def ones(n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32) -> _ext.core.Socket:
     """Build a socket filled with ones.
 
     Args:

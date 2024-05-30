@@ -11,9 +11,12 @@ namespace py = pybind11;
 using namespace spu;
 using namespace spu::module;
 
-namespace pyaf {
-namespace wrapper {
-void wrap_sleeper(py::handle scope);
+namespace pyaf
+{
+namespace wrapper
+{
+void
+wrap_sleeper(py::handle scope);
 }
 } // namespace pyaf
 #endif // WRAPPER_SLEEPER_HPP_

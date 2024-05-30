@@ -6,9 +6,12 @@
 
 namespace py = pybind11;
 
-namespace pyaf {
-namespace wrapper {
-void wrap_exceptions(py::module_ &scope);
+namespace pyaf
+{
+namespace wrapper
+{
+void
+wrap_exceptions(py::module_& scope);
 }
 } // namespace pyaf
 

@@ -207,11 +207,7 @@ def exclusive_paths(
 
     multipliers = [2, 3, 6]
     real_path = 1 if cyclic_path else path
-    theoretical_time = (
-        ((chain_sleep_time / multipliers[real_path]) * n_exec * n_inter_frames)
-        / 1000000.0
-        / n_threads
-    )
+    theoretical_time = ((chain_sleep_time / multipliers[real_path]) * n_exec * n_inter_frames) / 1000000.0 / n_threads
 
     print(f"Sequence elapsed time: {duration} ms")
     print(f"Sequence theoretical time: {theoretical_time} ms")
@@ -229,9 +225,7 @@ def exclusive_paths(
                 expected = len(incs) / multipliers[real_path] + tid * n_inter_frames + f
                 expected = expected % 256
                 if final_data[d] != expected:
-                    print(
-                        f"# expected = {expected} - obtained = {final_data[d]} (d = {d}, tid = {tid})"
-                    )
+                    print(f"# expected = {expected} - obtained = {final_data[d]} (d = {d}, tid = {tid})")
                     tests_passed = False
         tid += 1
     if print_stats:
@@ -239,13 +233,9 @@ def exclusive_paths(
         sequence_chain.show_stats(True, False)
 
     if tests_passed:
-        print(
-            f"#{streampu.rang.style.bold}{streampu.rang.fg.green} Tests passed! {streampu.rang.style.reset}"
-        )
+        print(f"#{streampu.rang.style.bold}{streampu.rang.fg.green} Tests passed! {streampu.rang.style.reset}")
     else:
-        print(
-            f"#{streampu.rang.style.bold}{streampu.rang.fg.red} Tests failed :-( {streampu.rang.style.reset}"
-        )
+        print(f"#{streampu.rang.style.bold}{streampu.rang.fg.red} Tests failed :-( {streampu.rang.style.reset}")
     return tests_passed
 
 

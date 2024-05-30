@@ -146,9 +146,7 @@ def do_while_loop_impl(
     else:
         streampu.Task.call_auto_exec = False
         ini_data = initializer.initialize()
-        sel_out_data = switcher.select(
-            in_data0=switcher["commute::out_data0"], in_data1=ini_data
-        )
+        sel_out_data = switcher.select(in_data0=switcher["commute::out_data0"], in_data1=ini_data)
         iterator.iterate.bind(switcher.select.status)
         y = incs[0].increment(sel_out_data)
         for i in range(5):
@@ -201,9 +199,7 @@ def do_while_loop_impl(
     for inc in incs:
         chain_sleep_time += inc.ns
 
-    theoretical_time = (
-        (chain_sleep_time * n_exec * n_inter_frames) / 1000000.0 / n_threads
-    )
+    theoretical_time = (chain_sleep_time * n_exec * n_inter_frames) / 1000000.0 / n_threads
     theoretical_time *= iterator.limit + 1
 
     print(f"Sequence theoretical time: {theoretical_time} ms")
@@ -216,9 +212,7 @@ def do_while_loop_impl(
                 expected = len(incs) * (1 + iterator.limit) + tid * n_inter_frames + f
                 expected = expected % 256
                 if final_data[d] != expected:
-                    print(
-                        f"# expected = {expected} - obtained = {final_data[d]} (d = {d}, tid = {tid})"
-                    )
+                    print(f"# expected = {expected} - obtained = {final_data[d]} (d = {d}, tid = {tid})")
                     tests_passed = False
         tid += 1
     if print_stats:
@@ -226,13 +220,9 @@ def do_while_loop_impl(
         sequence_do_while_loop.show_stats(True, False)
 
     if tests_passed:
-        print(
-            f"#{streampu.rang.style.bold}{streampu.rang.fg.green} Tests passed! {streampu.rang.style.reset}"
-        )
+        print(f"#{streampu.rang.style.bold}{streampu.rang.fg.green} Tests passed! {streampu.rang.style.reset}")
     else:
-        print(
-            f"#{streampu.rang.style.bold}{streampu.rang.fg.red} Tests failed :-( {streampu.rang.style.reset}"
-        )
+        print(f"#{streampu.rang.style.bold}{streampu.rang.fg.red} Tests failed :-( {streampu.rang.style.reset}")
 
     streampu.Task.call_auto_exec = True
     return tests_passed

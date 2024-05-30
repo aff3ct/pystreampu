@@ -6,21 +6,25 @@
 
 namespace py = pybind11;
 
-namespace pyaf {
-namespace wrapper {
-class py_Interface_is_done : public spu::tools::Interface_is_done {
-public:
-  /* Trampoline (need one for each virtual function) */
-  bool is_done() const override {
-    PYBIND11_OVERRIDE_PURE(
-        bool,                          /* Return type */
-        spu::tools::Interface_is_done, /* Parent class */
-        is_done /* Name of function in C++ (must match Python name) */
-    );
-  };
+namespace pyaf
+{
+namespace wrapper
+{
+class py_Interface_is_done : public spu::tools::Interface_is_done
+{
+  public:
+    /* Trampoline (need one for each virtual function) */
+    bool is_done() const override
+    {
+        PYBIND11_OVERRIDE_PURE(bool,                          /* Return type */
+                               spu::tools::Interface_is_done, /* Parent class */
+                               is_done                        /* Name of function in C++ (must match Python name) */
+        );
+    };
 };
 
-void wrap_interface_is_done(py::module_ &scope);
+void
+wrap_interface_is_done(py::module_& scope);
 } // namespace wrapper
 } // namespace pyaf
 

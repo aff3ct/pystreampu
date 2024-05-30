@@ -31,10 +31,11 @@ testpaths = [
 ]
 
 [tool.cibuildwheel]
+before-all = "uname -a"
 manylinux-x86_64-image = "manylinux2014"
 build-verbosity = 3
 test-requires = "pytest"
-test-command = "pytest --pyargs streampu --junitxml=./pyaf-core/report.xml"
+test-command = "pytest --pyargs streampu --junitxml=./streampu/report.xml"
 
 [tool.scikit-build]
 build-dir = "build"
@@ -42,16 +43,9 @@ wheel.packages = ["streampu"]
 wheel.license-files = ["LICENSE"]
 wheel.install-dir = "streampu"
 
-[tool.flake8]
-max-line-length = 120
-accept-encodings = "utf-8"
-per-file-ignores = """
-    streampu/__init__.py: F401, A004, I001, I004, I005
-    streampu/_bop.py: A001
-    streampu/_minmax.py: A001
-    streampu/_probe.py: I001, I005
-    streampu/_red.py: A001
-    streampu/_uop.py: A001
-    streampu/tests/conftest.py: D103, I001, I005,
-    streampu/tests/*.py: S101, T201, IF100
-"""
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 120

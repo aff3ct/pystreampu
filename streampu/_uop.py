@@ -29,9 +29,7 @@ class UType(Enum):
         return self.name.lower()
 
 
-def _uop_factory(
-    n_elmts: int, uop_type: UType, input_dtype: dtype = int8, output_dtype: dtype = int8
-) -> Module:
+def _uop_factory(n_elmts: int, uop_type: UType, input_dtype: dtype = int8, output_dtype: dtype = int8) -> Module:
     """Return an StreamPU unary operator module.
 
     Args:

@@ -151,24 +151,14 @@ def simple_pipeline(
     print("#")
 
     if not force_sequence and copy_mode:
-        print(
-            rang.warning_tag(
-                "'no_copy_mode' has no effect with pipeline (it is always enable)"
-            )
-        )
+        print(rang.warning_tag("'no_copy_mode' has no effect with pipeline (it is always enable)"))
     if not force_sequence and step_by_step:
         print(rang.warning_tag("'step_by_step' is not available with pipeline"))
     if force_sequence and n_threads > 1:
-        print(
-            rang.warning_tag(
-                "Sequence mode only supports a single thread (User-Source/Sinks are not clonable)"
-            )
-        )
+        print(rang.warning_tag("Sequence mode only supports a single thread (User-Source/Sinks are not clonable)"))
         n_threads = 1
 
-    source = streampu.source_user_binary(
-        data_length, in_filepath, auto_reset=False, dtype=streampu.uint8
-    )
+    source = streampu.source_user_binary(data_length, in_filepath, auto_reset=False, dtype=streampu.uint8)
 
     sink = streampu.sink_user_binary(data_length, out_filepath, dtype=streampu.uint8)
 
@@ -250,9 +240,7 @@ def simple_pipeline(
 
     in_filesize = os.stat(in_filepath).st_size
     n_frames = ceil(in_filesize * 8.0 / (data_length * n_inter_frames))
-    theoretical_time_us_allthreads = (
-        n_frames * (len(rlys) * sleep_time_us * 1000) * n_inter_frames
-    )
+    theoretical_time_us_allthreads = n_frames * (len(rlys) * sleep_time_us * 1000) * n_inter_frames
     theoretical_time = theoretical_time_us_allthreads / 1000000.0 / n_threads
 
     print(f"Sequence elapsed time: {duration} ms")

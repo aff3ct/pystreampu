@@ -96,3 +96,4 @@ from ._source import source_random, source_user, source_user_binary
 from ._stateless import Stateless
 from ._task import Task
 from ._uop import UType, abs, bitwise_not, cast, neg, uop
+from ._version import version as __version__

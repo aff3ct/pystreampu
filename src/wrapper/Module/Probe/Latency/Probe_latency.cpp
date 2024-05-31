@@ -4,7 +4,7 @@ namespace py = pybind11;
 using namespace py::literals;
 
 void
-pyaf::wrapper::wrap_probe_latency(py::handle scope)
+pyspu::wrapper::wrap_probe_latency(py::handle scope)
 {
     py::class_<spu::module::Probe_latency, spu::module::Probe<uint8_t>>(scope, "Probe_latency")
       .def(py::init<const std::string&, spu::tools::Reporter_probe*>(),

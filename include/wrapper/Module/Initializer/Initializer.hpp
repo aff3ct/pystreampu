@@ -14,7 +14,7 @@ namespace py = pybind11;
 using namespace spu;
 using namespace spu::module;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -25,7 +25,7 @@ wrap_initializer_internal(py::handle scope, const std::string& name);
 void
 wrap_initializer(py::handle scope);
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 #include "wrapper/Module/Initializer/Initializer.hxx"

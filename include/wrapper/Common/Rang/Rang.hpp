@@ -14,7 +14,7 @@ display_flag(T flag)
     message << flag;
     return message.str();
 }
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -98,4 +98,4 @@ wrap_rang_flags(py::module_& m)
     m.def("disable_colors", []() { setControlMode(rang::control::Off); });
 }
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu

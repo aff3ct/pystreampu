@@ -35,13 +35,13 @@ class Array : public Module
 } // namespace module
 } // namespace spu
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
 void
 wrap_array(py::module_& scope);
 }
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // Wrapper_Array_HPP_

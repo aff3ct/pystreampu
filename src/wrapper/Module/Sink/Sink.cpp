@@ -12,7 +12,7 @@ namespace py = pybind11;
 using namespace py::literals;
 
 void
-pyaf::wrapper::wrap_sink(py::handle scope)
+pyspu::wrapper::wrap_sink(py::handle scope)
 {
     using lB = tl::type_list<ALL_DTYPES>;
     lB::for_each(
@@ -29,9 +29,9 @@ pyaf::wrapper::wrap_sink(py::handle scope)
 #include "wrapper/Module/Sink/NO/Sink_NO.hpp"
 #include "wrapper/Module/Sink/User/Sink_user_binary.hpp"
 void
-pyaf::wrapper::wrap_sinks(py::handle scope)
+pyspu::wrapper::wrap_sinks(py::handle scope)
 {
-    pyaf::wrapper::wrap_sink(scope);
-    pyaf::wrapper::wrap_sink_user_binary(scope);
-    pyaf::wrapper::wrap_sink_no(scope);
+    pyspu::wrapper::wrap_sink(scope);
+    pyspu::wrapper::wrap_sink_user_binary(scope);
+    pyspu::wrapper::wrap_sink_no(scope);
 }

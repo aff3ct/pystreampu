@@ -11,7 +11,7 @@ namespace py = pybind11;
 using namespace spu;
 using namespace spu::module;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -20,7 +20,7 @@ wrap_controller(py::handle scope);
 void
 wrap_controllers(py::handle scope);
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #include "Cyclic/Controller_cyclic.hpp"
 #include "Limit/Controller_limit.hpp"

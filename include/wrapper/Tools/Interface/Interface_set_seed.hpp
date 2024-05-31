@@ -6,7 +6,7 @@
 
 namespace py = pybind11;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -26,6 +26,6 @@ class py_Interface_set_seed : public spu::tools::Interface_set_seed
 void
 wrap_interface_set_seed(py::module_& scope);
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // WRAPPER_INTERFACE_SET_SEED_HPP__

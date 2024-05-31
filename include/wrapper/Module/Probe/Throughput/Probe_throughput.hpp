@@ -5,12 +5,12 @@
 #include <streampu.hpp>
 namespace py = pybind11;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
 void
 wrap_probe_throughput(py::handle scope);
 }
-} // namespace pyaf
+} // namespace pyspu
 #endif // WRAPPER_PROBE_THROUGHPUT_HPP_

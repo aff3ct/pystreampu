@@ -1,4 +1,4 @@
-#include "pyaf.hpp"
+#include "ext.hpp"
 
 #include <string>
 #include <thread>
@@ -24,43 +24,43 @@ PYBIND11_MODULE(_ext, m)
 
     // Interfaces
     py::module_ submod_itf = m.def_submodule("interfaces"); // TODO : put in a separate file
-    pyaf::wrapper::wrap_interface_clone(submod_itf);
-    pyaf::wrapper::wrap_interface_is_done(submod_itf);
-    pyaf::wrapper::wrap_interface_reset(submod_itf);
-    pyaf::wrapper::wrap_interface_get_set_n_frames(submod_itf);
-    pyaf::wrapper::wrap_interface_set_seed(submod_itf);
-    pyaf::wrapper::wrap_interface_waiting(submod_itf);
+    pyspu::wrapper::wrap_interface_clone(submod_itf);
+    pyspu::wrapper::wrap_interface_is_done(submod_itf);
+    pyspu::wrapper::wrap_interface_reset(submod_itf);
+    pyspu::wrapper::wrap_interface_get_set_n_frames(submod_itf);
+    pyspu::wrapper::wrap_interface_set_seed(submod_itf);
+    pyspu::wrapper::wrap_interface_waiting(submod_itf);
 
     // Wrap of runtime namespace
     py::module_ m_core = m.def_submodule("core"); // TODO rename runtime
-    pyaf::wrapper::wrap_socket(m_core);
-    pyaf::wrapper::wrap_task(m_core);
+    pyspu::wrapper::wrap_socket(m_core);
+    pyspu::wrapper::wrap_task(m_core);
 
-    auto wrap_module(std::unique_ptr<pyaf::wrapper::Wrapper_py>(
-      new pyaf::wrapper::Wrapper_Module(m_core))); // TODO Update to the new way
+    auto wrap_module(std::unique_ptr<pyspu::wrapper::Wrapper_py>(
+      new pyspu::wrapper::Wrapper_Module(m_core))); // TODO Update to the new way
     wrap_module->definitions();
 
     // Wrap of tools namespace
     // dtypes (class for handling types in the python package)
-    pyaf::wrapper::wrap_dtypes(m);
+    pyspu::wrapper::wrap_dtypes(m);
 
-    pyaf::wrapper::wrap_fmtflags(m);
+    pyspu::wrapper::wrap_fmtflags(m);
 
-    pyaf::wrapper::wrap_signal_handler(m);
+    pyspu::wrapper::wrap_signal_handler(m);
 
     // Rang
     py::module_ m_rang = m.def_submodule("rang");
-    pyaf::wrapper::wrap_rang_flags(m_rang);
+    pyspu::wrapper::wrap_rang_flags(m_rang);
 
     // Exceptions
     py::module_ submod_exc = m.def_submodule("exceptions");
-    pyaf::wrapper::wrap_exceptions(submod_exc);
+    pyspu::wrapper::wrap_exceptions(submod_exc);
 
     py::module_ submod_rep = m.def_submodule("reporter");
-    pyaf::wrapper::wrap_reporter(submod_rep);
+    pyspu::wrapper::wrap_reporter(submod_rep);
 
     py::module_ submod_ter = m.def_submodule("terminal");
-    pyaf::wrapper::wrap_terminal(submod_ter);
+    pyspu::wrapper::wrap_terminal(submod_ter);
 
     // Help
     // TODO : put in a separate file
@@ -85,77 +85,71 @@ PYBIND11_MODULE(_ext, m)
 
     // Wrap of module namespace
     py::module_ submod_ada = m.def_submodule("ada");
-    pyaf::wrapper::wrap_adaptors(submod_ada);
+    pyspu::wrapper::wrap_adaptors(submod_ada);
 
     py::module_ submod_ctl = m.def_submodule("ctl");
-    pyaf::wrapper::wrap_controllers(submod_ctl);
+    pyspu::wrapper::wrap_controllers(submod_ctl);
 
     py::module_ submod_ran = m.def_submodule("ran");
-    pyaf::wrapper::wrap_range(submod_ran);
+    pyspu::wrapper::wrap_range(submod_ran);
 
     py::module_ submod_sli = m.def_submodule("sli");
-    pyaf::wrapper::wrap_slicer(submod_sli);
+    pyspu::wrapper::wrap_slicer(submod_sli);
 
     py::module_ submod_sts = m.def_submodule("sts");
-    pyaf::wrapper::wrap_stateless(submod_sts); // TODO : change python submodule
+    pyspu::wrapper::wrap_stateless(submod_sts); // TODO : change python submodule
 
     py::module_ submod_arr = m.def_submodule("arr");
-    pyaf::wrapper::wrap_array(submod_arr);
+    pyspu::wrapper::wrap_array(submod_arr);
 
     py::module_ submod_bop = m.def_submodule("bop");
-    pyaf::wrapper::wrap_binaryop(submod_bop);
+    pyspu::wrapper::wrap_binaryop(submod_bop);
 
     py::module_ submod_inc = m.def_submodule("inc");
-    pyaf::wrapper::wrap_incrementer(submod_inc);
+    pyspu::wrapper::wrap_incrementer(submod_inc);
 
     py::module_ submod_ini = m.def_submodule("ini");
-    pyaf::wrapper::wrap_initializer(submod_ini);
+    pyspu::wrapper::wrap_initializer(submod_ini);
 
     py::module_ submod_ite = m.def_submodule("ite");
-    pyaf::wrapper::wrap_iterator(submod_ite);
+    pyspu::wrapper::wrap_iterator(submod_ite);
 
     py::module_ submod_dly = m.def_submodule("dly");
-    pyaf::wrapper::wrap_delayer(submod_dly);
+    pyspu::wrapper::wrap_delayer(submod_dly);
 
     py::module_ submod_fin = m.def_submodule("fin");
-    pyaf::wrapper::wrap_finalizer(submod_fin);
+    pyspu::wrapper::wrap_finalizer(submod_fin);
 
     py::module_ submod_prb = m.def_submodule("prb");
-    pyaf::wrapper::wrap_probe(submod_prb);
+    pyspu::wrapper::wrap_probe(submod_prb);
 
     py::module_ submod_red = m.def_submodule("red");
-    pyaf::wrapper::wrap_reducer(submod_red);
+    pyspu::wrapper::wrap_reducer(submod_red);
 
     py::module_ submod_rel = m.def_submodule("rel");
-    pyaf::wrapper::wrap_relayer(submod_rel);
+    pyspu::wrapper::wrap_relayer(submod_rel);
 
     py::module_ submod_src = m.def_submodule("src");
-    pyaf::wrapper::wrap_source(submod_src);             // TODO : put in a separate file
-    pyaf::wrapper::wrap_source_random(submod_src);      // TODO : put in a separate file
-    pyaf::wrapper::wrap_source_user(submod_src);        // TODO : put in a separate file
-    pyaf::wrapper::wrap_source_user_binary(submod_src); // TODO : put in a separate file
+    pyspu::wrapper::wrap_source(submod_src);             // TODO : put in a separate file
+    pyspu::wrapper::wrap_source_random(submod_src);      // TODO : put in a separate file
+    pyspu::wrapper::wrap_source_user(submod_src);        // TODO : put in a separate file
+    pyspu::wrapper::wrap_source_user_binary(submod_src); // TODO : put in a separate file
 
     py::module_ submod_snk = m.def_submodule("snk");
-    pyaf::wrapper::wrap_sinks(submod_snk);
+    pyspu::wrapper::wrap_sinks(submod_snk);
 
     py::module_ submod_swi = m.def_submodule("swi");
-    pyaf::wrapper::wrap_switcher(submod_swi);
+    pyspu::wrapper::wrap_switcher(submod_swi);
 
     py::module_ submod_slp = m.def_submodule("slp");
-    pyaf::wrapper::wrap_sleeper(submod_slp);
+    pyspu::wrapper::wrap_sleeper(submod_slp);
 
     py::module_ submod_set = m.def_submodule("set");
-    pyaf::wrapper::wrap_set(submod_set);
+    pyspu::wrapper::wrap_set(submod_set);
 
     py::module_ submod_uop = m.def_submodule("uop");
-    pyaf::wrapper::wrap_unaryop(submod_uop);
+    pyspu::wrapper::wrap_unaryop(submod_uop);
 
-    pyaf::wrapper::wrap_sequence(m_core);
-    pyaf::wrapper::wrap_pipeline(m_core);
-
-#ifdef VERSION_INFO
-    m.attr("__version__") = VERSION_INFO;
-#else
-    m.attr("__version__") = "dev";
-#endif
+    pyspu::wrapper::wrap_sequence(m_core);
+    pyspu::wrapper::wrap_pipeline(m_core);
 }

@@ -17,7 +17,7 @@ namespace py = pybind11;
 using namespace py::literals;
 
 void
-pyaf::wrapper::wrap_sequence(py::handle scope)
+pyspu::wrapper::wrap_sequence(py::handle scope)
 {
     auto sequence_class = py::class_<spu::runtime::Sequence,
                                      spu::tools::Interface_clone,

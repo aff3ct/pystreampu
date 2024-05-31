@@ -6,7 +6,7 @@
 
 namespace py = pybind11;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -15,5 +15,5 @@ wrap_sinks(py::handle scope);
 void
 wrap_sink(py::handle scope);
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 #endif // WRAPPER_SINK_HPP_

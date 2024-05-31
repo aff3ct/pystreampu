@@ -6,7 +6,7 @@
 
 namespace py = pybind11;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -40,6 +40,6 @@ class Publicist_Terminal : public spu::tools::Terminal
 void
 wrap_terminal(py::module_& scope);
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // WRAPPER_INTERFACE_TERMINAL_HPP__

@@ -10,7 +10,7 @@
 
 namespace py = pybind11;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -38,6 +38,6 @@ class py_Interface_get_set_n_frames : public spu::tools::Interface_get_set_n_fra
 void
 wrap_interface_get_set_n_frames(py::module_& scope);
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // WRAPPER_INTERFACE_GET_SET_N_FRAMES_HPP__

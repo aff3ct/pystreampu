@@ -35,7 +35,7 @@ endif()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/pybind11/)
 set(PYBIND11_NEWPYTHON ON)
 # `pybind11_add_module` is a wrapper of the CMake `add_library` function
-pybind11_add_module(_ext MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/pyaf.cpp ${SRC_FILES} ${HEADER_FILES})
+pybind11_add_module(_ext MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/ext.cpp ${SRC_FILES} ${HEADER_FILES})
 
 set(pybind11_INCLUDE_DIRS)
 install(TARGETS _ext DESTINATION .)

@@ -1,11 +1,11 @@
 #include "wrapper/Module/Iterator/Iterator.hpp"
 
 namespace py = pybind11;
-using namespace pyaf::wrapper;
+using namespace pyspu::wrapper;
 using namespace py::literals;
 
 void
-pyaf::wrapper::wrap_iterator(py::handle scope)
+pyspu::wrapper::wrap_iterator(py::handle scope)
 {
     auto doc_str = R"pbdoc()pbdoc";
     auto py_iterator_class =

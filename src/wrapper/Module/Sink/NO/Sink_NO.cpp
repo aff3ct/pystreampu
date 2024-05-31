@@ -12,7 +12,7 @@ namespace py = pybind11;
 using namespace py::literals;
 
 void
-pyaf::wrapper::wrap_sink_no(py::handle scope)
+pyspu::wrapper::wrap_sink_no(py::handle scope)
 {
     using lB = tl::type_list<ALL_DTYPES>;
     lB::for_each(

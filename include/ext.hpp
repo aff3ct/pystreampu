@@ -1,5 +1,5 @@
-#ifndef PYAF_HPP_
-#define PYAF_HPP_
+#ifndef EXT_HPP_
+#define EXT_HPP_
 
 #include "wrapper/Common/Rang/Rang.hpp"
 #include "wrapper/Common/Tools/Format/Format.hpp"
@@ -49,4 +49,4 @@
 #include "wrapper/Module/Stateless/Stateless.hpp"
 #include "wrapper/Module/Switcher/Switcher.hpp"
 #include "wrapper/Module/Unaryop/Unaryop.hpp"
-#endif // PYAF_HPP_
+#endif // EXT_HPP_

@@ -19,7 +19,7 @@ namespace py = pybind11;
 #define ALL_INT_DTYPES UINT_DTYPES, INT_DTYPES
 #define SIGNED_DTYPES INT_DTYPES, FLOAT_DTYPES
 
-namespace pyaf
+namespace pyspu
 {
 
 /*enum type {
@@ -102,6 +102,6 @@ std::type_index inline str2typeid(const std::string& type_str)
     }
 }
 } // namespace utils
-} // namespace pyaf
+} // namespace pyspu
 
 #endif

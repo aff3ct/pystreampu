@@ -11,11 +11,11 @@
 namespace py = pybind11;
 using namespace py::literals;
 using namespace spu::module;
-using namespace pyaf::wrapper;
+using namespace pyspu::wrapper;
 using namespace spu::runtime;
 
 void
-pyaf::wrapper::wrap_task(py::handle scope)
+pyspu::wrapper::wrap_task(py::handle scope)
 {
     py::class_<spu::runtime::Task> py_task(scope, "Task");
 
@@ -72,8 +72,7 @@ pyaf::wrapper::wrap_task(py::handle scope)
                                       return out;
                                   });
 
-    py_task.def(
-      "exec",
+    py_task.def("exec",
       [](spu::runtime::Task& self, const int frame_id, const bool managed_memory)
       {
           py::scoped_ostream_redirect stream(std::cout,                                // std::ostream&
@@ -89,7 +88,7 @@ pyaf::wrapper::wrap_task(py::handle scope)
                 {
                     auto& m = t.get_module();
                     return py::cast(&m[t.get_name() + "::" + s]);
-                });
+                }, py::is_operator());
     py_task.def_property_readonly("module", &spu::runtime::Task::get_module);
     py_task.def_property("debug", &spu::runtime::Task::is_debug, &spu::runtime::Task::set_debug);
     py_task.def_property("stats", &spu::runtime::Task::is_stats, &spu::runtime::Task::set_stats);
@@ -146,4 +145,10 @@ pyaf::wrapper::wrap_task(py::handle scope)
     py_task.def("set_debug_limit", &spu::runtime::Task::set_debug_limit, "limit"_a);
     py_task.def("set_debug_precision", &spu::runtime::Task::set_debug_precision, "prec"_a);
     py_task.def("set_debug_frame_max", &spu::runtime::Task::set_debug_frame_max, "limit"_a);
+    py_task.def("abort_processing",[](spu::runtime::Task& self){
+        throw spu::tools::processing_aborted(__FILE__, __LINE__, __func__);
+    });
+    py_task.def("cancel_waiting",[](spu::runtime::Task& self){
+        throw spu::tools::waiting_canceled(__FILE__, __LINE__, __func__);
+    });
 };

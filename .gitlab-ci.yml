@@ -99,7 +99,7 @@ isort:
   - pip3 install isort
   - isort ./streampu --check-only
   only:
-  - merge requests
+  - merge_requests
 
 black:
   stage: linting
@@ -127,4 +127,4 @@ flake8:
   - pip3 install flake8
   - flake8 ./streampu
   only:
-  - merge requests
+  - merge_requests

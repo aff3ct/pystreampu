@@ -24,6 +24,12 @@ pyspu::wrapper::wrap_sequence(py::handle scope)
                                      spu::tools::Interface_get_set_n_frames,
                                      spu::tools::Interface_is_done>(scope, "_Sequence", py::dynamic_attr());
 
+    sequence_class.def(py::init<spu::runtime::Task&, const size_t, const bool, const std::vector<size_t>&>(),
+                       "first"_a,
+                       "n_threads"_a = 1,
+                       "thread_pinning"_a = false,
+                       "puids"_a = std::vector<size_t>(),
+                       py::return_value_policy::take_ownership);
     sequence_class.def(
       py::init<spu::runtime::Task&, spu::runtime::Task&, const size_t, const bool, const std::vector<size_t>&>(),
       "first"_a,
@@ -32,12 +38,6 @@ pyspu::wrapper::wrap_sequence(py::handle scope)
       "thread_pinning"_a = false,
       "puids"_a = std::vector<size_t>(),
       py::return_value_policy::take_ownership);
-    sequence_class.def(py::init<spu::runtime::Task&, const size_t, const bool, const std::vector<size_t>&>(),
-                       "first"_a,
-                       "n_threads"_a = 1,
-                       "thread_pinning"_a = false,
-                       "puids"_a = std::vector<size_t>(),
-                       py::return_value_policy::take_ownership);
     sequence_class.def(py::init<const std::vector<spu::runtime::Task*>&,
                                 const size_t,
                                 const bool,

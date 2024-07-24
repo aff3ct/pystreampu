@@ -38,10 +38,10 @@ set(PYBIND11_NEWPYTHON ON)
 pybind11_add_module(_ext MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/pyaf.cpp ${SRC_FILES} ${HEADER_FILES})
 
 set(pybind11_INCLUDE_DIRS)
-install(TARGETS _ext DESTINATION .)
+install(TARGETS _ext DESTINATION ${SKBUILD_PROJECT_NAME})
 
 install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/pybind11/include
-        DESTINATION .
+        DESTINATION ${SKBUILD_PROJECT_NAME}
         FILES_MATCHING PATTERN "*.h")
 
 include_directories(_ext PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)

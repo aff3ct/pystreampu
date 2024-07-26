@@ -24,29 +24,31 @@ pyaf::wrapper::wrap_sequence(py::handle scope)
                                      spu::tools::Interface_get_set_n_frames,
                                      spu::tools::Interface_is_done>(scope, "_Sequence", py::dynamic_attr());
 
-    sequence_class.def(py::init<spu::runtime::Task&, const size_t, const bool, const std::vector<size_t>&>(),
+    sequence_class.def(py::init<spu::runtime::Task&, const size_t, const bool, const std::string&, bool>(),
                        "first"_a,
                        "n_threads"_a = 1,
                        "thread_pinning"_a = false,
-                       "puids"_a = std::vector<size_t>(),
+                       "sequence_pinning_policy"_a = std::string(""),
+                       "tasks_inplace"_a = true,
                        py::return_value_policy::take_ownership);
     sequence_class.def(
-      py::init<spu::runtime::Task&, spu::runtime::Task&, const size_t, const bool, const std::vector<size_t>&>(),
+      py::init<spu::runtime::Task&, spu::runtime::Task&, const size_t, const bool, const std::string&, bool>(),
       "first"_a,
       "last"_a,
       "n_threads"_a = 1,
       "thread_pinning"_a = false,
-      "puids"_a = std::vector<size_t>(),
+      "sequence_pinning_policy"_a = std::string(""),
+      "tasks_inplace"_a = true,
       py::return_value_policy::take_ownership);
     sequence_class.def(py::init<const std::vector<spu::runtime::Task*>&,
                                 const size_t,
                                 const bool,
-                                const std::vector<size_t>&,
+                                const std::string&,
                                 const bool>(),
                        "firsts"_a,
                        "n_threads"_a = 1,
                        "thread_pinning"_a = false,
-                       "puids"_a = std::vector<size_t>(),
+                       "sequence_pinning_policy"_a = std::string(""),
                        "tasks_inplace"_a = true,
                        py::return_value_policy::take_ownership);
     sequence_class.def(py::init<const std::vector<spu::runtime::Task*>&,
@@ -54,14 +56,14 @@ pyaf::wrapper::wrap_sequence(py::handle scope)
                                 const std::vector<spu::runtime::Task*>&,
                                 const size_t,
                                 const bool,
-                                const std::vector<size_t>&,
+                                const std::string&,
                                 const bool>(),
                        "firsts"_a,
                        "lasts"_a,
                        "exclusions"_a,
                        "n_threads"_a = 1,
                        "thread_pinning"_a = false,
-                       "puids"_a = std::vector<size_t>(),
+                       "sequence_pinning_policy"_a = std::string(""),
                        "tasks_inplace"_a = true,
                        py::return_value_policy::take_ownership);
     /*sequence_class.def(py::init<const std::vector<const spu::runtime::Task *> &,
@@ -76,7 +78,7 @@ pyaf::wrapper::wrap_sequence(py::handle scope)
     sequence_class.def(py::init<const std::vector<spu::runtime::Task *> &, const
     std::vector<spu::runtime::Task *> &, const size_t, const bool, const
     std::vector<size_t> &, const bool>(), "firsts"_a, "lasts"_a, "n_threads"_a =
-    1, "thread_pinning"_a = false, "puids"_a = std::vector<size_t>(),
+    1, "thread_pinning"_a = false, "sequence_pinning_policy"_a = std::string(""),
     "tasks_inplace"_a = true); sequence_class.def(py::init<const
     std::vector<spu::runtime::Task *> &, const std::vector<spu::runtime::Task *>
     &, const std::vector<spu::runtime::Task *> &, const size_t, const bool, const
@@ -85,11 +87,11 @@ pyaf::wrapper::wrap_sequence(py::handle scope)
     std::vector<size_t>(), "tasks_inplace"_a = true);
     sequence_class.def(py::init<spu::runtime::Task &, const size_t, const bool,
     const std::vector<size_t> &, const bool>(), "first"_a, "n_threads"_a = 1,
-    "thread_pinning"_a = false, "puids"_a = std::vector<size_t>(),
+    "thread_pinning"_a = false, "sequence_pinning_policy"_a = std::string(""),
     "tasks_inplace"_a = true); sequence_class.def(py::init<spu::runtime::Task &,
     spu::runtime::Task &, const size_t, const bool, const std::vector<size_t> &,
     const bool>(), "first"_a, "last"_a, "n_threads"_a = 1, "thread_pinning"_a =
-    false, "puids"_a = std::vector<size_t>(), "tasks_inplace"_a = true);*/
+    false, "sequence_pinning_policy"_a = std::string(""), "tasks_inplace"_a = true);*/
     // sequence_class.def("exec", [](spu::runtime::Sequence& self,
     // std::function<bool(const std::vector<const int*>&)>
     // stop_condition){self.exec(stop_condition);});

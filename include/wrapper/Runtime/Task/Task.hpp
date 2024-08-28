@@ -23,13 +23,13 @@ class Task_Publicist : public Task
 }
 }*/
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
 void
 wrap_task(py::handle scope);
 }
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // BIND_TASK_HPP_

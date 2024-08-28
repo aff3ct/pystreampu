@@ -13,7 +13,7 @@
 namespace py = pybind11;
 using namespace spu;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -54,7 +54,7 @@ wrap_reducer_or(py::handle scope);
 void
 wrap_reducer_xor(py::handle scope);
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 #include "wrapper/Module/Reducer/Reducer.hxx"

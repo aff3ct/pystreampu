@@ -15,7 +15,7 @@
 namespace py = pybind11;
 using namespace py::literals;
 using namespace spu::module;
-using namespace pyaf::wrapper;
+using namespace pyspu::wrapper;
 using namespace spu::runtime;
 
 Wrapper_Module ::Wrapper_Module(py::handle scope)
@@ -57,7 +57,7 @@ Wrapper_Module ::definitions()
          spu::runtime::Task& task,
          const std::string& name,
          const size_t n_elmts,
-         const pyaf::dtype dtype)
+         const pyspu::dtype dtype)
       { return mdl.create_socket_in(task, name, n_elmts, utils::str2typeid(dtype.get_name())); },
       "task"_a,
       "name"_a,
@@ -73,7 +73,7 @@ Wrapper_Module ::definitions()
          spu::runtime::Task& task,
          const std::string& name,
          const size_t n_elmts,
-         const pyaf::dtype dtype)
+         const pyspu::dtype dtype)
       { return mdl.create_socket_out(task, name, n_elmts, utils::str2typeid(dtype.get_name())); },
       "task"_a,
       "name"_a,
@@ -89,7 +89,7 @@ Wrapper_Module ::definitions()
          spu::runtime::Task& task,
          const std::string& name,
          const size_t n_elmts,
-         const pyaf::dtype dtype)
+         const pyspu::dtype dtype)
       { return mdl.create_socket_fwd(task, name, n_elmts, utils::str2typeid(dtype.get_name())); },
       "task"_a,
       "name"_a,

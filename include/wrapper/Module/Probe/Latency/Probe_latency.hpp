@@ -5,12 +5,12 @@
 #include <streampu.hpp>
 namespace py = pybind11;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
 void
 wrap_probe_latency(py::handle scope);
 }
-} // namespace pyaf
+} // namespace pyspu
 #endif // WRAPPER_PROBE_LATENCY_HPP_

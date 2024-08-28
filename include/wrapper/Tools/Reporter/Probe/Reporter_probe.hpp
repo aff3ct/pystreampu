@@ -11,13 +11,13 @@
 
 namespace py = pybind11;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
 void
 wrap_reporter_probe(py::module_& scope);
 }
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // WRAPPER_INTERFACE_REPORTER_PROBE_HPP__

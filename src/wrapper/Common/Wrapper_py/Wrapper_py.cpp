@@ -1,5 +1,5 @@
 #include "wrapper/Common/Wrapper_py/Wrapper_py.hpp"
-using namespace pyaf::wrapper;
+using namespace pyspu::wrapper;
 
 Wrapper_py::Wrapper_py() {}
 

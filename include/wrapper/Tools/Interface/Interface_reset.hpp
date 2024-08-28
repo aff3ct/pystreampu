@@ -10,7 +10,7 @@
 
 namespace py = pybind11;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -30,6 +30,6 @@ class py_Interface_reset : public spu::tools::Interface_reset
 void
 wrap_interface_reset(py::module_& scope);
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // WRAPPER_INTERFACE_RESET_HPP__

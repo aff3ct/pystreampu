@@ -2,10 +2,10 @@
 
 namespace py = pybind11;
 using namespace py::literals;
-using namespace pyaf::wrapper;
+using namespace pyspu::wrapper;
 
 void
-pyaf::wrapper::wrap_exceptions(py::module_& scope)
+pyspu::wrapper::wrap_exceptions(py::module_& scope)
 {
     py::register_exception<spu::tools::cannot_allocate>(scope, "CannotAllocate");
     py::register_exception<spu::tools::control_flow_error>(scope, "ControlFlowError");

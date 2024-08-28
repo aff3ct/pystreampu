@@ -28,7 +28,7 @@ class Range : public Module
     bool throw_to_stop;
 
   public:
-    Range(int stop, int start = 0, int step = 1, pyaf::dtype dtype = pyaf::dtype::of<float>());
+    Range(int stop, int start = 0, int step = 1, pyspu::dtype dtype = pyspu::dtype::of<float>());
 
     virtual ~Range() = default;
     virtual Range* clone() const;
@@ -48,12 +48,12 @@ class Range : public Module
 #include "wrapper/Module/Range/Range.hxx"
 #endif
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
 void
 wrap_range(py::handle scope);
 }
-} // namespace pyaf
+} // namespace pyspu
 #endif // Wrapper_Range_HPP_

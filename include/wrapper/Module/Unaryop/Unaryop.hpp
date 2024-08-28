@@ -14,7 +14,7 @@ namespace py = pybind11;
 using namespace spu;
 using namespace spu::module;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -37,7 +37,7 @@ wrap_unaryop_cast(py::handle scope);
 // void wrap_unaryop_not_abs(py::handle scope);
 
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 #include "wrapper/Module/Unaryop/Unaryop.hxx"

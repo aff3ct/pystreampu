@@ -10,7 +10,7 @@ namespace py = pybind11;
 using namespace py::literals;
 
 void
-pyaf::wrapper::wrap_stateless(py::handle scope)
+pyspu::wrapper::wrap_stateless(py::handle scope)
 {
     auto stateless_class = py::class_<spu::module::Stateless, spu::module::Module>(scope,
                                                                                    "Stateless",

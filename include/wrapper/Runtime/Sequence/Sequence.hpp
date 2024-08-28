@@ -4,12 +4,12 @@
 #include <pybind11/pybind11.h>
 namespace py = pybind11;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
 void
 wrap_sequence(py::handle scope);
 }
-} // namespace pyaf
+} // namespace pyspu
 #endif // WRAPPER_SEQUENCE_HPP_

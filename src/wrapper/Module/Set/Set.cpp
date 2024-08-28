@@ -10,7 +10,7 @@ namespace py = pybind11;
 using namespace py::literals;
 
 void
-pyaf::wrapper::wrap_set(py::handle scope)
+pyspu::wrapper::wrap_set(py::handle scope)
 {
     auto set_class = py::class_<spu::module::Set, spu::module::Module>(scope, "Set");
     set_class.def(py::init<spu::runtime::Sequence&>(), "sequence"_a, py::keep_alive<1, 2>());

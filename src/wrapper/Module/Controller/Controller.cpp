@@ -7,11 +7,11 @@
 #include "wrapper/Common/Tools/type_functions.h"
 
 namespace py = pybind11;
-using namespace pyaf::wrapper;
+using namespace pyspu::wrapper;
 using namespace py::literals;
 
 void
-pyaf::wrapper::wrap_controller(py::handle scope)
+pyspu::wrapper::wrap_controller(py::handle scope)
 {
     auto py_controller_class =
       py::class_<spu::module::Controller, spu::module::Module, spu::tools::Interface_reset>(scope, "Controller");
@@ -19,10 +19,10 @@ pyaf::wrapper::wrap_controller(py::handle scope)
 }
 
 void
-pyaf::wrapper::wrap_controllers(py::handle scope)
+pyspu::wrapper::wrap_controllers(py::handle scope)
 {
-    pyaf::wrapper::wrap_controller(scope);
-    pyaf::wrapper::wrap_controller_cyclic(scope);
-    pyaf::wrapper::wrap_controller_limit(scope);
-    pyaf::wrapper::wrap_controller_static(scope);
+    pyspu::wrapper::wrap_controller(scope);
+    pyspu::wrapper::wrap_controller_cyclic(scope);
+    pyspu::wrapper::wrap_controller_limit(scope);
+    pyspu::wrapper::wrap_controller_static(scope);
 }

@@ -6,13 +6,13 @@
 
 namespace py = pybind11;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
 void
 wrap_exceptions(py::module_& scope);
 }
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // WRAPPER_EXCEPTION_HPP__

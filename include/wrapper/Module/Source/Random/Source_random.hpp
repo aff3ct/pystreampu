@@ -6,12 +6,12 @@
 
 namespace py = pybind11;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
 void
 wrap_source_random(py::handle scope);
 }
-} // namespace pyaf
+} // namespace pyspu
 #endif // WRAPPER_SOURCE_RANDOM_HPP_

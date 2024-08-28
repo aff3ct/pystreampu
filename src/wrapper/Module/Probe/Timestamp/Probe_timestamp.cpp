@@ -4,7 +4,7 @@ namespace py = pybind11;
 using namespace py::literals;
 
 void
-pyaf::wrapper::wrap_probe_timestamp(py::handle scope)
+pyspu::wrapper::wrap_probe_timestamp(py::handle scope)
 {
     py::class_<spu::module::Probe_timestamp, spu::module::Probe<uint8_t>>(scope, "Probe_timestamp")
       .def(py::init<const uint64_t, const std::string&, spu::tools::Reporter_probe*>(),

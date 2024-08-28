@@ -30,7 +30,7 @@ class Module_Publicist : public Module
 } // namespace module
 } // namespace spu
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -47,6 +47,6 @@ class Wrapper_Module
     virtual ~Wrapper_Module() = default;
 };
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // BIND_MODULE_HPP_

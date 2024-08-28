@@ -46,12 +46,12 @@ class Slicer : public Module
 #include "wrapper/Module/Slicer/Slicer.hxx"
 #endif
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
 void
 wrap_slicer(py::handle scope);
 }
-} // namespace pyaf
+} // namespace pyspu
 #endif // Wrapper_Slicer_HPP_

@@ -22,12 +22,12 @@ using namespace spu::module;
             {                                                                                                          \
                 using TO = typename decltype(to)::type;                                                                \
                 std::string TO_str = spu::runtime::type_to_string[typeid(TO)];                                         \
-                pyaf::wrapper::internal_wrap_unaryop<TI, TO, spu::tools::uop_##name<TI, TO>>(                          \
+                pyspu::wrapper::internal_wrap_unaryop<TI, TO, spu::tools::uop_##name<TI, TO>>(                          \
                   scope, "Unaryop_" + std::string(#name) + "_" + TI_str + "_" + TO_str);                               \
             });                                                                                                        \
       });
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -44,15 +44,15 @@ internal_wrap_unaryop(py::handle scope, const std::string& name)
 void
 wrap_unaryop(py::handle scope)
 {
-    pyaf::wrapper::wrap_unaryop_abs(scope);
-    pyaf::wrapper::wrap_unaryop_not(scope);
-    // pyaf::wrapper::wrap_unaryop_not_abs(scope);
-    pyaf::wrapper::wrap_unaryop_sign(scope);
-    pyaf::wrapper::wrap_unaryop_neg(scope);
-    pyaf::wrapper::wrap_unaryop_cast(scope);
+    pyspu::wrapper::wrap_unaryop_abs(scope);
+    pyspu::wrapper::wrap_unaryop_not(scope);
+    // pyspu::wrapper::wrap_unaryop_not_abs(scope);
+    pyspu::wrapper::wrap_unaryop_sign(scope);
+    pyspu::wrapper::wrap_unaryop_neg(scope);
+    pyspu::wrapper::wrap_unaryop_cast(scope);
 }
 
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // WRAPPER_UNARYOP_HXX_

@@ -3,7 +3,7 @@
 
 using namespace spu::runtime;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {

@@ -6,7 +6,7 @@
 
 namespace py = pybind11;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -41,6 +41,6 @@ class py_Interface_waiting : public spu::tools::Interface_waiting
 void
 wrap_interface_waiting(py::module_& scope);
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // WRAPPER_INTERFACE_WAITING_HPP__

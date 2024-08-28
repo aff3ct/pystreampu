@@ -5,10 +5,10 @@
 namespace py = pybind11;
 using namespace py::literals;
 using namespace spu::module;
-using namespace pyaf::wrapper;
+using namespace pyspu::wrapper;
 
 void
-pyaf::wrapper::wrap_array(py::module_& scope)
+pyspu::wrapper::wrap_array(py::module_& scope)
 {
     using lTI = tl::type_list<ALL_DTYPES>;
     lTI::for_each(

@@ -10,7 +10,7 @@ using namespace py::literals;
 using namespace spu;
 using namespace spu::module;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -32,6 +32,6 @@ wrap_relayer_internal(py::handle scope, const std::string& name)
 }
 
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // WRAPPER_RELAYER_HXX_

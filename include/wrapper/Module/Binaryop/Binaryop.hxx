@@ -23,12 +23,12 @@ using namespace spu::module;
             {                                                                                                          \
                 using TO = typename decltype(to)::type;                                                                \
                 std::string TO_str = spu::runtime::type_to_string[typeid(TO)];                                         \
-                pyaf::wrapper::internal_wrap_binaryop<TI, TO, spu::tools::bop_##name<TI, TO>>(                         \
+                pyspu::wrapper::internal_wrap_binaryop<TI, TO, spu::tools::bop_##name<TI, TO>>(                         \
                   scope, "Binaryop_" + std::string(#name) + "_" + TI_str + "_" + TO_str);                              \
             });                                                                                                        \
       });
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -47,25 +47,25 @@ internal_wrap_binaryop(py::handle scope, const std::string& name)
 void
 wrap_binaryop(py::handle scope)
 {
-    pyaf::wrapper::wrap_binaryop_add(scope);
-    pyaf::wrapper::wrap_binaryop_sub(scope);
-    pyaf::wrapper::wrap_binaryop_mul(scope);
-    pyaf::wrapper::wrap_binaryop_div(scope);
-    pyaf::wrapper::wrap_binaryop_min(scope);
-    pyaf::wrapper::wrap_binaryop_max(scope);
-    pyaf::wrapper::wrap_binaryop_le(scope);
-    pyaf::wrapper::wrap_binaryop_lt(scope);
-    pyaf::wrapper::wrap_binaryop_ge(scope);
-    pyaf::wrapper::wrap_binaryop_gt(scope);
-    pyaf::wrapper::wrap_binaryop_ne(scope);
-    pyaf::wrapper::wrap_binaryop_eq(scope);
+    pyspu::wrapper::wrap_binaryop_add(scope);
+    pyspu::wrapper::wrap_binaryop_sub(scope);
+    pyspu::wrapper::wrap_binaryop_mul(scope);
+    pyspu::wrapper::wrap_binaryop_div(scope);
+    pyspu::wrapper::wrap_binaryop_min(scope);
+    pyspu::wrapper::wrap_binaryop_max(scope);
+    pyspu::wrapper::wrap_binaryop_le(scope);
+    pyspu::wrapper::wrap_binaryop_lt(scope);
+    pyspu::wrapper::wrap_binaryop_ge(scope);
+    pyspu::wrapper::wrap_binaryop_gt(scope);
+    pyspu::wrapper::wrap_binaryop_ne(scope);
+    pyspu::wrapper::wrap_binaryop_eq(scope);
 
-    pyaf::wrapper::wrap_binaryop_and(scope);
-    pyaf::wrapper::wrap_binaryop_or(scope);
-    pyaf::wrapper::wrap_binaryop_xor(scope);
+    pyspu::wrapper::wrap_binaryop_and(scope);
+    pyspu::wrapper::wrap_binaryop_or(scope);
+    pyspu::wrapper::wrap_binaryop_xor(scope);
 }
 
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // WRAPPER_BINARYOP_HXX_

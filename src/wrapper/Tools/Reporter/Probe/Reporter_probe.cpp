@@ -7,10 +7,10 @@
 
 namespace py = pybind11;
 using namespace py::literals;
-using namespace pyaf::wrapper;
+using namespace pyspu::wrapper;
 
 void
-pyaf::wrapper::wrap_reporter_probe(py::module_& scope)
+pyspu::wrapper::wrap_reporter_probe(py::module_& scope)
 {
     auto rep_probe_class =
       py::class_<spu::tools::Reporter_probe, spu::tools::Reporter, spu::tools::Interface_get_set_n_frames>(

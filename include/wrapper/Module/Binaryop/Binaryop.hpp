@@ -14,7 +14,7 @@ namespace py = pybind11;
 using namespace spu;
 using namespace spu::module;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -55,7 +55,7 @@ wrap_binaryop_or(py::handle scope);
 void
 wrap_binaryop_xor(py::handle scope);
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 #include "wrapper/Module/Binaryop/Binaryop.hxx"

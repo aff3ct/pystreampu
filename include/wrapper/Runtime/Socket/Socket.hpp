@@ -20,7 +20,7 @@ class Socket_Publicist : public Socket
 } // namespace runtime
 } // namespace spu
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -44,7 +44,7 @@ spu::runtime::Socket& other);
 void
 wrap_socket(py::handle scope);
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 /*#ifndef DOXYGEN_SHOULD_SKIP_THIS
 #include "Socket.hxx"

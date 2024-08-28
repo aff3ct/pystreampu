@@ -11,13 +11,13 @@ namespace py = pybind11;
 using namespace spu;
 using namespace spu::module;
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
 void
 wrap_adaptor_n_to_1(py::handle scope);
 }
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // WRAPPER_ADAPTOR_N_TO_1_HPP_

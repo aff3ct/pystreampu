@@ -16,7 +16,7 @@ namespace py = pybind11;
 using namespace py::literals;
 
 void
-pyaf::wrapper::wrap_pipeline(py::handle scope)
+pyspu::wrapper::wrap_pipeline(py::handle scope)
 {
     auto pipeline_class =
       py::class_<spu::runtime::Pipeline, spu::tools::Interface_get_set_n_frames>(scope, "_Pipeline");

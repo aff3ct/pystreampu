@@ -5,10 +5,10 @@ using namespace py::literals;
 using namespace spu;
 using namespace spu::module;
 using namespace spu::tools;
-using namespace pyaf::wrapper;
+using namespace pyspu::wrapper;
 
 void
-pyaf::wrapper::wrap_slicer(py::handle scope)
+pyspu::wrapper::wrap_slicer(py::handle scope)
 {
     auto slicer_class = py::class_<spu::module::Slicer, spu::module::Module>(scope, "Slicer");
     slicer_class.def(py::init<spu::runtime::Socket&, const std::vector<int>&>(),
@@ -68,7 +68,7 @@ Slicer ::task_init(spu::runtime::Socket& sck)
     {
         std::stringstream message;
         message << "Unhandled socket type '" << sck.get_datatype_string() << "'.";
-        throw std::runtime_error(message.str());
+        throw spu::tools::unimplemented_error(message.str());
     }
 }
 

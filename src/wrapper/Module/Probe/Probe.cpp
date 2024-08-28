@@ -14,7 +14,7 @@ namespace py = pybind11;
 using namespace py::literals;
 
 void
-pyaf::wrapper::wrap_probe(py::handle scope)
+pyspu::wrapper::wrap_probe(py::handle scope)
 {
     // AProbe has a protected destructor
     auto aprobe_class = py::class_<spu::module::AProbe,
@@ -28,7 +28,7 @@ pyaf::wrapper::wrap_probe(py::handle scope)
       {
           using T = typename decltype(t)::type;
           std::string T_str = spu::runtime::type_to_string[typeid(T)];
-          auto probe_class = py::class_<spu::module::Probe<T>, spu::module::AProbe, pyaf::wrapper::py_Probe<T>>(
+          auto probe_class = py::class_<spu::module::Probe<T>, spu::module::AProbe, pyspu::wrapper::py_Probe<T>>(
             scope, std::string("Probe_" + T_str).c_str());
           // probe_class.def(py::init<const int, const std::string &>(), "size"_a,
           // "col_name"_a, py::return_value_policy::take_ownership);
@@ -50,9 +50,9 @@ pyaf::wrapper::wrap_probe(py::handle scope)
                  py::return_value_policy::take_ownership);
       });
 
-    pyaf::wrapper::wrap_probe_latency(scope);
-    pyaf::wrapper::wrap_probe_occurrence(scope);
-    pyaf::wrapper::wrap_probe_throughput(scope);
-    pyaf::wrapper::wrap_probe_time(scope);
-    pyaf::wrapper::wrap_probe_timestamp(scope);
+    pyspu::wrapper::wrap_probe_latency(scope);
+    pyspu::wrapper::wrap_probe_occurrence(scope);
+    pyspu::wrapper::wrap_probe_throughput(scope);
+    pyspu::wrapper::wrap_probe_time(scope);
+    pyspu::wrapper::wrap_probe_timestamp(scope);
 }

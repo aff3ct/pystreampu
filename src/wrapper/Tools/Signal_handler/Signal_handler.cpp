@@ -6,10 +6,10 @@
 
 namespace py = pybind11;
 using namespace py::literals;
-using namespace pyaf::wrapper;
+using namespace pyspu::wrapper;
 
 void
-pyaf::wrapper::wrap_signal_handler(py::module_& scope)
+pyspu::wrapper::wrap_signal_handler(py::module_& scope)
 {
     auto signal_handler_class = py::class_<spu::tools::Signal_handler>(scope, "Signal_handler");
     signal_handler_class.def_static("is_sigint", &spu::tools::Signal_handler::is_sigint);

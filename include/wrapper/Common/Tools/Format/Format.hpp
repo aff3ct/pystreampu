@@ -1,7 +1,7 @@
 #include <iostream>
 #include <pybind11/pybind11.h>
 
-namespace pyaf
+namespace pyspu
 {
 enum class fmtflags
 {
@@ -36,24 +36,24 @@ inline void
 wrap_fmtflags(py::module_& m)
 {
     py::enum_<fmtflags>(m, "FormatFlags", py::arithmetic())
-      .value("dec", pyaf::fmtflags::dec)
-      .value("oct", pyaf::fmtflags::oct)
-      .value("hex", pyaf::fmtflags::hex)
-      .value("basefield", pyaf::fmtflags::basefield)
-      .value("left", pyaf::fmtflags::left)
-      .value("right", pyaf::fmtflags::right)
-      .value("internal", pyaf::fmtflags::internal)
-      .value("adjustfield", pyaf::fmtflags::adjustfield)
-      .value("scientific", pyaf::fmtflags::scientific)
-      .value("fixed", pyaf::fmtflags::fixed)
-      .value("floatfield", pyaf::fmtflags::floatfield)
-      .value("boolalpha", pyaf::fmtflags::boolalpha)
-      .value("showbase", pyaf::fmtflags::showbase)
-      .value("showpoint", pyaf::fmtflags::showpoint)
-      .value("showpos", pyaf::fmtflags::showpos)
-      .value("skipws", pyaf::fmtflags::skipws)
-      .value("unitbuf", pyaf::fmtflags::unitbuf)
-      .value("uppercase", pyaf::fmtflags::uppercase);
+      .value("dec", pyspu::fmtflags::dec)
+      .value("oct", pyspu::fmtflags::oct)
+      .value("hex", pyspu::fmtflags::hex)
+      .value("basefield", pyspu::fmtflags::basefield)
+      .value("left", pyspu::fmtflags::left)
+      .value("right", pyspu::fmtflags::right)
+      .value("internal", pyspu::fmtflags::internal)
+      .value("adjustfield", pyspu::fmtflags::adjustfield)
+      .value("scientific", pyspu::fmtflags::scientific)
+      .value("fixed", pyspu::fmtflags::fixed)
+      .value("floatfield", pyspu::fmtflags::floatfield)
+      .value("boolalpha", pyspu::fmtflags::boolalpha)
+      .value("showbase", pyspu::fmtflags::showbase)
+      .value("showpoint", pyspu::fmtflags::showpoint)
+      .value("showpos", pyspu::fmtflags::showpos)
+      .value("skipws", pyspu::fmtflags::skipws)
+      .value("unitbuf", pyspu::fmtflags::unitbuf)
+      .value("uppercase", pyspu::fmtflags::uppercase);
 }
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu

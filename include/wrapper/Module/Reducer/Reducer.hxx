@@ -23,12 +23,12 @@ using namespace spu::module;
             {                                                                                                          \
                 using TO = typename decltype(to)::type;                                                                \
                 std::string TO_str = spu::runtime::type_to_string[typeid(TO)];                                         \
-                pyaf::wrapper::internal_wrap_reducer<TI, TO, spu::tools::bop_##name<TI, TO>>(                          \
+                pyspu::wrapper::internal_wrap_reducer<TI, TO, spu::tools::bop_##name<TI, TO>>(                          \
                   scope, "Reducer_" + std::string(#name) + "_" + TI_str + "_" + TO_str);                               \
             });                                                                                                        \
       });
 
-namespace pyaf
+namespace pyspu
 {
 namespace wrapper
 {
@@ -45,25 +45,25 @@ internal_wrap_reducer(py::handle scope, const std::string& name)
 void
 wrap_reducer(py::handle scope)
 {
-    pyaf::wrapper::wrap_reducer_add(scope);
-    pyaf::wrapper::wrap_reducer_sub(scope);
-    pyaf::wrapper::wrap_reducer_mul(scope);
-    pyaf::wrapper::wrap_reducer_div(scope);
-    pyaf::wrapper::wrap_reducer_min(scope);
-    pyaf::wrapper::wrap_reducer_max(scope);
-    pyaf::wrapper::wrap_reducer_le(scope);
-    pyaf::wrapper::wrap_reducer_lt(scope);
-    pyaf::wrapper::wrap_reducer_ge(scope);
-    pyaf::wrapper::wrap_reducer_gt(scope);
-    pyaf::wrapper::wrap_reducer_ne(scope);
-    pyaf::wrapper::wrap_reducer_eq(scope);
+    pyspu::wrapper::wrap_reducer_add(scope);
+    pyspu::wrapper::wrap_reducer_sub(scope);
+    pyspu::wrapper::wrap_reducer_mul(scope);
+    pyspu::wrapper::wrap_reducer_div(scope);
+    pyspu::wrapper::wrap_reducer_min(scope);
+    pyspu::wrapper::wrap_reducer_max(scope);
+    pyspu::wrapper::wrap_reducer_le(scope);
+    pyspu::wrapper::wrap_reducer_lt(scope);
+    pyspu::wrapper::wrap_reducer_ge(scope);
+    pyspu::wrapper::wrap_reducer_gt(scope);
+    pyspu::wrapper::wrap_reducer_ne(scope);
+    pyspu::wrapper::wrap_reducer_eq(scope);
 
-    pyaf::wrapper::wrap_reducer_and(scope);
-    pyaf::wrapper::wrap_reducer_or(scope);
-    pyaf::wrapper::wrap_reducer_xor(scope);
+    pyspu::wrapper::wrap_reducer_and(scope);
+    pyspu::wrapper::wrap_reducer_or(scope);
+    pyspu::wrapper::wrap_reducer_xor(scope);
 }
 
 } // namespace wrapper
-} // namespace pyaf
+} // namespace pyspu
 
 #endif // WRAPPER_REDUCER_HXX_

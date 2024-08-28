@@ -12,7 +12,7 @@
 
 namespace py = pybind11;
 using namespace py::literals;
-using namespace pyaf::wrapper;
+using namespace pyspu::wrapper;
 using namespace spu::runtime;
 
 std::map<std::type_index, std::string> type_map = { { typeid(int8_t), py::format_descriptor<int8_t>::format() },
@@ -27,7 +27,7 @@ std::map<std::type_index, std::string> type_map = { { typeid(int8_t), py::format
                                                     { typeid(double), py::format_descriptor<double>::format() } };
 
 void
-pyaf::wrapper::wrap_socket(py::handle scope)
+pyspu::wrapper::wrap_socket(py::handle scope)
 {
     py::class_<Socket, spu::tools::Interface_reset, spu::runtime::Socket_Publicist> py_socket(
       scope, "Socket", py::buffer_protocol(), py::dynamic_attr());
@@ -88,7 +88,7 @@ pyaf::wrapper::wrap_socket(py::handle scope)
                                     "Sockets to wich the socket is bound (for output sockets only).");
     py_socket.def_property_readonly(
       "dtype",
-      [](const spu::runtime::Socket& self) { return pyaf::dtype::get(self.get_datatype_string()); },
+      [](const spu::runtime::Socket& self) { return pyspu::dtype::get(self.get_datatype_string()); },
       "Data type.");
     py_socket.def_property_readonly("bound_socket",
                                     static_cast<Socket& (Socket::*)()>(&spu::runtime::Socket::get_bound_socket),
@@ -120,41 +120,41 @@ pyaf::wrapper::wrap_socket(py::handle scope)
     py_socket.def("__bool__",
                   [](const spu::runtime::Socket& sckt)
                   {
-                      size_t n_frames = sckt.get_task().get_module().get_n_frames();
-                      size_t n = sckt.get_n_elmts() / n_frames;
-                      if (n > n_frames)
-                      {
-                          std::stringstream message;
-                          message << "The truth value of an array with more than one element is "
-                                     "ambiguous.";
-                          throw std::runtime_error(message.str());
-                      }
-                      if (sckt.get_datatype() == typeid(int8_t))
-                          return (bool)(static_cast<int8_t*>(sckt.get_dataptr())[0]);
-                      else if (sckt.get_datatype() == typeid(int16_t))
-                          return (bool)(static_cast<int16_t*>(sckt.get_dataptr())[0]);
-                      else if (sckt.get_datatype() == typeid(int32_t))
-                          return (bool)(static_cast<int32_t*>(sckt.get_dataptr())[0]);
-                      else if (sckt.get_datatype() == typeid(int64_t))
-                          return (bool)(static_cast<int64_t*>(sckt.get_dataptr())[0]);
-                      else if (sckt.get_datatype() == typeid(uint8_t))
-                          return (bool)(static_cast<uint8_t*>(sckt.get_dataptr())[0]);
-                      else if (sckt.get_datatype() == typeid(uint16_t))
-                          return (bool)(static_cast<uint16_t*>(sckt.get_dataptr())[0]);
-                      else if (sckt.get_datatype() == typeid(uint32_t))
-                          return (bool)(static_cast<uint32_t*>(sckt.get_dataptr())[0]);
-                      else if (sckt.get_datatype() == typeid(uint64_t))
-                          return (bool)(static_cast<uint64_t*>(sckt.get_dataptr())[0]);
-                      else if (sckt.get_datatype() == typeid(float))
-                          return (bool)(static_cast<float*>(sckt.get_dataptr())[0]);
-                      else if (sckt.get_datatype() == typeid(double))
-                          return (bool)(static_cast<double*>(sckt.get_dataptr())[0]);
-                      else
-                      {
-                          std::stringstream message;
-                          message << "Unknown socket type '" << sckt.get_datatype_string() << "'.";
-                          throw std::runtime_error(message.str());
-                      }
+                        size_t n_frames = sckt.get_task().get_module().get_n_frames();
+                        size_t n = sckt.get_n_elmts() / n_frames;
+                        if (n > n_frames)
+                        {
+                            std::stringstream message;
+                            message << "The truth value of an array with more than one element is "
+                                        "ambiguous.";
+                            throw spu::tools::runtime_error(message.str());
+                        }
+                        if (sckt.get_datatype() == typeid(int8_t))
+                            return (bool)(static_cast<int8_t*>(sckt.get_dataptr())[0]);
+                        else if (sckt.get_datatype() == typeid(int16_t))
+                            return (bool)(static_cast<int16_t*>(sckt.get_dataptr())[0]);
+                        else if (sckt.get_datatype() == typeid(int32_t))
+                            return (bool)(static_cast<int32_t*>(sckt.get_dataptr())[0]);
+                        else if (sckt.get_datatype() == typeid(int64_t))
+                            return (bool)(static_cast<int64_t*>(sckt.get_dataptr())[0]);
+                        else if (sckt.get_datatype() == typeid(uint8_t))
+                            return (bool)(static_cast<uint8_t*>(sckt.get_dataptr())[0]);
+                        else if (sckt.get_datatype() == typeid(uint16_t))
+                            return (bool)(static_cast<uint16_t*>(sckt.get_dataptr())[0]);
+                        else if (sckt.get_datatype() == typeid(uint32_t))
+                            return (bool)(static_cast<uint32_t*>(sckt.get_dataptr())[0]);
+                        else if (sckt.get_datatype() == typeid(uint64_t))
+                            return (bool)(static_cast<uint64_t*>(sckt.get_dataptr())[0]);
+                        else if (sckt.get_datatype() == typeid(float))
+                            return (bool)(static_cast<float*>(sckt.get_dataptr())[0]);
+                        else if (sckt.get_datatype() == typeid(double))
+                            return (bool)(static_cast<double*>(sckt.get_dataptr())[0]);
+                        else
+                        {
+                        std::stringstream message;
+                        message << "Unknown socket type '" << sckt.get_datatype_string() << "'.";
+                        throw spu::tools::unimplemented_error(message.str());
+                        }
                   });
 
     py_socket.def(
@@ -181,7 +181,7 @@ pyaf::wrapper::wrap_socket(py::handle scope)
                   message << "The shape of the array must match the socket one.";
                   message << "Socket shape: " << n_row << " x " << n_col << ".";
                   message << "Array shape: " << buffer.shape[0] << " x " << buffer.shape[1] << ".\n";
-                  throw std::runtime_error(message.str());
+                  throw spu::tools::runtime_error(message.str());
               }
           }
           else if (n_row == 1 && buffer.ndim == 1)
@@ -192,7 +192,7 @@ pyaf::wrapper::wrap_socket(py::handle scope)
                   message << "The shape of the array must match the socket one.";
                   message << "Socket shape: " << 1 << " x " << n_col << ".";
                   message << "Array shape: " << 1 << " x " << buffer.shape[0] << ".\n";
-                  throw std::runtime_error(message.str());
+                  throw spu::tools::runtime_error(message.str());
               }
           }
 
@@ -203,7 +203,7 @@ pyaf::wrapper::wrap_socket(py::handle scope)
               message << "The dtype of the array must match the socket one.\n";
               message << "Socket dtype: " << py_self.dtype().attr("name").cast<std::string>() << ".\n";
               message << "Array dtype: " << arr.dtype().attr("name").cast<std::string>() << ".\n";
-              throw std::runtime_error(message.str());
+              throw spu::tools::runtime_error(message.str());
           }
 
           self.bind(buffer.ptr);

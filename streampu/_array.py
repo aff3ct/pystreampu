@@ -10,7 +10,7 @@ from . import _ext
 from ._typing import SocketLike
 
 
-def array(data: SocketLike, n_frames: int = None, dtype: _ext.dtype = None) -> _ext.core.Socket:
+def array(data: SocketLike, n_frames: int = 1, dtype: _ext.dtype = None) -> _ext.core.Socket:
     """Build a socket from data.
 
     Args:
@@ -40,7 +40,10 @@ def array(data: SocketLike, n_frames: int = None, dtype: _ext.dtype = None) -> _
             data = [data]
         if not isinstance(data[0], list):
             data = [data] * n_frames
-        data = np.array(data, dtype=dtype.numpy)
+        if dtype:
+            data = np.array(data, dtype=dtype.numpy)
+        else:
+            data = np.array(data)
 
     attr_name = f"Array_{str(data.dtype)}"
     return getattr(_ext.arr, attr_name)(data).read.data

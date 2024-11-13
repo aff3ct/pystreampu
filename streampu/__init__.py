@@ -75,7 +75,6 @@ from ._initializer import initializer
 # Proxies for min and max
 from ._minmax import max, min
 from ._module import Module
-from ._sequence import Sequence
 from ._pipeline import Pipeline
 from ._probe import (
     AProbe,
@@ -88,6 +87,7 @@ from ._probe import (
 )
 from ._red import RType, all, any, prod, red, sum
 from ._relayer import relayer
+from ._sequence import Sequence
 from ._sink import sink_no, sink_user_binary
 
 # Core

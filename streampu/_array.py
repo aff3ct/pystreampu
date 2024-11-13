@@ -71,10 +71,7 @@ def zeros(n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32)
     See Also:
         :meth:`streampu.array`, :meth:`streampu.ones`, :meth:`streampu.arange`
     """
-    mdl = getattr(_ext.arr, f"Array_{dtype.name}")(n_elmts, 0)
-    if n_frames > 1:
-        mdl.n_frames = n_frames
-    return mdl.get()
+    return array([0] * n_elmts, n_frames, dtype)
 
 
 def ones(n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32) -> _ext.core.Socket:
@@ -99,10 +96,7 @@ def ones(n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32) 
     See Also:
         :meth:`streampu.array`, :meth:`streampu.zeros`, :meth:`streampu.arange`
     """
-    mdl = getattr(_ext.arr, f"Array_{dtype.name}")(n_elmts, 1)
-    if n_frames > 1:
-        mdl.n_frames = n_frames
-    return mdl.get()
+    return array([1] * n_elmts, n_frames, dtype)
 
 
 def arange(
@@ -134,7 +128,7 @@ def arange(
         :meth:`streampu.array`, :meth:`streampu.zeros`, :meth:`streampu.ones`
     """
     arr = np.arange(start, stop, step, dtype=np.dtype(dtype.name))
-    return array(arr)
+    return array(arr, n_frames, dtype)
 
 
 __all__ = ["array", "zeros", "ones", "arange"]

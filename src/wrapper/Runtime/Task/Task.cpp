@@ -140,7 +140,9 @@ pyspu::wrapper::wrap_task(py::handle scope)
       "t_out"_a,
       "priority"_a = -1);
 
-    // py_task.def("is_bound"           , &spu::runtime::Task::is_bound );
+    py_task.def("is_bound",[](spu::runtime::Task& self){
+      return self.fake_input_sockets.size() > 0;
+    });
     py_task.def("set_debug_hex", &spu::runtime::Task::set_debug_hex, "debug_hex"_a);
     py_task.def("set_debug_limit", &spu::runtime::Task::set_debug_limit, "limit"_a);
     py_task.def("set_debug_precision", &spu::runtime::Task::set_debug_precision, "prec"_a);

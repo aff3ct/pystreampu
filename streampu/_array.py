@@ -10,7 +10,7 @@ from . import _ext
 from ._typing import SocketLike
 
 
-def array(data: SocketLike, n_frames: int = None, dtype: _ext.dtype = None) -> _ext.core.Socket:
+def array(data: SocketLike, n_frames: int = 1, dtype: _ext.dtype = None) -> _ext.core.Socket:
     """Build a socket from data.
 
     Args:
@@ -40,7 +40,10 @@ def array(data: SocketLike, n_frames: int = None, dtype: _ext.dtype = None) -> _
             data = [data]
         if not isinstance(data[0], list):
             data = [data] * n_frames
-        data = np.array(data, dtype=dtype.numpy)
+        if dtype:
+            data = np.array(data, dtype=dtype.numpy)
+        else:
+            data = np.array(data)
 
     attr_name = f"Array_{str(data.dtype)}"
     return getattr(_ext.arr, attr_name)(data).read.data
@@ -68,10 +71,7 @@ def zeros(n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32)
     See Also:
         :meth:`streampu.array`, :meth:`streampu.ones`, :meth:`streampu.arange`
     """
-    mdl = getattr(_ext.arr, f"Array_{dtype.name}")(n_elmts, 0)
-    if n_frames > 1:
-        mdl.n_frames = n_frames
-    return mdl.get()
+    return array([0] * n_elmts, n_frames, dtype)
 
 
 def ones(n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32) -> _ext.core.Socket:
@@ -96,10 +96,7 @@ def ones(n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32) 
     See Also:
         :meth:`streampu.array`, :meth:`streampu.zeros`, :meth:`streampu.arange`
     """
-    mdl = getattr(_ext.arr, f"Array_{dtype.name}")(n_elmts, 1)
-    if n_frames > 1:
-        mdl.n_frames = n_frames
-    return mdl.get()
+    return array([1] * n_elmts, n_frames, dtype)
 
 
 def arange(
@@ -131,7 +128,7 @@ def arange(
         :meth:`streampu.array`, :meth:`streampu.zeros`, :meth:`streampu.ones`
     """
     arr = np.arange(start, stop, step, dtype=np.dtype(dtype.name))
-    return array(arr)
+    return array(arr, n_frames, dtype)
 
 
 __all__ = ["array", "zeros", "ones", "arange"]

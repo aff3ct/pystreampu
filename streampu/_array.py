@@ -6,6 +6,8 @@ from __future__ import annotations
 
 import numpy as np
 
+from streampu import _mdl_stack
+
 from . import _ext
 from ._typing import SocketLike
 
@@ -46,7 +48,9 @@ def array(data: SocketLike, n_frames: int = 1, dtype: _ext.dtype = None) -> _ext
             data = np.array(data)
 
     attr_name = f"Array_{str(data.dtype)}"
-    return getattr(_ext.arr, attr_name)(data).read.data
+    new_array = getattr(_ext.arr, attr_name)(data)
+    _mdl_stack.append(new_array)
+    return new_array.read.data
 
 
 def zeros(n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32) -> _ext.core.Socket:

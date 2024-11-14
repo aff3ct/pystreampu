@@ -8,6 +8,7 @@ Elementwise unary operations are such that `z[i] = uop(x[i])`.
 from enum import Enum, auto
 
 import streampu._ext
+from streampu import _mdl_stack
 from streampu._ext import dtype, int8
 from streampu._ext.core import Module, Socket
 
@@ -75,6 +76,7 @@ def uop(uop_type: UType, sckt: Socket, output_dtype: dtype = None) -> Socket:
     n_elmts_frame = sckt.n_elmts // n_frames
     mdl = _uop_factory(n_elmts_frame, str(uop_type), input_dtype, output_dtype)
     mdl.n_frames = n_frames
+    _mdl_stack.append(mdl)
     return mdl.perform(sckt)
 
 

@@ -6,6 +6,7 @@ from __future__ import annotations
 from typing import Union
 
 import numpy as np
+from streampu import _mdl_stack
 
 from streampu._ext.core import Socket
 from streampu._ext.sli import Slicer
@@ -72,7 +73,7 @@ def _repr(self: Socket) -> str:
 Socket.__repr__ = _repr
 
 
-def _bind_(self: Socket, s_out: SocketLike, priority: int = 1, raw_data=False) -> None:
+def _bind_(self: Socket, s_out: SocketLike, priority: int = -1, raw_data=False) -> None:
     """Binds self to s_out.
 
     If s_out is not a `Socket`, s_out is converted to a `Socket` first.
@@ -89,16 +90,6 @@ def _bind_(self: Socket, s_out: SocketLike, priority: int = 1, raw_data=False) -
 
     if not isinstance(s_out, Socket):
         s_out = array(s_out)
-    else:
-        while hasattr(s_out, "_mrv"):
-            s_out = s_out._mrv
-
-    self._tag = s_out
-
-    if self.direction == Socket.directions.FWD:
-        # If slf is a forward socket,
-        # then it will be the most recent value of s_out
-        s_out._mrv = self
 
     self._bind(s_out, priority)
 
@@ -129,9 +120,7 @@ def _setitem(self: Socket, key: Union[int, slice], data: SocketLike) -> Socket:
     else:
         slc.write_one(self, data)
 
-    if not hasattr(self, "_slicers"):
-        self._slicers = []
-    self._slicers.append(slc)
+    _mdl_stack.append(slc)
 
 
 Socket.__setitem__ = _setitem
@@ -158,9 +147,7 @@ def _getitem(self: Socket, key: Union[slice, int]) -> Socket:
 
     slc.n_frames = self.task.module.n_frames
 
-    if not hasattr(self, "_slicers"):
-        self._slicers = []
-    self._slicers.append(slc)
+    _mdl_stack.append(slc)
 
     return slc.read(self)
 

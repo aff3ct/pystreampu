@@ -81,18 +81,17 @@ pyspu::wrapper::wrap_socket(py::handle scope)
                             self.get_type() == socket_t::SIN),
             buffer_handle);
       });
+
     py_socket.def_property_readonly("task", &spu::runtime::Socket::get_task, "Task owning the socket.");
     py_socket.def_property_readonly("n_elmts", &spu::runtime::Socket::get_n_elmts, "Number of elements per `n_frames`");
-    py_socket.def_property_readonly("bound_sockets",
-                                    &spu::runtime::Socket::get_bound_sockets,
-                                    "Sockets to wich the socket is bound (for output sockets only).");
+    py_socket.def("get_bound_sockets", &spu::runtime::Socket::get_bound_sockets, "Sockets to wich the socket is bound (for output sockets only).");
     py_socket.def_property_readonly(
       "dtype",
       [](const spu::runtime::Socket& self) { return pyspu::dtype::get(self.get_datatype_string()); },
       "Data type.");
-    py_socket.def_property_readonly("bound_socket",
-                                    static_cast<Socket& (Socket::*)()>(&spu::runtime::Socket::get_bound_socket),
-                                    "Socket bound to self (for input sockets only).");
+    py_socket.def("get_bound_socket",
+    [](const spu::runtime::Socket& self) { return &self.get_bound_socket(); },
+    "Socket bound to self (for input sockets only).", py::return_value_policy::reference);
 
     py_socket.def(
       "has_data",

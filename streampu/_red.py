@@ -2,6 +2,7 @@
 from enum import Enum, auto
 
 import streampu._ext
+from streampu import _mdl_stack
 from streampu._ext import dtype, int8
 from streampu._ext.core import Module, Socket
 
@@ -85,7 +86,7 @@ def red(red_type: RType, sckt: Socket, output_dtype: dtype = None) -> Socket:
 
     the_red = _red_factory(n_in, red_name, input_dtype, output_dtype)
     the_red.n_frames = n_frames
-
+    _mdl_stack.append(the_red)
     return the_red.reduce(sckt)
 
 

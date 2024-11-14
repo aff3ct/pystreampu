@@ -20,13 +20,15 @@ def _get_firsts(s: Socket):
     def visit(s: Socket, visited: List[Socket]):
         tsk = s.task
         visited.append(tsk)
-
-        if len(tsk.inputs) == 0 and len(tsk.forwards) == 0 and not tsk.is_bound():
+        tsk_forwards = tsk.forwards
+        if len(tsk.inputs) == 0 and len(tsk_forwards) == 0 and not tsk.is_bound():
             return [tsk]
 
         out = []
-        lbnd = _unique([si.bound_socket for si in tsk.inputs])
-        lbnd += _unique([si.bound_socket for si in tsk.forwards])
+        lbnd = [si.get_bound_socket() for si in tsk.inputs]
+        lbnd_fwd = [si.get_bound_socket() for si in tsk_forwards]
+        lbnd += lbnd_fwd
+        lbnd = _unique(lbnd)
         for b in lbnd:
             try:
                 if b.task not in visited:
@@ -107,8 +109,6 @@ class Sequence(_Sequence):
         if not isinstance(sockets, list):
             sockets = [sockets]
         for s_itm in sockets:
-            while hasattr(s_itm, "_mrv"):
-                s_itm = s_itm._mrv
             local_firsts = _get_firsts(s_itm)
             for first in local_firsts:
                 if first not in firsts:

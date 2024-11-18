@@ -1,8 +1,8 @@
 #ifndef WRAPPER_REDUCER_HPP_
 #define WRAPPER_REDUCER_HPP_
 
-#include <pybind11/iostream.h>
 #include <pybind11/pybind11.h>
+#include <pybind11/iostream.h>
 #include <pybind11/stl.h>
 
 #include <streampu.hpp>

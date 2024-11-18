@@ -1,8 +1,8 @@
 #ifndef WRAPPER_BINARYOP_HPP_
 #define WRAPPER_BINARYOP_HPP_
 
-#include <pybind11/iostream.h>
 #include <pybind11/pybind11.h>
+#include <pybind11/iostream.h>
 #include <pybind11/stl.h>
 
 #include <streampu.hpp>

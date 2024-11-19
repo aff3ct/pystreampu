@@ -1,8 +1,9 @@
 #include "wrapper/Tools/Terminal/Terminal.hpp"
 
-#include "wrapper/Common/pystreambuf.h"
-#include <pybind11/chrono.h>
 #include <pybind11/stl.h>
+#include <pybind11/chrono.h>
+
+#include "wrapper/Common/pystreambuf.h"
 
 namespace py = pybind11;
 using namespace py::literals;

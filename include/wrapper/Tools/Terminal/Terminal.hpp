@@ -2,6 +2,7 @@
 #define WRAPPER_INTERFACE_TERMINAL_HPP__
 
 #include <pybind11/pybind11.h>
+
 #include <streampu.hpp>
 
 namespace py = pybind11;

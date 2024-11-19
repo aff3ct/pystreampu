@@ -4,9 +4,6 @@
 #include <string>
 #include <typeinfo>
 
-#include <pybind11/numpy.h>
-#include <pybind11/stl.h>
-
 #include "wrapper/Common/Tools/Type/Type.hpp"
 #include "wrapper/Runtime/Socket/Socket.hpp"
 

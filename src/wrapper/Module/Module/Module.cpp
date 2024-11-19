@@ -1,7 +1,7 @@
-#include <pybind11/functional.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/stl.h>
+#include <pybind11/numpy.h>
+#include <pybind11/iostream.h>
+#include <pybind11/functional.h>
 
 #include <functional>
 #include <iostream>

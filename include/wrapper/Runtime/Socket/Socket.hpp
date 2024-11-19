@@ -2,6 +2,9 @@
 #define BIND_SOCKET_HPP_
 
 #include <pybind11/pybind11.h>
+#include <pybind11/numpy.h>
+#include <pybind11/stl.h>
+
 #include <streampu.hpp>
 
 #include "wrapper/Common/Wrapper_py/Wrapper_py.hpp"

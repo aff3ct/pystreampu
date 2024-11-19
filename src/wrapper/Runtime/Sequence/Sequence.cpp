@@ -1,10 +1,11 @@
 #include "wrapper/Runtime/Sequence/Sequence.hpp"
 
-#include "wrapper/Common/pystreambuf.h"
 
-#include <pybind11/functional.h>
-#include <pybind11/iostream.h>
 #include <pybind11/stl.h>
+#include <pybind11/iostream.h>
+#include <pybind11/functional.h>
+
+#include "wrapper/Common/pystreambuf.h"
 
 #include <atomic>
 #include <chrono>

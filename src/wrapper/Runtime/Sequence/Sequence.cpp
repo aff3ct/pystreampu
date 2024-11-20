@@ -1,11 +1,5 @@
 #include "wrapper/Runtime/Sequence/Sequence.hpp"
-
-
-#include <pybind11/stl.h>
-#include <pybind11/iostream.h>
-#include <pybind11/functional.h>
-
-#include "wrapper/Common/pystreambuf.h"
+#include "wrapper/Common/pybind11_common.h"
 
 #include <atomic>
 #include <chrono>
@@ -110,19 +104,19 @@ pyspu::wrapper::wrap_sequence(py::handle scope)
                            std::atomic<size_t> counter(0);
                            self.exec([&counter, n_exec]() { return ++counter >= n_exec; });
                        });
-
+    auto sys = py::module::import("sys");
     sequence_class.def("exec",
-                       [](spu::runtime::Sequence& self, spu::tools::Terminal_dump& terminal, std::ostream& stats_file)
+                       [](spu::runtime::Sequence& self, spu::tools::Terminal_dump& terminal, std::ostream& stream)
                        {
                            py::gil_scoped_release release{};
                            self.exec(
                              [&]() -> bool
                              {
                                  py::gil_scoped_acquire gil;
-                                 terminal.temp_report(stats_file);
+                                 terminal.temp_report(stream);
                                  return false;
                              });
-                       });
+                       }, "terminal"_a, "stream"_a = sys.attr("stdout"));
 
     sequence_class.def("exec_seq",
                        &spu::runtime::Sequence::exec_seq,
@@ -145,15 +139,13 @@ pyspu::wrapper::wrap_sequence(py::handle scope)
 
     sequence_class.def(
       "show_stats",
-      [](spu::runtime::Sequence& self, const bool ordered = false, const bool display_thr = true)
+      [](spu::runtime::Sequence& self, const bool ordered, const bool display_thr, std::ostream& stream)
       {
-          py::scoped_ostream_redirect stream(std::cout,                                // std::ostream&
-                                             py::module_::import("sys").attr("stdout") // Python output
-          );
-          spu::tools::Stats::show(self.get_modules_per_types(), ordered, display_thr);
+          spu::tools::Stats::show(self.get_modules_per_types(), ordered, display_thr, stream);
       },
       "ordered"_a = false,
-      "display_thr"_a = true);
+      "display_thr"_a = true,
+      "stream"_a = sys.attr("stdout"));
 
     sequence_class.def(
       "get_modules_per_threads", &spu::runtime::Sequence::get_modules_per_threads, py::return_value_policy::reference);

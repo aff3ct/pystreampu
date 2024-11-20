@@ -1,10 +1,7 @@
 #ifndef Wrapper_Array_HPP_
 #define Wrapper_Array_HPP_
 
-#include <pybind11/pybind11.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
-#include <pybind11/stl.h>
+#include "wrapper/Common/pybind11_common.h"
 
 #include "wrapper/Common/Tools/Type/Type.hpp"
 #include "wrapper/Common/Tools/type_functions.h"

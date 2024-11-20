@@ -1,6 +1,5 @@
 #include "wrapper/Module/Array/Array.hpp"
 
-#include "wrapper/Module/Array/Array.hpp"
 #include <string>
 namespace py = pybind11;
 using namespace py::literals;

@@ -1,10 +1,7 @@
 #ifndef Wrapper_Range_HPP_
 #define Wrapper_Range_HPP_
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
+#include "wrapper/Common/pybind11_common.h"
 
 #include "wrapper/Common/Tools/Type/Type.hpp"
 #include <streampu.hpp>

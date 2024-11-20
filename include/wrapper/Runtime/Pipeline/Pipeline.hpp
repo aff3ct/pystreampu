@@ -1,7 +1,7 @@
 #ifndef WRAPPER_PIPELINE_HPP_
 #define WRAPPER_PIPELINE_HPP_
 
-#include <pybind11/pybind11.h>
+#include "wrapper/Common/pybind11_common.h"
 namespace py = pybind11;
 
 namespace pyspu

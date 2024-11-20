@@ -1,11 +1,7 @@
 #include "wrapper/Runtime/Pipeline/Pipeline.hpp"
 
 
-#include <pybind11/stl.h>
-#include <pybind11/functional.h>
-#include <pybind11/iostream.h>
-
-#include "wrapper/Common/pystreambuf.h"
+#include "wrapper/Common/pybind11_common.h"
 
 #include <chrono>
 #include <functional>
@@ -19,8 +15,9 @@ using namespace py::literals;
 void
 pyspu::wrapper::wrap_pipeline(py::handle scope)
 {
-    auto pipeline_class =
-      py::class_<spu::runtime::Pipeline, spu::tools::Interface_get_set_n_frames>(scope, "_Pipeline");
+  auto sys = py::module::import("sys");
+  auto pipeline_class =
+    py::class_<spu::runtime::Pipeline, spu::tools::Interface_get_set_n_frames>(scope, "_Pipeline");
     pipeline_class.def(py::init(
                          [](const std::vector<spu::runtime::Task*>& firsts,
                             const std::vector<spu::runtime::Task*>& lasts,
@@ -80,21 +77,18 @@ pyspu::wrapper::wrap_pipeline(py::handle scope)
     pipeline_class.def("is_bound_adaptors", &spu::runtime::Pipeline::is_bound_adaptors);
 
     pipeline_class.def("show_stats",
-                       [](spu::runtime::Pipeline& self)
+                       [](spu::runtime::Pipeline& self, std::ostream& stream)
                        {
-                           py::scoped_ostream_redirect stream(std::cout,                                // std::ostream&
-                                                              py::module_::import("sys").attr("stdout") // Python output
-                           );
                            auto stages = self.get_stages();
                            for (size_t s = 0; s < stages.size(); s++)
                            {
                                const int n_threads = stages[s]->get_n_threads();
-                               std::cout << "#" << std::endl
-                                         << "# Pipeline stage " << s << " (" << n_threads
-                                         << " thread(s)): " << std::endl;
-                               spu::tools::Stats::show(stages[s]->get_tasks_per_types(), true);
+                               stream << "#" << std::endl
+                                      << "# Pipeline stage " << s << " (" << n_threads
+                                      << " thread(s)): " << std::endl;
+                               spu::tools::Stats::show(stages[s]->get_tasks_per_types(), true, true, stream);
                            }
-                       });
+                       }, "stream"_a = sys.attr("stdout"));
     pipeline_class.def_property_readonly(
       "stages", &spu::runtime::Pipeline::get_stages, py::return_value_policy::reference);
     pipeline_class.def_property_readonly(

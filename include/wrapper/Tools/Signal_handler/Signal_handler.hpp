@@ -1,7 +1,7 @@
 #ifndef WRAPPER_SIGNAL_HANDLER_HPP__
 #define WRAPPER_SIGNAL_HANDLER_HPP__
 
-#include <pybind11/pybind11.h>
+#include "wrapper/Common/pybind11_common.h"
 #include <streampu.hpp>
 
 namespace py = pybind11;

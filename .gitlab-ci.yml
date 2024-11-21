@@ -11,6 +11,10 @@ stages:
 linux:
   stage: build
   image: python:3.12
+  tags:
+    - x86_64
+    - linux
+      
   # make a docker daemon available for cibuildwheel to use
   services:
     - name: docker:dind

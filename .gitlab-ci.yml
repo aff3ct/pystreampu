@@ -8,15 +8,31 @@ stages:
   - coverage-linux
   - linting
 
-default:
-  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
-
-  cache:
-    key: ${CI_PROJECT_PATH}
+linux:
+  stage: build
+  image: python:3.12
+  # make a docker daemon available for cibuildwheel to use
+  services:
+    - name: docker:dind
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"]
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    # See https://github.com/docker-library/docker/pull/166
+    DOCKER_TLS_CERTDIR: ""
+  script:
+    - curl -sSL https://get.docker.com/ | sh
+    - python -m pip install cibuildwheel==2.21.3
+    - cibuildwheel --output-dir wheelhouse
+  artifacts:
     paths:
-    - .cache/
-    - venv/
+      - wheelhouse/
 
+coverage-linux:
+  stage: coverage-linux
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
+ 
   before_script:
     - apt update
     - apt install -y python3
@@ -26,47 +42,6 @@ default:
     - virtualenv venv
     - source venv/bin/activate
 
-build:
-  stage: build
-  tags:
-    - x86_64
-    - linux
-    - docker
-
-  artifacts:
-    name: streampu
-    paths:
-      - streampu
-      - venv
-
-  script:
-    - export CC="gcc"
-    - export CXX="g++"
-    - pip3 install ../pystreampu -v
-
-tests:
-  stage: tests
-
-  dependencies:
-  - build
-
-  tags:
-  - x86_64
-  - linux
-  - docker
-
-  script:
-    - cd ..
-    - pip3 show -f streampu
-    - pytest --pyargs streampu --junitxml=./pystreampu/report.xml
-
-  artifacts:
-    when: always
-    reports:
-      junit: report.xml
-
-coverage-linux:
-  stage: coverage-linux
   tags:
     - x86_64
     - linux
@@ -89,8 +64,18 @@ coverage-linux:
 
 isort:
   stage: linting
-  dependencies:
-  - build
+
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
+ 
+  before_script:
+    - apt update
+    - apt install -y python3
+    - apt install -y python3-pip
+    - python3 --version  # For debugging
+    - pip3 install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+
   tags:
   - x86_64
   - linux
@@ -103,8 +88,18 @@ isort:
 
 black:
   stage: linting
-  dependencies:
-  - build
+
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
+ 
+  before_script:
+    - apt update
+    - apt install -y python3
+    - apt install -y python3-pip
+    - python3 --version  # For debugging
+    - pip3 install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+
   tags:
   - x86_64
   - linux
@@ -117,8 +112,7 @@ black:
 
 flake8:
   stage: linting
-  dependencies:
-  - build
+
   tags:
   - x86_64
   - linux

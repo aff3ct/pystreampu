@@ -1,7 +1,5 @@
 [build-system]
 requires = ["scikit-build-core",
-            "cmake",
-            "ninja; platform_system!='Windows'",
             "setuptools_scm"
             ]
 build-backend = "scikit_build_core.build"
@@ -37,6 +35,7 @@ manylinux-x86_64-image = "manylinux2014"
 build-verbosity = 3
 test-requires = "pytest"
 test-command = "pytest --pyargs streampu --junitxml=./streampu/report.xml"
+archs = ["auto64"]
 
 [tool.scikit-build]
 build-dir = "build"

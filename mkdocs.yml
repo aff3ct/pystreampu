@@ -1,0 +1,49 @@
+site_name: StreamPU (Python API)
+
+repo_url: https://gitlab.inria.fr/fec/pystreampu
+
+nav:
+  - Home: index.md
+  - Setup: install.md
+  - Getting started:
+    - First steps: first_steps.ipynb
+    - Module, Task and Socket:
+      - Module: module.ipynb
+      - Task: task.ipynb
+      - Socket: socket.ipynb
+    - Back to the first steps: back_to_first_steps.ipynb
+
+plugins:
+  - search
+  - mkdocs-jupyter:
+      execute: True
+      remove_tag_config:
+        remove_input_tags:
+          - hide_code
+
+# - mkdocstrings
+
+theme:
+  name: material
+  features:
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.tabs.link
+    - navigation.expand
+    - navigation.footer
+
+markdown_extensions:
+  - pymdownx.highlight:
+      use_pygments: true
+      anchor_linenums: true
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+
+

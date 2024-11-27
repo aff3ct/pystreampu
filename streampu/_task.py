@@ -88,9 +88,6 @@ def _call_impl(
 
         return None
 
-    for s_out in outputs:
-        s_out._mdl = self.module
-
     # Return a tuple of Sockets except that does not contain the status socket
     # If only one output socket, return this socket
     out = tuple(sckt for sckt in outputs)

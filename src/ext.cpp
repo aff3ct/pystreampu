@@ -3,10 +3,6 @@
 #include <string>
 #include <thread>
 
-#include <pybind11/iostream.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-
 #include <streampu.hpp>
 
 namespace py = pybind11;
@@ -35,10 +31,7 @@ PYBIND11_MODULE(_ext, m)
     py::module_ m_core = m.def_submodule("core"); // TODO rename runtime
     pyspu::wrapper::wrap_socket(m_core);
     pyspu::wrapper::wrap_task(m_core);
-
-    auto wrap_module(std::unique_ptr<pyspu::wrapper::Wrapper_py>(
-      new pyspu::wrapper::Wrapper_Module(m_core))); // TODO Update to the new way
-    wrap_module->definitions();
+    pyspu::wrapper::wrap_module(m_core);
 
     // Wrap of tools namespace
     // dtypes (class for handling types in the python package)

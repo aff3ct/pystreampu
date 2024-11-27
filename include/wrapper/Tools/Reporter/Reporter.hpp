@@ -1,8 +1,7 @@
 #ifndef WRAPPER_INTERFACE_REPORTER_HPP__
 #define WRAPPER_INTERFACE_REPORTER_HPP__
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+#include "wrapper/Common/pybind11_common.h"
 
 #include <string>
 #include <vector>

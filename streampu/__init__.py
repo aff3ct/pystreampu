@@ -4,6 +4,9 @@ r"""StreamPU package.
 The streampu package provides interfaces for the StreamPU C++ library.
 """
 
+# Stack of hidden modules
+_mdl_stack = []
+
 # Tools
 from streampu._ext import FormatFlags, Signal_handler, exceptions, help
 

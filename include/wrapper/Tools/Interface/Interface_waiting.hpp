@@ -1,7 +1,7 @@
 #ifndef WRAPPER_INTERFACE_WAITING_HPP__
 #define WRAPPER_INTERFACE_WAITING_HPP__
 
-#include <pybind11/pybind11.h>
+#include "wrapper/Common/pybind11_common.h"
 #include <streampu.hpp>
 
 namespace py = pybind11;

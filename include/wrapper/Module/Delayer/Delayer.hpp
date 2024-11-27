@@ -1,13 +1,9 @@
 #ifndef WRAPPER_DELAYER_HPP_
 #define WRAPPER_DELAYER_HPP_
 
-#include <pybind11/pybind11.h>
-#include <pybind11/numpy.h>
-#include <pybind11/stl.h>
+#include "wrapper/Common/pybind11_common.h"
 
 #include <streampu.hpp>
-
-#include "wrapper/Common/Wrapper_py/Wrapper_py.hpp"
 
 namespace py = pybind11;
 using namespace spu;

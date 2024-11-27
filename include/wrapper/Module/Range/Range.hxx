@@ -1,3 +1,5 @@
+#ifndef WRAPPER_RANGE_HXX_
+#define WRAPPER_RANGE_HXX_
 #include "wrapper/Module/Range/Range.hpp"
 
 namespace py = pybind11;
@@ -42,3 +44,5 @@ Range ::task_init()
 }
 }; // namespace module
 } // namespace spu
+
+#endif // WRAPPER_RANGE_HXX_

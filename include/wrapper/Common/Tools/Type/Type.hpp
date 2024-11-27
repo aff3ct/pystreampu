@@ -1,7 +1,7 @@
 #ifndef TYPE_HPP_
 #define TYPE_HPP_
 
-#include <pybind11/pybind11.h>
+#include "wrapper/Common/pybind11_common.h"
 #include <streampu.hpp>
 #include <type_traits>
 

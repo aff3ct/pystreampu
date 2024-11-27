@@ -1,9 +1,9 @@
 #ifndef WRAPPER_REDUCER_HXX_
 #define WRAPPER_REDUCER_HXX_
 
+#include "wrapper/Module/Reducer/Reducer.hpp"
 #include "wrapper/Common/Tools/type_functions.h"
 #include "wrapper/Common/Tools/type_list.hpp"
-#include "wrapper/Module/Reducer/Reducer.hpp"
 
 namespace py = pybind11;
 using namespace py::literals;

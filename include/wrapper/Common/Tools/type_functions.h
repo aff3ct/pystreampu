@@ -7,8 +7,7 @@
 #include <typeindex>
 #include <typeinfo>
 
-#include <pybind11/numpy.h>
-#include <pybind11/pybind11.h>
+#include "wrapper/Common/pybind11_common.h"
 
 namespace py = pybind11;
 

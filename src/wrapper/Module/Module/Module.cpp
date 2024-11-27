@@ -1,16 +1,14 @@
-#include <pybind11/functional.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
-#include <pybind11/stl.h>
-
 #include <functional>
 #include <iostream>
 #include <sstream>
 
+#include "wrapper/Module/Module/Module.hpp"
+
 #include "wrapper/Common/Tools/Type/Type.hpp"
 #include "wrapper/Common/Tools/type_functions.h"
-#include "wrapper/Module/Module/Module.hpp"
 #include "wrapper/Runtime/Task/Task.hpp"
+
+
 
 namespace py = pybind11;
 using namespace py::literals;
@@ -18,23 +16,18 @@ using namespace spu::module;
 using namespace pyspu::wrapper;
 using namespace spu::runtime;
 
-Wrapper_Module ::Wrapper_Module(py::handle scope)
-  : Wrapper_py()
-  , py::class_<Module, Module_Publicist, spu::tools::Interface_clone, spu::tools::Interface_get_set_n_frames>(
+void pyspu::wrapper::wrap_module(py::handle scope)
+{
+auto py_module_class = py::class_<Module, Module_Publicist, spu::tools::Interface_clone, spu::tools::Interface_get_set_n_frames>(
       scope,
       "Module",
-      py::dynamic_attr())
-{
-}
+      py::dynamic_attr());
 
-void
-Wrapper_Module ::definitions()
-{
-    this->def(py::init<>());
-    this->def(py::init<const Module&>());
-    this->def_property("n_frames_per_wave", &Module::get_n_frames_per_wave, &Module_Publicist::set_n_frames_per_wave);
+    py_module_class.def(py::init<>());
+    py_module_class.def(py::init<const Module&>());
+    py_module_class.def_property("n_frames_per_wave", &Module::get_n_frames_per_wave, &Module_Publicist::set_n_frames_per_wave);
 
-    this->def_property_readonly(
+    py_module_class.def_property_readonly(
       "tasks",
       [](Module& self)
       {
@@ -45,20 +38,20 @@ Wrapper_Module ::definitions()
       },
       R"pbdoc(Module's list of tasks.)pbdoc");
 
-    this->def_property(
+    py_module_class.def_property(
       "name",
       [](const Module& m) { return m.get_custom_name() == "" ? m.get_name() : m.get_custom_name(); },
       &Module::set_custom_name,
       R"pbdoc(Name of the module)pbdoc");
 
-    this->def(
+    py_module_class.def(
       "create_socket_in",
       [](Module_Publicist& mdl,
          spu::runtime::Task& task,
          const std::string& name,
          const size_t n_elmts,
          const pyspu::dtype dtype)
-      { return mdl.create_socket_in(task, name, n_elmts, utils::str2typeid(dtype.get_name())); },
+      { return mdl.create_socket_in(task, name, n_elmts, pyspu::utils::str2typeid(dtype.get_name())); },
       "task"_a,
       "name"_a,
       "n_elmts"_a,
@@ -67,14 +60,14 @@ Wrapper_Module ::definitions()
         Create a new input socket to a task.
     )pbdoc");
 
-    this->def(
+    py_module_class.def(
       "create_socket_out",
       [](Module_Publicist& mdl,
          spu::runtime::Task& task,
          const std::string& name,
          const size_t n_elmts,
          const pyspu::dtype dtype)
-      { return mdl.create_socket_out(task, name, n_elmts, utils::str2typeid(dtype.get_name())); },
+      { return mdl.create_socket_out(task, name, n_elmts, pyspu::utils::str2typeid(dtype.get_name())); },
       "task"_a,
       "name"_a,
       "n_elmts"_a,
@@ -83,14 +76,14 @@ Wrapper_Module ::definitions()
         Create a new output socket to a task.
     )pbdoc");
 
-    this->def(
+    py_module_class.def(
       "create_socket_fwd",
       [](Module_Publicist& mdl,
          spu::runtime::Task& task,
          const std::string& name,
          const size_t n_elmts,
          const pyspu::dtype dtype)
-      { return mdl.create_socket_fwd(task, name, n_elmts, utils::str2typeid(dtype.get_name())); },
+      { return mdl.create_socket_fwd(task, name, n_elmts, pyspu::utils::str2typeid(dtype.get_name())); },
       "task"_a,
       "name"_a,
       "n_elmts"_a,
@@ -99,7 +92,7 @@ Wrapper_Module ::definitions()
         Create a new forward socket to a task.
     )pbdoc");
 
-    this->def(
+    py_module_class.def(
       "create_task",
       [](Module_Publicist& mdl, const std::string& name) { return &mdl.create_task(name); },
       "name"_a,
@@ -115,9 +108,9 @@ Wrapper_Module ::definitions()
     )pbdoc",
       py::return_value_policy::reference);
 
-    this->def("create_codelet", &Module_Publicist::create_codelet);
+    py_module_class.def("create_codelet", &Module_Publicist::create_codelet);
 
-    this->def(
+    py_module_class.def(
       "__getitem__",
       [](Module& m, const std::string& key)
       {
@@ -145,5 +138,5 @@ Wrapper_Module ::definitions()
     )pbdoc",
       py::is_operator());
 
-    def("deep_copy", &Module_Publicist::deep_copy);
+    py_module_class.def("deep_copy", &Module_Publicist::deep_copy);
 };

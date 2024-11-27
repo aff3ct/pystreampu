@@ -1,9 +1,10 @@
 #ifndef BIND_TASK_HPP_
 #define BIND_TASK_HPP_
 
-#include "wrapper/Common/Wrapper_py/Wrapper_py.hpp"
 #include <memory>
-#include <pybind11/pybind11.h>
+
+#include "wrapper/Common/pybind11_common.h"
+
 #include <streampu.hpp>
 
 namespace py = pybind11;

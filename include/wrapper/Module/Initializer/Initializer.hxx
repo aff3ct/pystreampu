@@ -1,9 +1,9 @@
 #ifndef WRAPPER_INITIALIZER_HXX_
 #define WRAPPER_INITIALIZER_HXX_
 
+#include "wrapper/Module/Initializer/Initializer.hpp"
 #include "wrapper/Common/Tools/type_functions.h"
 #include "wrapper/Common/Tools/type_list.hpp"
-#include "wrapper/Module/Initializer/Initializer.hpp"
 
 namespace py = pybind11;
 using namespace py::literals;

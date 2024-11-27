@@ -1,14 +1,10 @@
 #ifndef WRAPPER_INITIALIZER_HPP_
 #define WRAPPER_INITIALIZER_HPP_
 
-#include <pybind11/iostream.h>
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
+#include "wrapper/Common/pybind11_common.h"
 
 #include <streampu.hpp>
 #include <string>
-
-#include "wrapper/Common/Wrapper_py/Wrapper_py.hpp"
 
 namespace py = pybind11;
 using namespace spu;

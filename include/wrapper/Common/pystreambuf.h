@@ -56,7 +56,7 @@ derivative works thereof, in binary and source code form.
 
 #pragma once
 
-#include <pybind11/pybind11.h>
+#include "wrapper/Common/pybind11_common.h"
 
 #include <iostream>
 #include <streambuf>

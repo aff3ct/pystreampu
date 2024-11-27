@@ -12,7 +12,7 @@ pip3 install --verbose -Ccmake.define.CMAKE_BUILD_TYPE=Debug \
                        -Ccmake.define.CMAKE_EXE_LINKER_FLAGS="$LFLAGS" \
                        -Ccmake.define.CMAKE_CXX_FLAGS_DEBUG="-O0" -e $WD
 
-python3 -m pytest --pyargs streampu --cov=streampu --cov-report=lcov --cov-report=term
+python3 -m pytest tests --cov=streampu --cov-report=lcov --cov-report=term
 
 mv coverage.lcov code_coverage_files/streampu.info
 

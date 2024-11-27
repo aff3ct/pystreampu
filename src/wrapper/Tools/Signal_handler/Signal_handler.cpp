@@ -1,8 +1,6 @@
 #include "wrapper/Tools/Signal_handler/Signal_handler.hpp"
 
-#include "wrapper/Common/pystreambuf.h"
-#include <pybind11/chrono.h>
-#include <pybind11/stl.h>
+#include "wrapper/Common/pybind11_common.h"
 
 namespace py = pybind11;
 using namespace py::literals;

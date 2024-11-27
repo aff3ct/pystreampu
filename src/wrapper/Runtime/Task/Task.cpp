@@ -1,13 +1,12 @@
 #include "wrapper/Runtime/Task/Task.hpp"
 #include "wrapper/Module/Array/Array.hpp"
 #include "wrapper/Runtime/Socket/Socket.hpp"
-#include <pybind11/stl.h>
 
 #include <chrono>
-#include <pybind11/chrono.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <rang.hpp>
+
+#include "wrapper/Common/pybind11_common.h"
+
 namespace py = pybind11;
 using namespace py::literals;
 using namespace spu::module;

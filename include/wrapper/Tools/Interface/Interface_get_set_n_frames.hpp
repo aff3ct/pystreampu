@@ -5,7 +5,7 @@
 #ifndef WRAPPER_INTERFACE_GET_SET_N_FRAMES_HPP__
 #define WRAPPER_INTERFACE_GET_SET_N_FRAMES_HPP__
 
-#include <pybind11/pybind11.h>
+#include "wrapper/Common/pybind11_common.h"
 #include <streampu.hpp>
 
 namespace py = pybind11;

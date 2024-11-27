@@ -1,8 +1,7 @@
 #ifndef BIND_MODULE_HPP_
 #define BIND_MODULE_HPP_
 
-#include "wrapper/Common/Wrapper_py/Wrapper_py.hpp"
-#include <pybind11/pybind11.h>
+#include "wrapper/Common/pybind11_common.h"
 #include <streampu.hpp>
 #include <string>
 
@@ -34,18 +33,7 @@ namespace pyspu
 {
 namespace wrapper
 {
-class Wrapper_Module
-  : public Wrapper_py
-  , public py::class_<spu::module::Module,
-                      spu::module::Module_Publicist,
-                      spu::tools::Interface_clone,
-                      spu::tools::Interface_get_set_n_frames>
-{
-  public:
-    Wrapper_Module(py::handle scope);
-    virtual void definitions();
-    virtual ~Wrapper_Module() = default;
-};
+void wrap_module(py::handle scope);
 } // namespace wrapper
 } // namespace pyspu
 

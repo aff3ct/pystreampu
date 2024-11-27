@@ -34,7 +34,7 @@ manylinux-x86_64-image = "manylinux2014"
 before-all = "uname -a"
 build-verbosity = 3
 test-requires = "pytest"
-test-command = "pytest --pyargs streampu --junitxml=./streampu/report.xml"
+test-command = "pytest tests/ --junitxml=./streampu/report.xml"
 skip = ["*-musllinux*"]
 
 [tool.cibuildwheel.macos]

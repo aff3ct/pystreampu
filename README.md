@@ -4,7 +4,7 @@
 ### Install from the sources
 Clone the repository
 ```
-git clone --recursive git@gitlab.inria.fr:fec/pystreampu.git
+git clone --recursive https://github.com/aff3ct/pystreampu.git
 ```
 then install the python interface of `StreamPU` using `pip3`
 ```

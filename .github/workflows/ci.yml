@@ -15,6 +15,7 @@ jobs:
           python-version: 3.x
       - name: Build
         run: |
+          export GIT_TAG="v0.0.0"
           git submodule update --init --recursive
           pip install --upgrade pip
           python -m venv env

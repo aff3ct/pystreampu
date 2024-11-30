@@ -15,6 +15,7 @@ jobs:
           python-version: 3.x
       - name: Build
         run: |
+          git submodule update --init --recursive
           pip install --upgrade pip
           python -m venv env
           source env/bin/activate

@@ -5,7 +5,6 @@ permissions:
 jobs:
   build-linux:
     runs-on: ubuntu-latest
-    container: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -21,7 +20,6 @@ jobs:
           source env/bin/activate
           echo "VIRTUAL ENV:" $VIRTUAL_ENV
           pip install . -v
-        shell: bash
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:

@@ -8,8 +8,7 @@ Elementwise binary operations are such that `z[i] = bop(s_0[i], s_1[i])`.
 from enum import Enum, auto
 
 import streampu._ext
-from streampu import _mdl_stack
-from streampu import array
+from streampu import _mdl_stack, array
 from streampu._ext import dtype, int8, int32
 from streampu._ext.core import Module, Socket
 from streampu._typing import SocketLike

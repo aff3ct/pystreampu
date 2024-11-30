@@ -3,7 +3,7 @@
 max-line-length = 120
 accept-encodings = UTF-8
 per-file-ignores =
-    streampu/__init__.py: F401, A004, I001, I004, I005
+    streampu/__init__.py: F401, A004, I001, I004, I005, E402
     streampu/_bop.py: A001
     streampu/_minmax.py: A001
     streampu/_probe.py: I001, I005

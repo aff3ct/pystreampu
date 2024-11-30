@@ -25,9 +25,8 @@ tests = [
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-testpaths = [
-    "tests"
-]
+testpaths = ["tests"]
+addopts = ["--import-mode=importlib"]
 
 [tool.cibuildwheel]
 manylinux-x86_64-image = "manylinux2014"

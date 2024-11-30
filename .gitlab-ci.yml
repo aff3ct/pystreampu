@@ -7,39 +7,86 @@ stages:
   - tests
   - coverage-linux
   - linting
+  - build-wheels
 
-linux:
+
+build-linux:
   stage: build
-  image: python:3.12
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
+
+  cache:
+    key: ${CI_PROJECT_PATH}
+    paths:
+    - .cache/
+    - venv/
+
+  before_script:
+    - apt update
+    - apt install -y python3
+    - apt install -y python3-pip
+    - python3 --version  # For debugging
+    - pip3 install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+
   tags:
     - x86_64
     - linux
     - docker
 
-  # make a docker daemon available for cibuildwheel to use
-  services:
-    - name: docker:dind
-      entrypoint: ["env", "-u", "DOCKER_HOST"]
-      command: ["dockerd-entrypoint.sh"]
-  variables:
-    NO_PROXY: "docker"
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_DRIVER: overlay2
-    # See https://github.com/docker-library/docker/pull/166
-    DOCKER_TLS_CERTDIR: ""
-  script:
-    - curl -sSL https://get.docker.com/ | sh
-    - python -m pip install cibuildwheel==2.21.3
-    - cibuildwheel --output-dir wheelhouse
   artifacts:
+    name: streampu
     paths:
-      - wheelhouse/
+      - streampu
+      - venv
+
+  script:
+    - export CC="gcc"
+    - export CXX="g++"
+    - pip3 install ../pystreampu -v
+
+
+tests:
+  stage: tests
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
+
+  cache:
+    key: ${CI_PROJECT_PATH}
+    paths:
+    - .cache/
+    - venv/
+
+  before_script:
+    - apt update
+    - apt install -y python3
+    - apt install -y python3-pip
+    - python3 --version  # For debugging
+    - pip3 install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+
+  dependencies:
+  - build-linux
+
+  tags:
+  - x86_64
+  - linux
+  - docker
+
+  script:
+    - pip3 show -f streampu
+    - pytest tests --junitxml=./pystreampu/report.xml
+
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
 
 
 coverage-linux:
   stage: coverage-linux
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
- 
+
   before_script:
     - apt update
     - apt install -y python3
@@ -73,7 +120,7 @@ isort:
   stage: linting
 
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
- 
+
   before_script:
     - apt update
     - apt install -y python3
@@ -97,7 +144,7 @@ black:
   stage: linting
 
   image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
- 
+
   before_script:
     - apt update
     - apt install -y python3
@@ -120,6 +167,17 @@ black:
 flake8:
   stage: linting
 
+  image: registry.gitlab.com/aff3ct/aff3ct/x86_64_ubuntu_gcc:v9.3.0
+
+  before_script:
+    - apt update
+    - apt install -y python3
+    - apt install -y python3-pip
+    - python3 --version  # For debugging
+    - pip3 install virtualenv
+    - virtualenv venv
+    - source venv/bin/activate
+
   tags:
   - x86_64
   - linux
@@ -129,3 +187,55 @@ flake8:
   - flake8 ./streampu
   only:
   - merge_requests
+
+build-wheels-linux:
+  stage: build-wheels
+  image: python:3.12
+  tags:
+    - x86_64
+    - linux
+    - docker
+
+# make a docker daemon available for cibuildwheel to use
+  services:
+    - name: docker:dind
+      entrypoint: ["env", "-u", "DOCKER_HOST"]
+      command: ["dockerd-entrypoint.sh"]
+  variables:
+    NO_PROXY: "docker"
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+    # See https://github.com/docker-library/docker/pull/166
+    DOCKER_TLS_CERTDIR: ""
+  parallel:
+    matrix:
+      - ARCHS: ["x86_64"] # aarch64
+        PYTHON_TYPE: ["cp"]
+        PYTHON_VERSION: ["38", "39", "310", "311", "312", "313"]
+#      - ARCHS: ["x86_64"]
+#        PYTHON_TYPE: ["pp"]
+#        PYTHON_VERSION: ["38", "39", "310"]
+  script:
+    - curl -sSL https://get.docker.com/ | sh
+    - python -m pip install cibuildwheel==2.21.3
+    - CIBW_BUILD="$PYTHON_TYPE$PYTHON_VERSION-*" cibuildwheel --platform linux  --archs $ARCHS --output-dir wheelhouse
+  only:
+  - tags
+
+# macos:
+#  stage: build-wheels
+#  image: macos-14-xcode-15
+#  before_script:
+#    - python3 -m pip install cibuildwheel==2.21.3
+#  parallel:
+#    matrix:
+#      - ARCHS: ["x86_64", arm64]
+#        PYTHON_TYPE: ["cp"]
+#        PYTHON_VERSION: ["38", "39", "310", "311", "312", "313"]
+#  script:
+#    - CIBW_BUILD="$PYTHON_TYPE$PYTHON_VERSION-*" python3 -m cibuildwheel --platform macos  --archs $ARCHS --output-dir wheelhouse
+#  artifacts:
+#    paths:
+#      - wheelhouse/
+#  tags:
+#    - saas-macos-medium-m1

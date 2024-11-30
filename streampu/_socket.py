@@ -8,6 +8,7 @@ from typing import Union
 import numpy as np
 from streampu import _mdl_stack
 
+from streampu import _mdl_stack
 from streampu._ext.core import Socket
 from streampu._ext.sli import Slicer
 

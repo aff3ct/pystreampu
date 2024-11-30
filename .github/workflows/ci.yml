@@ -15,13 +15,13 @@ jobs:
           python-version: 3.x
       - name: Build
         run: |
-          export GIT_TAG="v0.0.0"
           git submodule update --init --recursive
           pip install --upgrade pip
           python -m venv env
           source env/bin/activate
           echo "VIRTUAL ENV:" $VIRTUAL_ENV
-          pip install . -v
+          export GIT_TAG="v0.0.0"
+          pip install -v -Ccmake.define.SPU_OVERRIDE_VERSION="$GIT_TAG" .
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:

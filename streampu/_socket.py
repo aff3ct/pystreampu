@@ -6,7 +6,6 @@ from __future__ import annotations
 from typing import Union
 
 import numpy as np
-from streampu import _mdl_stack
 
 from streampu import _mdl_stack
 from streampu._ext.core import Socket

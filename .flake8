@@ -8,6 +8,5 @@ per-file-ignores =
     streampu/_minmax.py: A001
     streampu/_probe.py: I001, I005
     streampu/_red.py: A001
+    streampu/_socket.py: F811
     streampu/_uop.py: A001
-    streampu/tests/conftest.py: D103, I001, I005,
-    streampu/tests/*.py: S101, T201, IF100

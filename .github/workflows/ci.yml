@@ -28,8 +28,9 @@ jobs:
           name: env
           path: env
   deploy:
-    if: contains( github.ref, 'actions_github')
+    if: contains( github.ref, 'develop')
     runs-on: ubuntu-latest
+    needs: [build-linux]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

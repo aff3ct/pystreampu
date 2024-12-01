@@ -28,7 +28,7 @@ jobs:
           name: env
           path: env
   deploy:
-    if: contains( github.ref, 'develop')
+    if: contains( github.ref, 'actions_github')
     runs-on: ubuntu-latest
     needs: [build-linux]
     steps:

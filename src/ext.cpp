@@ -78,7 +78,7 @@ PYBIND11_MODULE(_ext, m)
 
     // Wrap of module namespace
     py::module_ submod_ada = m.def_submodule("ada");
-    pyspu::wrapper::wrap_adaptors(submod_ada);
+    pyspu::wrapper::wrap_adaptors_m_to_n(submod_ada);
 
     py::module_ submod_ctl = m.def_submodule("ctl");
     pyspu::wrapper::wrap_controllers(submod_ctl);

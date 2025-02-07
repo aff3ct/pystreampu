@@ -23,8 +23,8 @@ auto py_module_class = py::class_<Module, Module_Publicist, spu::tools::Interfac
       "Module",
       py::dynamic_attr());
 
-    py_module_class.def(py::init<>());
-    py_module_class.def(py::init<const Module&>());
+    //py_module_class.def(py::init<>());
+    //py_module_class.def(py::init<const Module&>());
     py_module_class.def_property("n_frames_per_wave", &Module::get_n_frames_per_wave, &Module_Publicist::set_n_frames_per_wave);
 
     py_module_class.def_property_readonly(

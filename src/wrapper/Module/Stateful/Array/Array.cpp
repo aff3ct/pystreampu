@@ -1,4 +1,5 @@
 #include "wrapper/Module/Stateful/Array/Array.hpp"
+//#include "wrapper/Module/Stateful/Stateful/Stateful.hpp"
 
 #include <string>
 namespace py = pybind11;
@@ -15,7 +16,7 @@ pyspu::wrapper::wrap_array(py::module_& scope)
       {
           using TI = typename decltype(ti)::type;
           std::string TI_str = spu::runtime::type_to_string[typeid(TI)];
-          auto arra_py_class = py::class_<spu::module::Array<TI>, spu::module::Module>(scope, std::string("Array_" + TI_str).c_str());
+          auto arra_py_class = py::class_<spu::module::Array<TI>, spu::module::Stateful>(scope, std::string("Array_" + TI_str).c_str());
 
 
           arra_py_class.def(py::init<py::array_t<TI>&>(),
@@ -34,7 +35,7 @@ pyspu::wrapper::wrap_array(py::module_& scope)
 
 template<typename T>
 Array<T>::Array(py::array_t<T>& data)
-  : Module()
+  : Stateful()
   , dataptr(data.request().ptr)
 {
     const std::string name = "Array";

@@ -10,7 +10,7 @@ using namespace pyspu::wrapper;
 void
 pyspu::wrapper::wrap_slicer(py::handle scope)
 {
-    auto slicer_class = py::class_<spu::module::Slicer, spu::module::Module>(scope, "Slicer");
+    auto slicer_class = py::class_<spu::module::Slicer, spu::module::Stateful>(scope, "Slicer");
     slicer_class.def(py::init<spu::runtime::Socket&, const std::vector<int>&>(),
                      "sck"_a,
                      "slice"_a,
@@ -24,7 +24,7 @@ pyspu::wrapper::wrap_slicer(py::handle scope)
 }
 
 Slicer ::Slicer(spu::runtime::Socket& sck, const std::vector<int>& slice)
-  : Module()
+  : Stateful()
   , n_elmts(sck.get_n_elmts() / sck.get_task().get_module().get_n_frames())
   , slice(slice)
 {

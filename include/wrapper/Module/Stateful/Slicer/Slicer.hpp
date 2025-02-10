@@ -16,7 +16,7 @@ namespace spu
 {
 namespace module
 {
-class Slicer : public Module
+class Slicer : public Stateful
 {
   protected:
     int n_elmts;

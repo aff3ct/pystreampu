@@ -41,6 +41,10 @@ PYBIND11_MODULE(_ext, m)
 
     pyspu::wrapper::wrap_signal_handler(m);
 
+    // Stateful
+    py::module_ submod_stf = m.def_submodule("stf");
+    pyspu::wrapper::wrap_stateful(submod_stf);
+
     // Rang
     py::module_ m_rang = m.def_submodule("rang");
     pyspu::wrapper::wrap_rang_flags(m_rang);
@@ -78,7 +82,7 @@ PYBIND11_MODULE(_ext, m)
 
     // Wrap of module namespace
     py::module_ submod_ada = m.def_submodule("ada");
-    pyspu::wrapper::wrap_adaptors_m_to_n(submod_ada);
+    pyspu::wrapper::wrap_adaptor_m_to_n(submod_ada);
 
     py::module_ submod_ctl = m.def_submodule("ctl");
     pyspu::wrapper::wrap_controllers(submod_ctl);

@@ -10,8 +10,11 @@ _mdl_stack = []
 # Tools
 from streampu._ext import FormatFlags, Signal_handler, exceptions, help
 
+# Stateful
+from streampu._ext.stf import Stateful
+
 # Modules with no factory
-from streampu._ext.ada import Adaptor, Adaptor_1_to_n, Adaptor_n_to_1
+from streampu._ext.ada import Adaptor_m_to_n
 from streampu._ext.ctl import (
     Controller,
     Controller_cyclic,

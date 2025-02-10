@@ -10,7 +10,7 @@ using namespace pyspu::wrapper;
 void
 pyspu::wrapper::wrap_range(py::handle scope)
 {
-    auto range_class = py::class_<spu::module::Range, spu::module::Module>(scope, "Range");
+    auto range_class = py::class_<spu::module::Range, spu::module::Stateful>(scope, "Range");
     range_class.def(py::init<int, int, int, pyspu::dtype>(),
                     "stop"_a,
                     "start"_a = 0,
@@ -38,7 +38,7 @@ pyspu::wrapper::wrap_range(py::handle scope)
 }
 
 Range ::Range(int stop, int start, int step, pyspu::dtype dtype)
-  : Module()
+  : Stateful()
   , stop(stop)
   , start(start)
   , step(step)

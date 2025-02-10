@@ -15,7 +15,7 @@ namespace spu
 {
 namespace module
 {
-class Range : public Module
+class Range : public Stateful
 {
   protected:
     int stop;

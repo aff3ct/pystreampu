@@ -6,6 +6,8 @@
 #include <string>
 
 namespace py = pybind11;
+
+/*
 namespace spu
 {
 namespace module
@@ -28,6 +30,7 @@ class Module_Publicist : public Module
 };
 } // namespace module
 } // namespace spu
+*/
 
 namespace pyspu
 {

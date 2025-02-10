@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from streampu._ext.sts import Stateful
+from streampu._ext.sfl import Stateful
 
 Stateful.__doc__ = R"""
 Class Stateful

@@ -18,14 +18,13 @@ using namespace spu::runtime;
 
 void pyspu::wrapper::wrap_module(py::handle scope)
 {
-auto py_module_class = py::class_<Module, Module_Publicist, spu::tools::Interface_clone, spu::tools::Interface_get_set_n_frames>(
+auto py_module_class = py::class_<Module, spu::tools::Interface_clone, spu::tools::Interface_get_set_n_frames>(
       scope,
       "Module",
       py::dynamic_attr());
 
     //py_module_class.def(py::init<>());
     //py_module_class.def(py::init<const Module&>());
-    py_module_class.def_property("n_frames_per_wave", &Module::get_n_frames_per_wave, &Module_Publicist::set_n_frames_per_wave);
 
     py_module_class.def_property_readonly(
       "tasks",
@@ -43,72 +42,6 @@ auto py_module_class = py::class_<Module, Module_Publicist, spu::tools::Interfac
       [](const Module& m) { return m.get_custom_name() == "" ? m.get_name() : m.get_custom_name(); },
       &Module::set_custom_name,
       R"pbdoc(Name of the module)pbdoc");
-
-    py_module_class.def(
-      "create_socket_in",
-      [](Module_Publicist& mdl,
-         spu::runtime::Task& task,
-         const std::string& name,
-         const size_t n_elmts,
-         const pyspu::dtype dtype)
-      { return mdl.create_socket_in(task, name, n_elmts, pyspu::utils::str2typeid(dtype.get_name())); },
-      "task"_a,
-      "name"_a,
-      "n_elmts"_a,
-      "dtype"_a,
-      R"pbdoc(
-        Create a new input socket to a task.
-    )pbdoc");
-
-    py_module_class.def(
-      "create_socket_out",
-      [](Module_Publicist& mdl,
-         spu::runtime::Task& task,
-         const std::string& name,
-         const size_t n_elmts,
-         const pyspu::dtype dtype)
-      { return mdl.create_socket_out(task, name, n_elmts, pyspu::utils::str2typeid(dtype.get_name())); },
-      "task"_a,
-      "name"_a,
-      "n_elmts"_a,
-      "dtype"_a,
-      R"pbdoc(
-        Create a new output socket to a task.
-    )pbdoc");
-
-    py_module_class.def(
-      "create_socket_fwd",
-      [](Module_Publicist& mdl,
-         spu::runtime::Task& task,
-         const std::string& name,
-         const size_t n_elmts,
-         const pyspu::dtype dtype)
-      { return mdl.create_socket_fwd(task, name, n_elmts, pyspu::utils::str2typeid(dtype.get_name())); },
-      "task"_a,
-      "name"_a,
-      "n_elmts"_a,
-      "dtype"_a,
-      R"pbdoc(
-        Create a new forward socket to a task.
-    )pbdoc");
-
-    py_module_class.def(
-      "create_task",
-      [](Module_Publicist& mdl, const std::string& name) { return &mdl.create_task(name); },
-      "name"_a,
-      R"pbdoc(
-        Create a new task.
-
-        Args:
-            name (str): name of the task
-
-        Returns:
-            Task: newly created task.
-
-    )pbdoc",
-      py::return_value_policy::reference);
-
-    py_module_class.def("create_codelet", &Module_Publicist::create_codelet);
 
     py_module_class.def(
       "__getitem__",
@@ -137,6 +70,4 @@ auto py_module_class = py::class_<Module, Module_Publicist, spu::tools::Interfac
             Task | Socket : task or socket described by the key.
     )pbdoc",
       py::is_operator());
-
-    py_module_class.def("deep_copy", &Module_Publicist::deep_copy);
 };

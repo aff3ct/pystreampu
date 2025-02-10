@@ -47,7 +47,8 @@
 #include "wrapper/Module/Stateful/Source/Source.hpp"
 #include "wrapper/Module/Stateful/Source/User/Source_user.hpp"
 #include "wrapper/Module/Stateful/Source/User/Source_user_binary.hpp"
-#include "wrapper/Module/Stateless/Stateless.hpp"
+#include "wrapper/Module/Stateful/Stateful/Stateful.hpp"
 #include "wrapper/Module/Stateful/Switcher/Switcher.hpp"
 #include "wrapper/Module/Stateful/Unaryop/Unaryop.hpp"
+#include "wrapper/Module/Stateless/Stateless.hpp"
 #endif // EXT_HPP_

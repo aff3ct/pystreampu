@@ -33,6 +33,7 @@ PYBIND11_MODULE(_ext, m)
     pyspu::wrapper::wrap_task(m_core);
     pyspu::wrapper::wrap_module(m_core);
 
+
     // Wrap of tools namespace
     // dtypes (class for handling types in the python package)
     pyspu::wrapper::wrap_dtypes(m);
@@ -77,6 +78,9 @@ PYBIND11_MODULE(_ext, m)
       "verbose"_a = false);
 
     // Wrap of module namespace
+    py::module_ submod_sfl = m.def_submodule("sfl");
+    pyspu::wrapper::wrap_stateful(submod_sfl);
+
     py::module_ submod_ada = m.def_submodule("ada");
     pyspu::wrapper::wrap_adaptors_m_to_n(submod_ada);
 

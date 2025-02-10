@@ -17,7 +17,7 @@ namespace spu
 namespace module
 {
 template<typename T = int>
-class Array : public Module
+class Array : public Stateful
 {
   private:
     void* dataptr;

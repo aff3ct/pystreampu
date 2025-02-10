@@ -82,7 +82,7 @@ PYBIND11_MODULE(_ext, m)
     pyspu::wrapper::wrap_stateful(submod_sfl);
 
     py::module_ submod_ada = m.def_submodule("ada");
-    pyspu::wrapper::wrap_adaptors_m_to_n(submod_ada);
+    pyspu::wrapper::wrap_adaptor_m_to_n(submod_ada);
 
     py::module_ submod_ctl = m.def_submodule("ctl");
     pyspu::wrapper::wrap_controllers(submod_ctl);

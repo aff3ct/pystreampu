@@ -21,8 +21,8 @@ pyspu::wrapper::wrap_adaptor_m_to_n(py::handle scope)
     py_adaptor_class.def_property("n_frames", &spu::module::Adaptor_m_to_n::get_n_frames, &spu::module::Adaptor_m_to_n::set_n_frames);
 }
 
-void
-pyspu::wrapper::wrap_adaptors_m_to_n(py::handle scope)
-{
-    pyspu::wrapper::wrap_adaptor_m_to_n(scope);
-}
+//void
+//pyspu::wrapper::wrap_adaptors_m_to_n(py::handle scope)
+//{
+//    pyspu::wrapper::wrap_adaptor_m_to_n(scope);
+//}

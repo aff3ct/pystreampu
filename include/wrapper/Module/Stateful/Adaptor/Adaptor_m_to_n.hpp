@@ -15,8 +15,6 @@ namespace wrapper
 {
 void
 wrap_adaptor_m_to_n(py::handle scope);
-void
-wrap_adaptors_m_to_n(py::handle scope);
 } // namespace wrapper
 } // namespace pyspu
 

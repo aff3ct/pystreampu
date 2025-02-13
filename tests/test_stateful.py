@@ -19,10 +19,10 @@ class Example_increase(Stateful):
     def __init__(self,N,dtype):
         self.N=N
         super().__init__()
-        super().create_task("incr")
-        super().create_socket_in(self["incr"],"sock_in",n_elts,dtype)
-        super().create_socket_out(self["incr"],"sock_out",n_elts,dtype)
-        super().create_codelet(self["incr"],processing)
+        self.create_task("incr")
+        self.create_socket_in(self["incr"],"sock_in",n_elts,dtype)
+        self.create_socket_out(self["incr"],"sock_out",n_elts,dtype)
+        self.create_codelet(self["incr"],processing)
     
     def execut(self):
          self.N=self["incr"](self.N)
@@ -43,6 +43,7 @@ def test_stateful(dtype):
     
     for i in range(0,4):
         src['generate::out_data']=adding.execut()
+        #src['generate::out_data']=adding["incr"](src['generate::out_data'])    #fonctionne aussi
     print("Output of source:", src['generate::out_data']) 
 
 if __name__ == '__main__':

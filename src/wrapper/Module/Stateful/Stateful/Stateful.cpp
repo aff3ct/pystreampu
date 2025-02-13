@@ -9,10 +9,11 @@ using namespace spu::module;
 void
 pyspu::wrapper::wrap_stateful(py::handle scope)
 {
-    auto stateful_class = py::class_<spu::module::Stateful, spu::module::Module>(scope,"Stateful",
+    auto stateful_class = py::class_<spu::module::Stateful, spu::module::Stateful_Publicist, spu::module::Module>(scope,"Stateful",
                                                                                         R"pbdoc(
         Stateful modules are modules that cannot be cloned due to internal state
         )pbdoc");
+    stateful_class.def(py::init<>());
     stateful_class.def_property("n_frames_per_wave", &Stateful::get_n_frames_per_wave, &Stateful_Publicist::set_n_frames_per_wave);
 
     stateful_class.def(

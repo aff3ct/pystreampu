@@ -8,5 +8,3 @@ Stateful modules are modules that cannot be cloned due to internal state.
 """
 
 __all__ = ["Stateful"]
-
-

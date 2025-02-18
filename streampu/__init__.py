@@ -10,9 +10,6 @@ _mdl_stack = []
 # Tools
 from streampu._ext import FormatFlags, Signal_handler, exceptions, help
 
-# Stateful
-from streampu._ext.sfl import Stateful
-
 # Modules with no factory
 from streampu._ext.ada import Adaptor_m_to_n
 from streampu._ext.ctl import (
@@ -33,6 +30,7 @@ from streampu._ext.ite import Iterator
 from streampu._ext.ran import Range
 from streampu._ext.reporter import Reporter, Reporter_probe
 from streampu._ext.set import Set
+from streampu._ext.sfl import Stateful
 from streampu._ext.slp import Sleeper
 from streampu._ext.swi import Switcher
 from streampu._ext.terminal import Terminal, Terminal_dump, Terminal_std
@@ -99,8 +97,9 @@ from ._sink import sink_no, sink_user_binary
 # Core
 from ._socket import Socket
 from ._source import source_random, source_user, source_user_binary
+
+# from ._stateful import Stateful
 from ._stateless import Stateless
-from ._stateful import Stateful
 from ._task import Task
 from ._uop import UType, abs, bitwise_not, cast, neg, uop
 from ._version import version as __version__

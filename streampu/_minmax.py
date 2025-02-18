@@ -22,7 +22,8 @@ def min(*args: tuple[Socket, ...], output_dtype: dtype = None) -> Socket:
 
     Returns:
         out(Socket): if *args has length 1, returns the minimum of the socket
-                     if *args has length > 1, returns the componentwize minimum of all Sockets in args
+                     if *args has length > 1, returns the componentwize
+                     minimum of all Sockets in args
     """
     if len(args) == 1:
         return red_min(args[0], output_dtype=output_dtype)
@@ -43,7 +44,8 @@ def max(*args: tuple[Socket, ...], output_dtype: dtype = None) -> Socket:
 
     Returns:
         out(Socket): if *args has length 1, returns the maximum of the socket
-                     if *args has length > 1, returns the componentwize maximum of all Sockets in args
+                     if *args has length > 1, returns the componentwize
+                     maximum of all Sockets in args
     """
     if len(args) == 1:
         return red_max(args[0], output_dtype=output_dtype)

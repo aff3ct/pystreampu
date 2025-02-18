@@ -2,11 +2,8 @@
 """Functionnal tests for Stateless."""
 import numpy as np
 
-from streampu import array
-from streampu import Stateless
-from streampu import uint16
-from streampu import help
-from streampu import Sequence
+from streampu import Sequence, Stateless, array, help, uint16
+
 def test_stateless(dtype):
     """Test Stateless module
 
@@ -30,10 +27,11 @@ def test_stateless(dtype):
         out = t.sock_out.numpy
         out[:] = inp[:] + 1
         return 0
-    
-    mdl.create_codelet(tsk, processing)    
-    
+
+    mdl.create_codelet(tsk, processing)
+
     y =tsk(x)
+    assert y is not None
     """
     Other way to write :
 

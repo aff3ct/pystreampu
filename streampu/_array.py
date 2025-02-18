@@ -92,7 +92,8 @@ def ones(n_elmts: int = 1, n_frames: int = 1, dtype: _ext.dtype = _ext.float32) 
     Examples:
         >>> x = streampu.ones(8)
         >>> x
-        socket([1. 1. 1. 1. 1. 1. 1. 1.], dtype=float32, name=X, task=Array.get)
+        socket([1. 1. 1. 1. 1. 1. 1. 1.], dtype=float32, name=X,
+        task=Array.get)
         >>> x = streampu.ones(8, dtype=streampu.int16)
         >>> x
         socket([1 1 1 1 1 1 1 1], dtype=int16, name=X, task=Array.get)

@@ -24,7 +24,8 @@ class Pipeline(_Pipeline):
 
         Args:
             module_class(type): a module class type
-            set_modules(bool): if True consider 'set' as modules, else explore the content of the set
+            set_modules(bool): if True consider 'set' as modules,
+            else explore the content of the set
 
         Returns:
             out (list): list of modules with type `module_class`

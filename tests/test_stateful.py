@@ -2,8 +2,7 @@
 """Functionnal tests for Stateful."""
 
 import streampu as spu
-from streampu import Stateful
-from streampu import uint32
+from streampu import Stateful, uint32
 
 n_elts=5
 
@@ -40,7 +39,8 @@ def test_stateful(dtype):
 
     #print(dir(spu))
     adding = Example_increase(src['generate::out_data'],dtype=dtype)
-    
+    assert adding is not None
+
     for i in range(0,4):
         src['generate::out_data']=adding.execut()
         #src['generate::out_data']=adding["incr"](src['generate::out_data'])    #fonctionne aussi

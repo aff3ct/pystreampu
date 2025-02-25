@@ -8,6 +8,7 @@ stages:
   - coverage-linux
   - linting
   - build-wheels
+  #- deploy
 
 
 build-linux:
@@ -218,9 +219,32 @@ build-wheels-linux:
   script:
     - curl -sSL https://get.docker.com/ | sh
     - python -m pip install cibuildwheel==2.21.3
+    - python -m pip install twine
     - CIBW_BUILD="$PYTHON_TYPE$PYTHON_VERSION-*" cibuildwheel --platform linux  --archs $ARCHS --output-dir wheelhouse
+    - python -m twine upload --repository-url https://test.pypi.org/legacy/ --verbose wheelhouse/* -u $TWINE_USERNAME -p $TWINE_PASSWORD
   only:
   - tags
+
+#testpypi :                                                                                                 
+#  stage: deploy                                                                                                     
+#                                                                                                                    
+#  before_script:                                                                                                    
+#    - apt update                                                                                                    
+#    - apt install -y python3                                                                                        
+#    - apt install -y python3-pip                                                                                    
+#    - python3 --version                                                                                             
+#    - pip3 install virtualenv                                                                                       
+#    - virtualenv venv                                                                                               
+#    - source venv/bin/activate                                                                                      
+#                                                                                                                    
+#  script:                                                                                                           
+#    - pip install twine #pip3 ?                                                                                     
+#    - twine upload --repository-url https://test.pypi.org/legacy/ wheelhouse/* -u $TWINE_USERNAME -p $TWINE_PASSWORD
+    #-python3 -m twine ... ?                                                                                        
+                                                                                                                    
+#  only:                                                                                                             
+#    - tags                                                                                                          
+                                                                                                                    
 
 # macos:
 #  stage: build-wheels

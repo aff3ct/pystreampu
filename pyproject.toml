@@ -13,7 +13,7 @@ license = {file = "LICENSE"}
 readme = "README.md"
 dependencies = [
     "numpy",
-    "multipledispatch",
+    "pybind11>=2.13",
     "pytest>=6.0"
 ]
 dynamic = ["version"]
@@ -48,6 +48,7 @@ repair-wheel-command = "auditwheel repair -w {dest_dir} {wheel}"
 
 [tool.scikit-build]
 build-dir = "build"
+cmake.define.CMAKE_CXX_FLAGS ="-Wall -funroll-loops -fvisibility=hidden -fvisibility-inlines-hidden"
 wheel.packages = ["streampu"]
 wheel.license-files = ["LICENSE"]
 wheel.install-dir = "streampu"

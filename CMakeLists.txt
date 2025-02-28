@@ -1,7 +1,16 @@
 cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0054 NEW)
 
-project (${SKBUILD_PROJECT_NAME} LANGUAGES CXX)
+if (CMAKE_GENERATOR MATCHES "Ninja")
+    file(
+        WRITE "${CMAKE_BINARY_DIR}/GNUMakeRulesOverwrite.cmake"
+            "STRING(REPLACE \"-MD\" \"-MMD\" CMAKE_DEPFILE_FLAGS_C \"\${CMAKE_DEPFILE_FLAGS_C}\")\n"
+            "STRING(REPLACE \"-MD\" \"-MMD\" CMAKE_DEPFILE_FLAGS_CXX \"\${CMAKE_DEPFILE_FLAGS_CXX}\")\n"
+    )
+    set(CMAKE_USER_MAKE_RULES_OVERRIDE "${CMAKE_BINARY_DIR}/GNUMakeRulesOverwrite.cmake" CACHE INTERNAL "")
+endif()
+
+project (pystreampu LANGUAGES CXX)
 
 #set(CMAKE_INSTALL_LIBDIR streampu)
 #set(CMAKE_INSTALL_INCLUDEDIR streampu)
@@ -14,7 +23,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-
+include(GNUInstallDirs)
 #
 file(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/*)
@@ -38,11 +47,6 @@ set(PYBIND11_NEWPYTHON ON)
 pybind11_add_module(_ext MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/ext.cpp ${SRC_FILES} ${HEADER_FILES})
 
 set(pybind11_INCLUDE_DIRS)
-install(TARGETS _ext DESTINATION .)
-
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/pybind11/include
-        DESTINATION .
-        FILES_MATCHING PATTERN "*.h")
 
 include_directories(_ext PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set_target_properties(_ext PROPERTIES OUTPUT_NAME _ext
@@ -51,8 +55,36 @@ set_target_properties(_ext PROPERTIES OUTPUT_NAME _ext
 
 target_link_libraries(_ext PRIVATE spu-static-lib)
 
+install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/pybind11/include
+        DESTINATION .
+        FILES_MATCHING PATTERN "*.h")
+
+install(TARGETS _ext
+        DESTINATION .
+        EXPORT pystreampu-config
+        COMPONENT library)
+
+install(EXPORT
+        pystreampu-config
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/pystreampu"
+        NAMESPACE pyspu::
+        COMPONENT library)
+
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pystreampu
+        COMPONENT headers
+        FILES_MATCHING PATTERN "*.hpp")
+
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pystreampu
+        COMPONENT headers
+        FILES_MATCHING PATTERN "*.hxx")
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/pystreampu
+        COMPONENT headers
+        FILES_MATCHING PATTERN "*.h")
 message("############################################################")
 message("# CMAKE_BUILD_TYPE : ${CMAKE_BUILD_TYPE}")
 message("# CMAKE_CXX_FLAGS : ${CMAKE_CXX_FLAGS}")
-message("# SKBUILD_PROJECT_NAME : ${SKBUILD_PROJECT_NAME}")
+message("# SKBUILD_PROJECT_NAME : streampu")
 message("############################################################")

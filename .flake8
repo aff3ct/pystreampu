@@ -10,3 +10,4 @@ per-file-ignores =
     streampu/_red.py: A001
     streampu/_socket.py: F811
     streampu/_uop.py: A001
+    examples/custom_cpp_module/tests/test_custom_cpp_module.py: E402

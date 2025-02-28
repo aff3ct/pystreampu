@@ -45,6 +45,7 @@ build-linux:
     - export CC="gcc"
     - export CXX="g++"
     - pip3 install ../pystreampu -v
+    - pwd && find
 
 
 tests:
@@ -138,6 +139,7 @@ isort:
   script:
   - pip3 install isort
   - isort ./streampu --check-only
+  - isort ./examples --check-only
   only:
   - merge_requests
 
@@ -162,6 +164,8 @@ black:
   script:
   - pip3 install black
   - black --check ./streampu
+  - black --check ./examples
+
   only:
   - merge_requests
 
@@ -186,6 +190,7 @@ flake8:
   script:
   - pip3 install flake8
   - flake8 ./streampu
+  - flake8 ./examples
   only:
   - merge_requests
 
@@ -225,26 +230,26 @@ build-wheels-linux:
   only:
   - tags
 
-#testpypi :                                                                                                 
-#  stage: deploy                                                                                                     
-#                                                                                                                    
-#  before_script:                                                                                                    
-#    - apt update                                                                                                    
-#    - apt install -y python3                                                                                        
-#    - apt install -y python3-pip                                                                                    
-#    - python3 --version                                                                                             
-#    - pip3 install virtualenv                                                                                       
-#    - virtualenv venv                                                                                               
-#    - source venv/bin/activate                                                                                      
-#                                                                                                                    
-#  script:                                                                                                           
-#    - pip install twine #pip3 ?                                                                                     
+#testpypi :
+#  stage: deploy
+#
+#  before_script:
+#    - apt update
+#    - apt install -y python3
+#    - apt install -y python3-pip
+#    - python3 --version
+#    - pip3 install virtualenv
+#    - virtualenv venv
+#    - source venv/bin/activate
+#
+#  script:
+#    - pip install twine #pip3 ?
 #    - twine upload --repository-url https://test.pypi.org/legacy/ wheelhouse/* -u $TWINE_USERNAME -p $TWINE_PASSWORD
-    #-python3 -m twine ... ?                                                                                        
-                                                                                                                    
-#  only:                                                                                                             
-#    - tags                                                                                                          
-                                                                                                                    
+    #-python3 -m twine ... ?
+
+#  only:
+#    - tags
+
 
 # macos:
 #  stage: build-wheels

@@ -4,6 +4,13 @@ r"""StreamPU package.
 The streampu package provides interfaces for the StreamPU C++ library.
 """
 
+import sys
+
+if sys.version_info < (3, 10):
+    from importlib_metadata import entry_points
+else:
+    from importlib.metadata import entry_points
+
 # Stack of hidden modules
 _mdl_stack = []
 
@@ -104,3 +111,8 @@ from ._task import Task
 from ._uop import UType, abs, bitwise_not, cast, neg, uop
 from ._version import version as __version__
 from .utils import get_cmake_dirs
+
+plugins = {}
+_plugins = entry_points(group="streampu.plugins")
+for _ in _plugins:
+    plugins[_.name] = _.load()

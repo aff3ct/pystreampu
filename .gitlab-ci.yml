@@ -44,7 +44,7 @@ build-linux:
   script:
     - export CC="gcc"
     - export CXX="g++"
-    - pip3 install ../pystreampu -v
+    - pip3 install ../pystreampu -v -Ccmake.define.SPU_OVERRIDE_VERSION=v0.0.0
     - pwd && find
 
 

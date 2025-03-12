@@ -10,6 +10,7 @@ pip3 install --verbose -Ccmake.define.CMAKE_BUILD_TYPE=Debug \
                        -Ccmake.define.CMAKE_CXX_COMPILER=$CXX \
                        -Ccmake.define.CMAKE_CXX_FLAGS="$CFLAGS" \
                        -Ccmake.define.CMAKE_EXE_LINKER_FLAGS="$LFLAGS" \
+                       -Ccmake.define.SPU_OVERRIDE_VERSION=v0.0.0\
                        -Ccmake.define.CMAKE_CXX_FLAGS_DEBUG="-O0" -e $WD
 
 python3 -m pytest tests --cov=streampu --cov-report=lcov --cov-report=term

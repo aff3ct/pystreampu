@@ -12,6 +12,7 @@ description = "Python wrapper for StreamPU library."
 license = {file = "LICENSE"}
 readme = "README.md"
 dependencies = [
+    "importlib_metadata",
     "numpy",
     "pybind11>=2.13",
     "pytest>=6.0"

@@ -13,11 +13,10 @@ from ._typing import SocketLike
 def _call_impl(
     self: Module,
     *args: tuple[SocketLike],
-    raw_data=False,
-    no_doc=False,
+    raw_data: bool = False,
     **kwargs: dict[str, SocketLike],
 ) -> Union[Socket, tuple[Socket], None]:
-    return self.tasks[0](*args, raw_data=raw_data, no_doc=no_doc, **kwargs)
+    return self.tasks[0](*args, raw_data=raw_data, **kwargs)
 
 
 def getattr_impl(self: Module, attr: str) -> Union[Task, Socket]:

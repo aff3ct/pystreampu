@@ -16,6 +16,6 @@ pyspu::wrapper::wrap_probe_timestamp(py::handle scope)
       .def(py::init<const std::string&, spu::tools::Reporter_probe*>(),
            "col_name"_a,
            "reporter"_a = nullptr,
-           py::keep_alive<1, 4>(),
+           py::keep_alive<1, 3>(),
            py::return_value_policy::take_ownership);
 }

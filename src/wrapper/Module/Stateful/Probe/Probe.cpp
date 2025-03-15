@@ -22,6 +22,9 @@ pyspu::wrapper::wrap_probe(py::handle scope)
                                    spu::tools::Interface_reset,
                                    std::unique_ptr<spu::module::AProbe, py::nodelete>>(scope, "AProbe");
 
+    aprobe_class.def_property("str_display", &spu::module::AProbe::get_str_display, &spu::module::AProbe::set_str_display);
+
+
     using lT = tl::type_list<ALL_DTYPES>;
     lT::for_each(
       [&](auto t)

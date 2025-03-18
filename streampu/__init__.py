@@ -12,7 +12,7 @@ else:
     from importlib.metadata import entry_points
 
 # Stack of hidden modules
-_mdl_stack = []
+from ._context_manager import _Context, _context_manager
 
 # Tools
 from streampu._ext import FormatFlags, Signal_handler, exceptions, help

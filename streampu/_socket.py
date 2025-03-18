@@ -7,7 +7,7 @@ from typing import Union
 
 import numpy as np
 
-from streampu import _mdl_stack
+from streampu import _context_manager
 from streampu._ext.core import Socket
 from streampu._ext.sli import Slicer
 
@@ -73,7 +73,7 @@ def _repr(self: Socket) -> str:
 Socket.__repr__ = _repr
 
 
-def _bind_(self: Socket, s_out: SocketLike, priority: int = -1, raw_data=False) -> None:
+def _bind_(self: Socket, s_out: SocketLike, priority: int = -1, raw_data: bool = False) -> None:
     """Binds self to s_out.
 
     If s_out is not a `Socket`, s_out is converted to a `Socket` first.
@@ -84,6 +84,9 @@ def _bind_(self: Socket, s_out: SocketLike, priority: int = -1, raw_data=False) 
         priority (int): Priority of the bind.
         raw_data (bool): if True converts data to a Socket
     """
+    while hasattr(s_out, "_mrv"):
+        s_out = s_out._mrv
+
     if raw_data:
         self._bind(np.array(s_out, copy=False))
         return
@@ -117,10 +120,10 @@ def _setitem(self: Socket, key: Union[int, slice], data: SocketLike) -> Socket:
     slc.n_frames = self.task.module.n_frames
     if hasattr(data, "__len__") and len(data) > 1:
         slc.write(self, data)
+        _context_manager.store_task(slc.write)
     else:
         slc.write_one(self, data)
-
-    _mdl_stack.append(slc)
+        _context_manager.store_task(slc.write_one)
 
 
 Socket.__setitem__ = _setitem
@@ -147,7 +150,7 @@ def _getitem(self: Socket, key: Union[slice, int]) -> Socket:
 
     slc.n_frames = self.task.module.n_frames
 
-    _mdl_stack.append(slc)
+    _context_manager.store_task(slc.read)
 
     return slc.read(self)
 

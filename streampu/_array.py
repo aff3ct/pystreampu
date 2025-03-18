@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from streampu import _mdl_stack
+from streampu import _context_manager
 
 from . import _ext
 from ._typing import SocketLike
@@ -49,7 +49,7 @@ def array(data: SocketLike, n_frames: int = 1, dtype: _ext.dtype = None) -> _ext
 
     attr_name = f"Array_{str(data.dtype)}"
     new_array = getattr(_ext.arr, attr_name)(data)
-    _mdl_stack.append(new_array)
+    _context_manager.store_task(new_array.read)
     return new_array.read.data
 
 

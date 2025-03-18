@@ -152,7 +152,7 @@ pyspu::wrapper::wrap_socket(py::handle scope)
                         throw spu::tools::unimplemented_error(message.str());
                         }
                   });
-
+    py_socket.def("unbind", &spu::runtime::Socket::unbind);
     py_socket.def(
       "_bind",
       [](spu::runtime::Socket& self, spu::runtime::Socket& s_out, const int priority) { self.bind(s_out, priority); },

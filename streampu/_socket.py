@@ -26,7 +26,11 @@ def _str(self: Socket) -> str:
     Returns:
         out (str): str representing the socket's data
     """
-    return str(self.numpy)
+    dspl_sckt = self
+    while hasattr(dspl_sckt, "_mrv"):
+        dspl_sckt = dspl_sckt._mrv
+
+    return str(dspl_sckt.numpy)
 
 
 Socket.__str__ = _str

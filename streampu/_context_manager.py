@@ -12,12 +12,6 @@ class _Context:
         if len(tsk.inputs) == 0 and len(tsk.forwards) == 0:
             self._firsts.append(tsk)
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
-
 
 class _ContextManager:
     def __init__(self):
@@ -39,7 +33,6 @@ class _ContextManager:
     def open_context(self, context):
         if context:
             self._opened_contexts.append(context)
-            self._current_opened_context = self._opened_contexts[-1]
 
     def close_context(self, context):
         if id(context) == id(self.current_context):

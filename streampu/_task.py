@@ -10,6 +10,7 @@ import numpy as np
 from streampu._ext import exceptions as exc
 from streampu._ext.core import Socket, Task
 from streampu._typing import SocketLike
+from streampu import _context_manager
 
 Task.call_auto_exec = True
 
@@ -66,6 +67,8 @@ def _call_impl(
     inputs = [sckt for sckt in self.sockets if sckt.direction != out_dir]
     outputs = [sckt for sckt in self.sockets if sckt.direction == out_dir]
     outputs = [sckt for sckt in outputs if sckt.name != "status"]
+
+    _context_manager.store_task(self)
 
     for i, arg in enumerate(args):
         inputs[i].reset()

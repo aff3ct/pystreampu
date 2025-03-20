@@ -9,7 +9,7 @@ class _Context:
 
     def store_task(self, tsk):
         self.store_module(tsk.module)
-        if len(tsk.inputs) == 0 and len(tsk.forwards) == 0:
+        if len(tsk.inputs) == 0 and all([s.has_data() for s in tsk.forwards]):
             self._firsts.append(tsk)
 
 

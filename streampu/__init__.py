@@ -11,6 +11,8 @@ if sys.version_info < (3, 10):
 else:
     from importlib.metadata import entry_points
 
+from ._context_manager import _Context, _context_manager  # isort:skip
+
 # Stack of hidden modules
 # Tools
 from streampu._ext import FormatFlags, Signal_handler, exceptions, help
@@ -63,7 +65,6 @@ from ._bop import (
     not_equal,
     sub,
 )
-from ._context_manager import _Context, _context_manager
 from ._delayer import delayer
 from ._dtype import (
     dtype,

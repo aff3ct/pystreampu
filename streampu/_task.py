@@ -7,10 +7,10 @@ from typing import Any, Union
 
 import numpy as np
 
+from streampu import _context_manager
 from streampu._ext import exceptions as exc
 from streampu._ext.core import Socket, Task
 from streampu._typing import SocketLike
-from streampu import _context_manager
 
 Task.call_auto_exec = True
 

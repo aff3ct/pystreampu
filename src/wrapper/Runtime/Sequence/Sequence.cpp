@@ -106,17 +106,18 @@ pyspu::wrapper::wrap_sequence(py::handle scope)
                        });
     auto sys = py::module::import("sys");
     sequence_class.def("exec",
-                       [](spu::runtime::Sequence& self, spu::tools::Terminal_dump& terminal, std::ostream& stream)
+                       [](spu::runtime::Sequence& self, spu::tools::Terminal_dump& terminal, std::ostream& stream, bool force_report)
                        {
                            py::gil_scoped_release release{};
                            self.exec(
-                             [&]() -> bool
-                             {
-                                 py::gil_scoped_acquire gil;
-                                 terminal.temp_report(stream);
-                                 return false;
-                             });
-                       }, "terminal"_a, "stream"_a = sys.attr("stdout"));
+                            [&](const std::vector<const int*>& statuses) -> bool
+                            {
+                                py::gil_scoped_acquire gil;
+                                if (statuses.back() != nullptr || force_report)
+                                   terminal.temp_report(stream);
+                                return false;
+                            });
+                       }, "terminal"_a, "stream"_a = sys.attr("stdout"), "force_report"_a = false);
 
     sequence_class.def("exec_seq",
                        &spu::runtime::Sequence::exec_seq,

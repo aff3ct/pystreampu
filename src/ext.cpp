@@ -13,6 +13,7 @@ using namespace py::literals;
 
 PYBIND11_MODULE(_ext, m)
 {
+    spu::tools::Buffer_allocator::set_task_autoalloc(true);
     m.def("get_hardware_concurrency", &std::thread::hardware_concurrency);
     // Split in two following
     // https:pybind11.readthedocs.io/en/stable/advanced/misc.html#avoiding-c-types-in-docstrings

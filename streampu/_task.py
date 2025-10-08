@@ -60,6 +60,7 @@ def _call_impl(
     self: Task,
     *args: tuple[SocketLike],
     raw_data=False,
+    auto_exec=True,
     **kwargs: dict[str, SocketLike],
 ) -> Union[Socket, tuple[Socket], None]:
     out_dir = Socket.directions.OUT
@@ -75,10 +76,12 @@ def _call_impl(
         inputs[i].bind(arg, raw_data=raw_data)
 
     for key, sckt in kwargs.items():
+        if key in ["raw_data", "auto_exec"]:
+            continue
         self[key].reset()
         self[key].bind(sckt, raw_data=raw_data)
 
-    if Task.call_auto_exec:
+    if Task.call_auto_exec and auto_exec:
         try:
             self.exec()
         except exc.ProcessingAborted:

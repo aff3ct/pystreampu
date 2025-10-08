@@ -31,11 +31,13 @@ file(GLOB_RECURSE SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 file(GLOB_RECURSE HEADER_FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/*)
 
 
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/pybind11/)
+#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/pybind11/)
 set(PYBIND11_NEWPYTHON ON)
+find_package(pybind11 CONFIG 3.0 REQUIRED)
 # `pybind11_add_module` is a wrapper of the CMake `add_library` function
 pybind11_add_module(_ext MODULE ${CMAKE_CURRENT_SOURCE_DIR}/src/ext.cpp ${SRC_FILES} ${HEADER_FILES})
 
+# set(pybind11_INCLUDE_DIRS)
 if (NOT INCLUDE_SPU_LIB)
         message(STATUS "Using user installed StreamPU library")
         find_package(cpptrace REQUIRED)
@@ -77,9 +79,11 @@ set_target_properties(_ext PROPERTIES OUTPUT_NAME _ext
                            PRIVATE VERSION_INFO=${VERSION_INFO}) #  set -fpic
 
 
-install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/lib/pybind11/include
-        DESTINATION .
-        FILES_MATCHING PATTERN "*.h")
+# Install pybind11 headers
+# install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/lib/pybind11/include/pybind11
+#         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+#         COMPONENT headers
+#         FILES_MATCHING PATTERN "*.h")
 
 install(TARGETS _ext
         DESTINATION .
@@ -88,7 +92,7 @@ install(TARGETS _ext
 
 install(EXPORT
         pystreampu-config
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/pystreampu"
+        DESTINATION "share/cmake/pystreampu"
         NAMESPACE pyspu::
         COMPONENT library)
 

@@ -1,6 +1,7 @@
 [build-system]
 requires = ["scikit-build-core",
-            "setuptools_scm"
+            "setuptools_scm",
+            "pybind11>=3.0.0"
             ]
 build-backend = "scikit_build_core.build"
 
@@ -14,7 +15,6 @@ readme = "README.md"
 dependencies = [
     "importlib_metadata",
     "numpy",
-    "pybind11>=2.13",
     "pytest>=6.0"
 ]
 dynamic = ["version"]

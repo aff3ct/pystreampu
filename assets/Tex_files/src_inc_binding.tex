@@ -1,0 +1,32 @@
+\documentclass{standalone}
+
+\usepackage{tikz}
+\usetikzlibrary{streampu}
+
+\begin{document}
+  \begin{tikzpicture}[background rectangle/.style={thick, draw=gray!60, fill=white, fill opacity=1.0, rounded corners=2px}, show background rectangle]
+    %%%%%%%%%%%%%%%%%%
+    %% create tasks %%
+    %%%%%%%%%%%%%%%%%%
+    %     options             id   coords      label                 sin sout sfwd attributes
+    %     -------             --   ------      -----                 --- ---- ---- ----------
+    \task                     {t1} {-0.5, 0}   {generate\\($t_1$)} {0} {1}  {0}  {};
+    \task [right=1.0cm of t1] {t2} {}          {increment\\($t_2$)}  {1} {1}  {0}  {};
+
+    %%%%%%%%%%%%%%%%%%%%
+    %% create modules %%
+    %%%%%%%%%%%%%%%%%%%%
+    %       options  task ids id   label
+    %       -------  -------- --   -----
+    \module          {"t1"}   {m1} {Initializer};
+    \module          {"t2"}   {m2} {Incrementer};
+
+    %%%%%%%%%%%%%%%%
+    %% bind tasks %%
+    %%%%%%%%%%%%%%%%
+    %     options start id path end id
+    %     ------- -------- ---- ------
+    \draw [bind]  (t1_so1) --   (t2_si1);
+
+  \end{tikzpicture}
+\end{document}
